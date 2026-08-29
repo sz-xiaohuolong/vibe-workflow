@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vibe Workflow"
+  short_description: "协调长期软件项目的版本生命周期、决策关卡、上下文与验证状态"
+  default_prompt: "使用 $vibe-workflow 继续当前软件项目，并从仓库事实恢复正确状态。"
