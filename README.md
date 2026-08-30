@@ -104,7 +104,7 @@ flowchart TD
 |---|---|---|---|
 | **Product Intent** | 👤 **人类决策** | 功能范围、核心流程、平台边界、数据业务语义、付费 API、不可逆动作 | 必须提供 Current Req、Problem、Impact、Options、Trade-offs 与建议方案，获批前不得落地为既成事实。 |
 | **Schema / DDL** | 👤 **人类决策** | 增删改表、字段、索引、约束、数据回填、ORM 结构变更 | 严格执行五步闭环：`investigate → proposal pending → explicit approval → migration → verify`。 |
-| **Security / Auth** | 👤 **人类决策** | 权限控制、匿名访问、敏感日志、Secret、数据暴露面 | **代码行数 $\ne$ 风险等级**。一行权限条件修改同样受制于 Security Gate。 |
+| **Security / Auth** | 👤 **人类决策** | 权限控制、匿名访问、敏感日志、Secret、数据暴露面 | **代码行数 ≠ 风险等级**。一行权限条件修改同样受制于 Security Gate。 |
 | **Implementation** | 🤖 **Agent 自主** | 私有函数/类命名、内部接口、测试组织、代码重构 | 遵循仓库既有模式，自主快速决断，不制造流程官僚化。 |
 
 ### 2. 证据（Verification）与发布（Shipping）两权分立
@@ -120,7 +120,15 @@ flowchart TD
 
 ### 4. 容错与熔断机制 (Circuit Breaker)
 当出现：**连续 3 次同类失败**、**修 A 坏 B/C**、**原架构假设被推翻** 或 **修改范围持续失控扩散** 时：
-$$\text{STOP PATCHING} \longrightarrow \text{保留稳定状态} \longrightarrow \text{记录 Debug Snapshot} \longrightarrow \text{置 REPLAN\_REQUIRED} \longrightarrow \text{重新系统化排查}$$
+
+```text
+STOP PATCHING
+  → 保留/恢复 Last Known Good State
+  → 记录 Debug Snapshot (symptom, repro, attempts, diff)
+  → Operational Status = REPLAN_REQUIRED
+  → 建立 fresh context 重新系统化排查
+```
+
 *严禁把“换个参数再试一次”包装成合法 Retry。*
 
 ---
