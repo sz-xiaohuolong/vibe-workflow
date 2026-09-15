@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 220" width="100%" height="100%">
+  <defs>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0e131f"/>
+      <stop offset="100%" stop-color="#161e2e"/>
+    </linearGradient>
+    <linearGradient id="blueLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="50%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Background Card -->
+  <rect x="10" y="10" width="900" height="200" rx="12" fill="url(#cardGrad)" stroke="#26334d" stroke-width="1.5" filter="url(#shadow)"/>
+
+  <!-- Top Decorative Connecting Line -->
+  <path d="M 60 110 L 860 110" stroke="#1f293d" stroke-width="3" stroke-dasharray="4 4"/>
+  <path d="M 60 110 L 860 110" stroke="url(#blueLine)" stroke-width="2" stroke-opacity="0.6"/>
+
+  <!-- Stage 1: Freeze Gate -->
+  <g transform="translate(60, 60)">
+    <rect x="0" y="0" width="115" height="100" rx="8" fill="#131b2c" stroke="#f59e0b" stroke-width="1.5"/>
+    <rect x="8" y="10" width="99" height="18" rx="4" fill="#f59e0b" fill-opacity="0.15"/>
+    <text x="57" y="23" fill="#f59e0b" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="0.5">HUMAN GATE</text>
+    <text x="57" y="52" fill="#f1f5f9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" text-anchor="middle">Requirements</text>
+    <text x="57" y="70" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" text-anchor="middle">Status: FROZEN</text>
+    <circle cx="57" cy="88" r="3" fill="#f59e0b"/>
+  </g>
+
+  <!-- Arrow 1 -->
+  <path d="M 185 110 L 205 110" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Stage 2: Spec & Design -->
+  <g transform="translate(215, 60)">
+    <rect x="0" y="0" width="115" height="100" rx="8" fill="#131b2c" stroke="#3b82f6" stroke-width="1.5"/>
+    <rect x="8" y="10" width="99" height="18" rx="4" fill="#3b82f6" fill-opacity="0.15"/>
+    <text x="57" y="23" fill="#60a5fa" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="0.5">SPECIFIED</text>
+    <text x="57" y="52" fill="#f1f5f9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" text-anchor="middle">Design &amp; Plan</text>
+    <text x="57" y="70" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" text-anchor="middle">REQ / AC Matrix</text>
+    <circle cx="57" cy="88" r="3" fill="#3b82f6"/>
+  </g>
+
+  <!-- Arrow 2 -->
+  <path d="M 340 110 L 360 110" stroke="#6366f1" stroke-width="2"/>
+
+  <!-- Stage 3: Building & TDD -->
+  <g transform="translate(370, 60)">
+    <rect x="0" y="0" width="115" height="100" rx="8" fill="#131b2c" stroke="#6366f1" stroke-width="1.5"/>
+    <rect x="8" y="10" width="99" height="18" rx="4" fill="#6366f1" fill-opacity="0.15"/>
+    <text x="57" y="23" fill="#818cf8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="0.5">DELEGATED</text>
+    <text x="57" y="52" fill="#f1f5f9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" text-anchor="middle">Build (TDD)</text>
+    <text x="57" y="70" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" text-anchor="middle">Vertical Slices</text>
+    <circle cx="57" cy="88" r="3" fill="#6366f1"/>
+  </g>
+
+  <!-- Arrow 3 -->
+  <path d="M 495 110 L 515 110" stroke="#8b5cf6" stroke-width="2"/>
+
+  <!-- Stage 4: Circuit Breaker Shield -->
+  <g transform="translate(525, 60)">
+    <rect x="0" y="0" width="115" height="100" rx="8" fill="#131b2c" stroke="#ec4899" stroke-width="1.5"/>
+    <rect x="8" y="10" width="99" height="18" rx="4" fill="#ec4899" fill-opacity="0.15"/>
+    <text x="57" y="23" fill="#f472b6" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="0.5">CIRCUIT BREAKER</text>
+    <text x="57" y="52" fill="#f1f5f9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" text-anchor="middle">Zero Retry Loop</text>
+    <text x="57" y="70" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" text-anchor="middle">3-Fail ➔ Replan</text>
+    <circle cx="57" cy="88" r="3" fill="#ec4899"/>
+  </g>
+
+  <!-- Arrow 4 -->
+  <path d="M 650 110 L 670 110" stroke="#10b981" stroke-width="2"/>
+
+  <!-- Stage 5: Verification -->
+  <g transform="translate(680, 60)">
+    <rect x="0" y="0" width="115" height="100" rx="8" fill="#131b2c" stroke="#10b981" stroke-width="1.5"/>
+    <rect x="8" y="10" width="99" height="18" rx="4" fill="#10b981" fill-opacity="0.15"/>
+    <text x="57" y="23" fill="#34d399" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="0.5">EVIDENCE GATE</text>
+    <text x="57" y="52" fill="#f1f5f9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" text-anchor="middle">Verification</text>
+    <text x="57" y="70" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" text-anchor="middle">Fresh Pass Logs</text>
+    <circle cx="57" cy="88" r="3" fill="#10b981"/>
+  </g>
+
+  <!-- Bottom Durable Memory Banner -->
+  <rect x="180" y="174" width="560" height="24" rx="6" fill="#0b0f19" stroke="#1e293b" stroke-width="1"/>
+  <text x="460" y="190" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace" font-size="11" font-weight="500" text-anchor="middle">
+    Repository is Memory: Code · Tests · Living Docs · Traceability
+  </text>
+</svg>

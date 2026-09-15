@@ -1,0 +1,28 @@
+---
+description: Lifecycle Orchestrator for long-running software engineering projects.
+globs: *
+alwaysApply: false
+---
+
+# Vibe Workflow Instructions (Cursor Adapter)
+
+When working on multi-step, multi-session, or multi-release software engineering tasks:
+
+## Core Principles
+1. **Requirements Freeze**: Do not write implementation code or scaffolds until requirements are frozen and open questions are resolved.
+2. **Repository is Memory**: The repository (code, git, tests, and `docs/vibe/`) is the sole source of truth. Chat context is transient.
+3. **Human Decision Gates**: Stop and get explicit human approval before:
+   - Altering product scope or acceptance criteria
+   - Executing database schema/DDL migrations
+   - Modifying public APIs or breaking compatibility
+   - Altering security, authentication, or sensitive data exposure
+   - Introducing external paid services or credentials
+4. **Circuit Breaker**: After 3 consecutive failures on the same issue or when regressions cascade, STOP PATCHING. Revert to the last known good state, record a debug snapshot, and replan.
+5. **Fresh Evidence Before "Done"**: Never declare a task or release complete without fresh, passing test/build execution evidence.
+
+## Artifact Locations
+- Product Specs: `docs/vibe/releases/<release-id>/SPEC.md`
+- Proposed Architecture: `docs/vibe/releases/<release-id>/PROPOSED_DESIGN.md`
+- Implementation Plans: `docs/vibe/releases/<release-id>/IMPLEMENTATION_PLAN.md`
+- Living Architecture: `docs/vibe/TECH_DESIGN.md`
+- Progress & State: `docs/vibe/PROGRESS.md`

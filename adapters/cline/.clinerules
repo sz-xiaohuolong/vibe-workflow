@@ -1,0 +1,6 @@
+# Vibe Workflow Rules for Cline / Roo Code
+
+- Requirements Freeze: Confirm Requirement Status is FROZEN with zero Open Questions before writing code.
+- Human Gates: Halt and prompt the user for explicit approval on scope changes, schema migrations, security rules, and destructive operations.
+- Evidence Gate: Run fresh verification commands before claiming completion.
+- Circuit Breaker: Revert to last stable commit and halt patching when 3 consecutive fixes fail.

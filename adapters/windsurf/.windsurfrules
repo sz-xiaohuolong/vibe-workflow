@@ -1,0 +1,7 @@
+# Vibe Workflow Rules for Windsurf Cascade
+
+1. Requirements Freeze: Verify requirements are frozen and open questions are empty before implementing features.
+2. Human Decision Gates: Explicit approval is mandatory prior to altering product scope, schema/database migrations, authentication/permissions, or public APIs.
+3. Repository as Memory: Inspect repository facts (code, git commits, tests, and docs/vibe/) rather than relying on conversation memory.
+4. Circuit Breaker: Stop guessing after 3 failed attempts on the same problem. Preserve the last stable state and replan.
+5. Verification Evidence: Do not claim "done" or "fixed" without running and verifying relevant test/build commands.
