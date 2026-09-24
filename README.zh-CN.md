@@ -10,7 +10,7 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
   <a href="docs/CONSTITUTION.md"><img src="https://img.shields.io/badge/Spec-agentskills.io-purple.svg" alt="Specification: agentskills.io"></a>
-  <a href="tests/results/v0.1.md"><img src="https://img.shields.io/badge/Skill%20TDD-25%2F25%20PASS-brightgreen.svg" alt="Tests: 25/25 PASS"></a>
+  <a href="tests/results/v0.2.md"><img src="https://img.shields.io/badge/V0.2-7%20scenarios%20reviewed-blue.svg" alt="V0.2 七项场景走查"></a>
   <a href="#-多-agent-兼容性矩阵"><img src="https://img.shields.io/badge/Agents-Codex%20%7C%20Claude%20%7C%20Gemini-blueviolet.svg" alt="Supported Agents"></a>
 </p>
 
@@ -57,8 +57,8 @@
 ## ⚡ 五大核心工程支柱
 
 1. **需求冻结与入口门禁 (Requirements Freeze & Entry Gate)**：工程开始前必须满足四项可观察条件：`Requirement Status == FROZEN`、`Open Questions == None`、`Release ID 存在`、`验收目标可测`。
-2. **Repository is Memory, Chat is Conversation**：聊天上下文是瞬态的。Git 提交、测试套件和 `docs/vibe/` 结构化文档是唯一的持久事实源。
-3. **证据 (Verification) 与发布 (Shipping) 两权分立**：人类可以决定承担风险并授权发布，但**人类的口头风险接受不能把缺失的证据改写为 `VERIFIED` 或 `READY_TO_SHIP`**。
+2. **Repository is Memory, Chat is Conversation**：聊天上下文是瞬态的。Git、测试和仓库现有事实文档承载持久状态；`docs/vibe/` 只是新项目的建议结构。
+3. **证据 (Verification) 与发布 (Shipping) 两权分立**：Release 先凭证据达到 `READY_TO_SHIP`，再取得精确发布授权；风险接受不能把缺失证据改写为 `VERIFIED`。
 4. **熔断机制 (Circuit Breaker，拒绝无脑重试)**：当出现连续 3 次同类失败、修 A 坏 B 或基础假设失效时：
    ```text
    STOP PATCHING
@@ -134,6 +134,17 @@ cd vibe-workflow
 
 ### 2. 常用工作流示例
 
+#### 接管已有项目（v0.2）
+```text
+$vibe-workflow init 审计当前仓库，沿用已有文档和构建入口，建立或刷新唯一的职责地图，并报告待澄清事实。
+```
+
+重复执行 `init` 会复核地图的真实路径和证据，只更新变化项。仓库已有 `PROJECT.md` 地图时继续沿用；缺少地图时才创建 `DOCUMENT_MAP.md`。需求尚未冻结时也可审计现状，但进入 SPEC、设计或开发仍需通过工程入口 Gate。
+
+v0.2 还明确六类跨模块触发条件，并在进度中区分 `IMPLEMENTED_UNVERIFIED`（已实现待验证）、`POC_VALIDATED`（已通过 POC）和 `VERIFIED`（已验证）；前两者不能作为正式功能完成证据。
+
+存量接管与文档地图的设计参考了 [project-vibe-spec](https://github.com/dnwwdwd/project-vibe-spec)，并按本 Skill 的 Release 状态机与证据规则进行了独立整合。
+
 #### 启动新项目 / 新 Release
 ```text
 $vibe-workflow 检查工程入口 Gate，并基于当前冻结的需求初始化 v0.1 Release 流程。
@@ -189,7 +200,7 @@ Vibe Workflow 严格遵循 open `SKILL.md` 规范 ([agentskills.io](https://agen
 `vibe-workflow` 自身完全基于工业级 **Skill TDD** 严苛流程构建：
 - **25 个真实对抗场景**：承受高压催促演示、权限暗度陈仓、Schema 偷跑、虚假完成声明等工程危机测试。
 - **双盲微测评估**：Control（无技能对照组）与 Candidate 严格对比。
-- **证据落盘**：查看可审计的测试证据与记录：[`tests/results/v0.1.md`](tests/results/v0.1.md) 和 [`tests/scenarios.md`](tests/scenarios.md)。
+- **证据落盘**：v0.1 的 25 个对抗场景见 [`tests/results/v0.1.md`](tests/results/v0.1.md)；v0.2 新增七项规则走查和独立执行记录见 [`tests/results/v0.2.md`](tests/results/v0.2.md)。
 
 运行本地静态与结构校验：
 ```bash

@@ -20,6 +20,8 @@
 - 当前工作树、分支和最近相关状态。
 - PROJECT/Document Map 或等价索引。
 
+用户明确运行 `$vibe-workflow init` 时按 [init.md](init.md) 审计和更新映射；需求未冻结不妨碍现状审计与事实记录，但不能因此进入 SPEC/Build。
+
 目的只是建立事实源地图和当前 Release，不是把整个仓库永久留在上下文。
 
 ## Resume Pack
@@ -27,7 +29,7 @@
 新会话依次读取：
 
 1. AGENTS.md。
-2. PROJECT/Document Map。
+2. 唯一权威的 PROJECT/Document Map，按其中真实路径定位资料。
 3. PROGRESS。
 4. 当前 Release 的 PROJECT_BRIEF 和 Effective SPEC 中相关部分。
 5. 当前 Task 对应的 PROPOSED_DESIGN、当前 TECH_DESIGN、PLAN、代码、测试和 evidence；没有目标架构变化时省略 PROPOSED_DESIGN。

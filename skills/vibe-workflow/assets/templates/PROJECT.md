@@ -15,19 +15,16 @@
 
 ## Document Map
 
-| 职责 | 实际路径 | Owner/说明 |
-|---|---|---|
-| Agent Rules | `AGENTS.md` | 行为与入口 |
-| Current Project | `docs/vibe/PROJECT.md` | 当前定位与索引 |
-| Current Architecture | `docs/vibe/TECH_DESIGN.md` | 当前技术事实 |
-| Current Release Proposed Design | `待建立/不适用` | 未实现目标方案与批准状态 |
-| Current Progress | `docs/vibe/PROGRESS.md` | 当前执行状态 |
-| Current Release Brief | `待建立` | 产品范围基线 |
-| Current Effective SPEC | `待建立` | 当前 Release 产品行为 |
-| Current Plan | `待建立` | Slice/Task/验证映射 |
-| Current Verification | `待建立` | REQ/AC 证据 |
-| Decisions | `docs/vibe/decisions/` | 决策历史 |
-| Bugs | `docs/vibe/bugs/` | Bug 证据与修复 |
+本文件是新项目默认的权威地图；若仓库已有其他地图，则沿用现有地图并在此仅记录其路径：`本文件/现有索引路径`。
+
+| 职责 | 实际路径或外部位置 | 状态 | 定位依据/备注 |
+|---|---|---|---|
+| Agent Rules | `AGENTS.md/待发现` | `待核验` | 行为与入口 |
+| Current Architecture | `待发现` | `待核验` | 由代码/配置核验 |
+| Current Progress | `待发现` | `待核验` | 由 Git/测试核验 |
+| Current Release Brief/SPEC | `待发现` | `待澄清` | 产品意图和验收来源 |
+| Current Plan/Verification | `待发现` | `待核验` | 任务与证据路径 |
+| Decisions/Bugs | `待发现` | `待核验` | 历史记录路径 |
 
 ## Supported Commands
 

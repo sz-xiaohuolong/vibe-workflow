@@ -113,7 +113,7 @@ UI 改动不能代表授权正确。改变匿名访问、AuthN/AuthZ、Secret、
 
 人类风险接受不能把 `UNVERIFIED` 改成 `VERIFIED`，也不能让缺少 REQ/AC evidence 的 Release 成为 `READY_TO_SHIP`。
 
-V0.1 不支持 emergency release 旁路：
+V0.2 不支持 emergency release 旁路：
 
 - `publish/deploy/release` 的必要前置条件是 Workflow State 已为 `READY_TO_SHIP`，之后仍需对精确 target 获得 Shipping Authorization。
 - push/PR 可在明确授权后用于协作，但必须保留真实 Verification Status，且不得描述为已验证、可发布或 Release 完成。

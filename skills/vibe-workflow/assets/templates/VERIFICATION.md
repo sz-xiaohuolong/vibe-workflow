@@ -11,9 +11,9 @@
 
 ## Requirement Evidence Matrix
 
-| REQ | AC | Test/Flow | Command/Steps | Result | Evidence | Commit/Artifact | Notes |
-|---|---|---|---|---|---|---|---|
-| REQ-001 | AC-001 | `未关联` | `未运行` | `UNVERIFIED` | `无` | `无` | `待验证` |
+| REQ | AC | Task Delivery Status | Test/Flow | Command/Steps | Result | Evidence | Commit/Artifact | Notes |
+|---|---|---|---|---|---|---|---|---|
+| REQ-001 | AC-001 | `NOT_STARTED/IMPLEMENTED_UNVERIFIED/POC_VALIDATED/VERIFIED` | `未关联` | `未运行` | `UNVERIFIED` | `无` | `无` | `待验证` |
 
 ## Automated Checks
 
@@ -54,3 +54,4 @@
 - Human Shipping Decision: `PENDING/NOT_REQUESTED`
 
 Shipping Authorization 不改变 Verification Status；风险接受不能把未知结果写成通过。
+POC 证据和已写代码可记录在矩阵中，但不能代替正式 AC 的通过证据。

@@ -10,7 +10,7 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
   <a href="docs/CONSTITUTION.md"><img src="https://img.shields.io/badge/Spec-agentskills.io-purple.svg" alt="Specification: agentskills.io"></a>
-  <a href="tests/results/v0.1.md"><img src="https://img.shields.io/badge/Skill%20TDD-25%2F25%20PASS-brightgreen.svg" alt="Tests: 25/25 PASS"></a>
+  <a href="tests/results/v0.2.md"><img src="https://img.shields.io/badge/V0.2-7%20scenarios%20reviewed-blue.svg" alt="V0.2 七项场景走查"></a>
   <a href="#multi-agent-compatibility"><img src="https://img.shields.io/badge/Agents-Codex%20%7C%20Claude%20%7C%20Gemini-blueviolet.svg" alt="Supported Agents"></a>
 </p>
 
@@ -57,8 +57,8 @@ It does not teach an LLM how to write a function; it provides the **state machin
 ## ⚡ Five Core Engineering Pillars
 
 1. **Requirements Freeze & Entry Gates**: Engineering never begins on ambiguous intent. Four observable conditions are required: `Requirement Status == FROZEN`, `Open Questions == None`, `Release ID exists`, and `Acceptance Goals are testable`.
-2. **Repository is Memory, Chat is Conversation**: Chat context is transient. The repository (Git commits, tests, and `docs/vibe/`) is the single durable source of truth.
-3. **Decoupled Verification & Shipping Gates**: Human risk acceptance can authorize a deployment, but it **cannot** convert missing test evidence into `VERIFIED` or `READY_TO_SHIP`. Facts and permissions remain strictly separate.
+2. **Repository is Memory, Chat is Conversation**：Git、测试与仓库现有事实文档承载持久状态；`docs/vibe/` 只是新项目的建议结构。
+3. **Decoupled Verification & Shipping Gates**：发布必须先达到 `READY_TO_SHIP`，再获得精确授权；风险接受不能把缺失证据改成 `VERIFIED`。
 4. **Circuit Breaker (Zero Retry Loops)**: When an agent encounters 3 consecutive failures, cascades regressions, or disproves core assumptions, it must:
    ```text
    STOP PATCHING
@@ -134,6 +134,13 @@ cd vibe-workflow
 
 ### 2. Common Workflows
 
+#### 存量仓库接管（v0.2）
+```text
+$vibe-workflow init 审计当前仓库，沿用已有文档与构建入口，建立或刷新唯一的职责地图，并报告待澄清事实。
+```
+
+`init` 可重复执行；已有地图优先沿用，缺少时才创建 `DOCUMENT_MAP.md`。v0.2 还明确六类跨模块触发，并区分 `IMPLEMENTED_UNVERIFIED`、`POC_VALIDATED`、`VERIFIED`。行为回归记录见 [v0.2 验证](tests/results/v0.2.md)。
+
 #### Start a New Project
 ```text
 $vibe-workflow Check the Entry Gate and initialize Release v0.1 from our frozen requirements.
@@ -189,7 +196,7 @@ Vibe Workflow follows the open `SKILL.md` specification ([agentskills.io](https:
 Vibe Workflow was built and validated using **Skill TDD**:
 - **25 Adversarial Scenarios**: Subjected to pressure testing (rushed demos, cascading failures, unauthorized schema edits, and fake completion claims).
 - **Dual-Blind Microtests**: Rigorously benchmarked with Control (no skill) vs. Candidate evaluations.
-- **Evidence-Backed**: Inspect our reproducible test scripts and logs in [`tests/results/v0.1.md`](tests/results/v0.1.md) and [`tests/scenarios.md`](tests/scenarios.md).
+- **验证记录**：v0.1 的 25 个场景见 [`tests/results/v0.1.md`](tests/results/v0.1.md)；v0.2 的七项规则走查与独立执行证据见 [`tests/results/v0.2.md`](tests/results/v0.2.md)。
 
 Run static compliance checks locally:
 ```bash

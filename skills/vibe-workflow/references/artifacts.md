@@ -9,7 +9,7 @@
 1. 检查仓库已有 AGENTS、README、docs、需求、设计、进度、测试、迁移和发布约定。
 2. 找到职责等价物时沿用，不额外创建平行目录。
 3. 只有职责缺失时，才从 `assets/templates/` 复制相应模板。
-4. 在 `docs/vibe/PROJECT.md` 或项目既有索引中记录“职责 → 实际路径”。索引只导航，不承载产品或技术结论。
+4. 在项目已有 Document Map、`DOCUMENT_MAP.md` 或等价索引中记录“职责 → 实际路径 → 状态 → 依据”。一个仓库只维护一个权威地图；索引只导航，不承载产品或技术结论。首次审计和重跑规则见 [init.md](init.md)。
 5. 更新 AGENTS 时保留已有规则，只加入必要的事实源路径和恢复顺序；不复制产品正文。
 
 ## Release-scoped artifacts
@@ -48,10 +48,13 @@ docs/vibe/decisions/
 docs/vibe/bugs/
 ```
 
+`DOCUMENT_MAP.md` 仅在仓库没有既有地图时创建；与 `PROJECT.md` 内的地图二选一。以上目录只是新建项目的建议路径，不要求存量仓库迁移。
+
 | Artifact | 职责 |
 |---|---|
 | AGENTS.md | Agent 长期行为规则、事实源入口、项目命令；不复制业务正文 |
-| PROJECT.md | 当前项目定位、当前 Release、Quality Profile、Document Map |
+| PROJECT.md | 当前项目定位、当前 Release、Quality Profile；可承载既有 Document Map |
+| DOCUMENT_MAP.md 或既有地图 | 治理职责的真实路径、状态和定位依据；仅作导航 |
 | TECH_DESIGN.md | 当前真实架构、模块、接口、数据、权限、运行和验证入口 |
 | PROGRESS.md | 当前 State/Status/Slice/Task、Last Stable Commit、证据、阻塞和 Next Task |
 | DEC-xxx.md | 重大选择、方案、取舍、批准、影响和恢复 |
@@ -120,6 +123,7 @@ Release Verification 必须能逐项回答“REQ 是否真的完成”，不能�
 
 - `assets/templates/PROJECT_BRIEF.md`
 - `assets/templates/PROJECT.md`
+- `assets/templates/DOCUMENT_MAP.md`（仅在现有仓库没有地图时）
 - `assets/templates/CHANGE.md`
 - `assets/templates/SPEC.md`
 - `assets/templates/TECH_DESIGN.md`

@@ -32,6 +32,19 @@ MIGRATION  DESTRUCTIVE_OPERATION
 
 ## Task Verification
 
+### Task Delivery Status
+
+进度状态只描述当前 Task/功能的交付程度，独立于 Release 的 `Verification Status` 和 `Shipping Authorization`：
+
+| 状态 | 可写入条件 | 不得推断 |
+|---|---|---|
+| `NOT_STARTED` / `IN_PROGRESS` / `BLOCKED` | 实际执行位置或阻塞证据 | 已实现或已验证 |
+| `IMPLEMENTED_UNVERIFIED`（已实现待验证） | 代码或 artifact 已存在，但适用检查未运行、已过期或未覆盖 AC | `DONE`、`VERIFIED` |
+| `POC_VALIDATED`（已通过 POC） | 有明确范围内的概念可行性演示或探针证据 | 正式功能已实现、Release AC 已通过 |
+| `VERIFIED`（已验证） | 当前实现的适用 AC、自动化检查和受影响运行路径均有 fresh evidence；不适用项有理由 | Shipping Authorization 已获批 |
+
+POC 是独立的局部证据；从 POC 转正式交付时，先确认正式需求、实现边界和 AC，再运行正式环境所需验证。仅有 POC 的 REQ/AC 仍为 `UNVERIFIED`。代码已写但 CI 将来才运行时保持 `IMPLEMENTED_UNVERIFIED`。一个 Release 的 Verification Status 由其全部适用 REQ/AC 和 Release 检查决定，不能由单个 Task 状态自动晋级。
+
 根据项目运行能证明当前 Task 的最小充分检查：
 
 - relevant tests；
@@ -121,7 +134,7 @@ Push、PR、publish、deploy、release 或不可逆外部副作用需要明确�
 
 授权不是唯一前置条件：
 
-- `publish/deploy/release` 仅可从 `READY_TO_SHIP` 执行；V0.1 不提供 emergency release 旁路。
+- `publish/deploy/release` 仅可从 `READY_TO_SHIP` 执行；V0.2 不提供 emergency release 旁路。
 - push/PR 可在明确授权后执行协作动作，但要保留真实 Verification Status，不得声称 Release 已验证或可发布。
 - 若人类要求发布 `UNVERIFIED/PARTIAL/BLOCKED` 的 Release，拒绝该发布动作并记录缺口；风险接受不改变状态事实。
 

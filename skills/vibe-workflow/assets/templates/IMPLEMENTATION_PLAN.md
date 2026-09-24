@@ -33,6 +33,8 @@
 - Dependencies: `无/待确认`
 - Risk Tags: `None/待确认`
 - Planned Test/Evidence: `待定义`
+- Cross-module Impact: `不适用/写入入口、读取方、传播、刷新/恢复与失败路径待确认`
+- Checked Unaffected Modules: `不适用/待确认`
 - Recovery Point: `待定义`
 - Status: `NOT_STARTED`
 

@@ -1,6 +1,6 @@
 ---
 name: vibe-workflow
-description: Use when 软件项目任务跨越多个步骤、会话或 Release，或需要协调持久项目状态、决策关卡、范围控制、上下文恢复与完成证据；也用于继续已经采用 vibe-workflow 的项目。
+description: Use when 软件项目任务跨越多个步骤、会话或 Release，或需要接管存量仓库、协调持久项目状态、决策关卡、范围控制、上下文恢复与完成证据；也用于继续已经采用 vibe-workflow 的项目。
 ---
 
 # Vibe Workflow
@@ -26,7 +26,7 @@ description: Use when 软件项目任务跨越多个步骤、会话或 Release�
 
 ## 工程入口 Gate
 
-新项目或新 Release 只有同时满足以下条件才能进入 SPEC、技术设计或 Build：
+新项目或新 Release 只有同时满足以下条件才能进入 SPEC、技术设计或 Build。`$vibe-workflow init` 的现状审计和事实映射不属于工程开工，可以在需求未冻结时进行：
 
 ```text
 Requirement Status == FROZEN
@@ -54,13 +54,13 @@ Tiny 任务可以使用用户的精确请求形成 task-local frozen intent；�
 ## 启动或继续工作
 
 1. 从当前目录向上读取适用的 `AGENTS.md`。
-2. 查找 `docs/vibe/PROJECT.md` 和 `docs/vibe/PROGRESS.md` 或项目中的等价文档。
+2. 查找唯一权威的 Document Map、当前项目索引和进度文档；优先按地图中的真实路径读取，缺失时再发现 `docs/vibe/PROJECT.md`、`docs/vibe/PROGRESS.md` 或等价文档。
 3. 用仓库、Git、代码和测试证据核验当前 Release、State、Slice、Task 与 Last Stable Commit。
 4. 若聊天与仓库事实冲突，显式报告冲突；不要静默采用聊天记忆。
 5. 先判断 Gate，再判断任务复杂度和是否并行。
 6. 只读取当前分支所需 reference 和 Task Context Pack。
 
-首次接入、跨会话恢复和上下文裁剪规则见 [context.md](references/context.md)。
+用户说 `$vibe-workflow init`、接管旧仓库或初始化项目治理时，执行 [init.md](references/init.md)；`init` 是 Skill 的对话子命令，不要求安装 CLI。首次接入、跨会话恢复和上下文裁剪规则见 [context.md](references/context.md)。
 
 ## Release 状态机
 
@@ -90,7 +90,7 @@ REQUIREMENTS_FROZEN
 
 Risk/Decision Gate 覆盖 Tiny 标签和并行收益。一行权限修改仍需 Security Gate；Schema Task 在安排执行顺序前先完成 `investigate → proposal → explicit human approval`。
 
-完整二维 Router、Document Budget 和 Spike/Bug 分支见 [routing.md](references/routing.md)。
+完整二维 Router、跨模块可观察触发条件、Document Budget 和 Spike/Bug 分支见 [routing.md](references/routing.md)。
 
 ## Human Decision Gates
 
@@ -118,9 +118,9 @@ Shipping Authorization = 人类是否授权外部发布动作
 
 人类可以决定承担风险，但不能把缺失证据改写为 `VERIFIED` 或 `READY_TO_SHIP`。存在未覆盖的 REQ/AC 时保持 `UNVERIFIED` 或 `BLOCKED`；不得用“负责人接受风险”绕过事实状态。
 
-V0.1 不提供 emergency release 旁路。`publish/deploy/release` 只有在 Workflow State 已为 `READY_TO_SHIP` 且获得精确 Shipping Authorization 后才可执行；push/PR 也需要明确授权，且不得暗示 Release 已验证或可发布。
+V0.2 不提供 emergency release 旁路。`publish/deploy/release` 只有在 Workflow State 已为 `READY_TO_SHIP` 且获得精确 Shipping Authorization 后才可执行；push/PR 也需要明确授权，且不得暗示 Release 已验证或可发布。
 
-Task/Release verification、Quality Profile、Risk tags、Review 和 Shipping 见 [quality-and-release.md](references/quality-and-release.md)。
+Task 进度须区分 `IMPLEMENTED_UNVERIFIED`、`POC_VALIDATED` 与 `VERIFIED`；POC 和已写代码不能推动 Release 进入 READY_TO_SHIP。Task/Release verification、Quality Profile、Risk tags、Review 和 Shipping 见 [quality-and-release.md](references/quality-and-release.md)。
 
 ## Build 与恢复
 
@@ -164,6 +164,7 @@ STOP PATCHING
 ## Artifact 与 Context 索引
 
 - 建立、接管或维护 Release/living docs、事实所有权和追踪链时，读 [artifacts.md](references/artifacts.md)。
+- 执行 `$vibe-workflow init`、建立或刷新现有仓库的职责地图时，读 [init.md](references/init.md)。
 - 首次接入、恢复会话或控制读取范围时，读 [context.md](references/context.md)。
 - Product/Implementation 边界、Requirement Change、Schema 和其他 Human Gate 时，读 [gates.md](references/gates.md)。
 - Build、Bug、失败熔断、并行或经验沉淀时，读 [execution.md](references/execution.md)。

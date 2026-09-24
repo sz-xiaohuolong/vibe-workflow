@@ -52,6 +52,7 @@ PY
 
 required_files=(
   references/lifecycle.md
+  references/init.md
   references/routing.md
   references/artifacts.md
   references/context.md
@@ -60,6 +61,7 @@ required_files=(
   references/quality-and-release.md
   assets/templates/PROJECT_BRIEF.md
   assets/templates/PROJECT.md
+  assets/templates/DOCUMENT_MAP.md
   assets/templates/CHANGE.md
   assets/templates/SPEC.md
   assets/templates/TECH_DESIGN.md
@@ -97,6 +99,13 @@ rg -q 'PROPOSED_DESIGN' "$skill_dir/references/context.md"
 rg -q 'Proposed Design:' "$skill_dir/assets/templates/IMPLEMENTATION_PLAN.md"
 rg -q 'Verification Status' "$skill_dir/assets/templates/VERIFICATION.md"
 rg -q 'Shipping Authorization' "$skill_dir/assets/templates/VERIFICATION.md"
+rg -q '\$vibe-workflow init' "$skill_dir/SKILL.md"
+rg -q '再次.*init' "$skill_dir/references/init.md"
+rg -q '一个仓库只保留一个权威地图' "$skill_dir/references/init.md"
+rg -q '跨模块可观察触发' "$skill_dir/references/routing.md"
+rg -q 'POC_VALIDATED' "$skill_dir/references/quality-and-release.md"
+rg -q 'IMPLEMENTED_UNVERIFIED' "$skill_dir/assets/templates/PROGRESS.md"
+rg -q 'POC_VALIDATED' "$skill_dir/assets/templates/VERIFICATION.md"
 
 if command -v skills-ref >/dev/null 2>&1; then
   skills-ref validate "$skill_dir"
