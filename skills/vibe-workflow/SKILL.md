@@ -23,6 +23,7 @@ description: Use when 软件项目任务跨越多个步骤、会话或 Release�
 8. 复杂任务严谨，简单任务不官僚。
 9. 没有 fresh verification evidence，不得声称完成。
 10. 优先调用专业 Skill，不复制其教程。
+11. 人类文档先给结论与下一步；原始运行证据不充当正文。
 
 ## 工程入口 Gate
 
@@ -124,7 +125,7 @@ Task 进度须区分 `IMPLEMENTED_UNVERIFIED`、`POC_VALIDATED` 与 `VERIFIED`�
 
 ## Build 与恢复
 
-按 Vertical Slice 和小 Task 推进；每个 Task 组装最小上下文、在确认范围内实现、获取 Task evidence、检查 diff，再更新 PROGRESS。
+按 Vertical Slice 和小 Task 推进；Slice 是当前 Release 内的执行单元，不自动产生新 Release 或成套文档。每个 Task 组装最小上下文、在确认范围内实现、获取 Task evidence、检查 diff，再更新 PROGRESS。
 
 同类失败连续三次、修 A 坏 B/C、架构假设失效或改动范围持续扩大时：
 
@@ -163,7 +164,7 @@ STOP PATCHING
 
 ## Artifact 与 Context 索引
 
-- 建立、接管或维护 Release/living docs、事实所有权和追踪链时，读 [artifacts.md](references/artifacts.md)。
+- 建立、接管或维护 Release/living docs、事实所有权、面向人类的摘要与证据存放时，读 [artifacts.md](references/artifacts.md)。
 - 执行 `$vibe-workflow init`、建立或刷新现有仓库的职责地图时，读 [init.md](references/init.md)。
 - 首次接入、恢复会话或控制读取范围时，读 [context.md](references/context.md)。
 - Product/Implementation 边界、Requirement Change、Schema 和其他 Human Gate 时，读 [gates.md](references/gates.md)。

@@ -17,6 +17,8 @@ Project
 
 对已发布产品的 Bug 修复也创建新的 patch Release 或后续 Release；旧 Release 只保存当时事实。
 
+Release 是对外有意义的范围/验收/发布边界；Slice 是同一 Release 中可运行、可验证的执行切片，Task 是更小的工作项。`R1-S1`、`R1-S2` 这样的短周期切片编号不能仅因完成一天工作就被视为新 Release。新 Release 需有独立的范围基线或真实发布/版本边界；在当前已冻结范围内推进 S1→S2，只更新当前 Release 的计划/进度/验证记录，不创建 `releases/R1-S2/`。若切片引入新的产品范围，先过 Requirement Change Gate；若当前 Release 已封存，按下述新 Release 流程处理。
+
 ## Workflow State Contract
 
 | State | 进入条件 | 主要证据 | 允许的下一状态 |

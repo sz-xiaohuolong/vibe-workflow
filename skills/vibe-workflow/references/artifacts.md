@@ -26,6 +26,8 @@ docs/vibe/releases/<release-id>/
 └── VERIFICATION.md
 ```
 
+只有真正的 Release 才拥有上述目录；同一 Release 的 S1/S2/S3 记录在 `IMPLEMENTATION_PLAN.md` 的 Slice Map 和 living `PROGRESS.md` 中。每个 Slice 在 PROGRESS 中用一行记录状态、证据链接和下一步，不为 Slice 新建 `releases/<release-id>-Sx/`、单独子目录或整套 SPEC/PLAN/REVIEW/VERIFICATION。复杂切片确需调查、设计或决策文件时，按实际职责添加单份文件并链接，不能因此升级为 Release。已有历史目录不自动搬迁或改写；在 Document Map 中标明其历史性质，后续按真实 Release 边界写入。
+
 | Artifact | 拥有的事实 | 不拥有的事实 |
 |---|---|---|
 | PROJECT_BRIEF | Problem、Target User、Scope、Constraints、Acceptance Goals、Requirement Version/Status | 低层实现设计 |
@@ -59,6 +61,18 @@ docs/vibe/bugs/
 | PROGRESS.md | 当前 State/Status/Slice/Task、Last Stable Commit、证据、阻塞和 Next Task |
 | DEC-xxx.md | 重大选择、方案、取舍、批准、影响和恢复 |
 | BUG-xxx.md | 症状、复现、证据、根因、修复、回归测试和状态 |
+
+## 面向人类的正文
+
+`PROGRESS.md` 与 `SPEC.md` 的标题后先放最多三条数据行的摘要表，列出范围/当前事实、阻塞或边界、下一步或验收入口；首屏不写长段状态辩护。PROGRESS 摘要报告当前执行与验证事实；SPEC 摘要报告冻结的产品范围和验收入口，不复制随测试变化的运行进度。正文按读者当前要完成的事组织：进度供快速定位，SPEC 供核对行为，操作步骤和背景解释各归其职责；不要机械建立四类空目录。
+
+正文用可核对的短句写“做了什么、证据是什么、还缺什么”。失败、未验证、风险和阻塞必须在摘要/对应状态行明确显示，不得藏到附录；对同一事实的扩展解释只在文末 `## Limitations & Disclaimers` 写一次，避免每段重复“这不代表……”。该节没有额外限制时可写“无”或省略，不为免责制造内容。
+
+## 原始证据与可读文档分离
+
+新生成的测试日志、运行 dump、原始指标 JSON 等暂存于项目根目录 `.evidence/<release-id>/<slice-or-task-id>/`，默认在目标项目 `.gitignore` 加入 `/.evidence/`；沿用已有等价 `artifacts/`/CI artifact 位置时，在 Document Map 或 VERIFICATION 标明即可。`docs/` 保存人类可读的 Markdown 摘要、结果、命令、时间、环境、退出码及证据指针，不内嵌整段日志。配置、Schema、源数据和需版本控制的 JSON 并非“原始运行证据”，不能仅凭扩展名迁走或忽略。
+
+忽略本地证据不等于丢失可追溯性：需要长期审计或多人复核时，将原始产物保存到有稳定地址和保留策略的 CI/artifact 存储，记录其链接、运行 ID 或摘要；不能把被忽略的本机路径当作远程可重放证据。接管旧仓库时先识别既有引用和保留要求，不自动移动、删除旧 `docs/` 证据。
 
 ## 事实所有权
 
@@ -109,6 +123,7 @@ Release Verification 必须能逐项回答“REQ 是否真的完成”，不能�
 | 变化 | 必须更新 | 按需更新 |
 |---|---|---|
 | 新 Release/Feature | PROJECT_BRIEF、SPEC、PLAN、PROGRESS | PROPOSED_DESIGN、DEC、CHANGE；实现后按证据更新 TECH_DESIGN |
+| 当前 Release 内新 Slice | PROGRESS 一行；PLAN 的 Slice Map 按需更新 | 影响既有 REQ/AC 时更新对应验证行；无独立文档套件 |
 | 产品行为变化 | 当前 Release baseline/SPEC、CHANGE | PROJECT、PROPOSED_DESIGN、DEC |
 | 架构/数据/公开接口变化 | PROPOSED_DESIGN、PLAN、PROGRESS；适用 Gate 时含 DEC | SPEC（产品行为受影响时）；实现验证后更新 TECH_DESIGN |
 | Bug 修复 | BUG、测试/evidence | TECH_DESIGN、PROGRESS、VERIFICATION |

@@ -57,6 +57,7 @@ POC 是独立的局部证据；从 POC 转正式交付时，先确认正式需�
 使用 fresh output。旧运行、CI 将来会跑、页面看起来正常、代码已存在或另一个 Agent 报告成功都不是当前证据。
 
 Task evidence 记录命令/步骤、时间、结果、环境/版本、失败数、限制和 artifact path；不要写未运行的检查。
+原始日志和运行 JSON 的默认存放、忽略及持久引用规则见 [artifacts.md](artifacts.md)；VERIFICATION/PROGRESS 写结论和证据指针，不复制 dump。
 
 ## Release Verification
 
