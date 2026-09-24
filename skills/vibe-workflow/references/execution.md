@@ -111,7 +111,7 @@ Retry 只适用于有新证据支持的 transient failure、明确 typo、环境
 
 ## Progress 更新
 
-Task 开始、完成、阻塞或触发 Gate/Circuit Breaker 时，同一轮更新 PROGRESS：
+Task 开始、完成、阻塞或触发 Gate/Circuit Breaker 时，同一轮更新 PROGRESS；摘要只提最重要的事实，明细在任务、证据或适用时的风险表中维护：
 
 - Current Release/State/Status。
 - Current Slice/Task。

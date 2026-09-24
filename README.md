@@ -141,6 +141,8 @@ $vibe-workflow init 审计当前仓库，沿用已有文档与构建入口，建
 
 `init` 可重复执行；已有地图优先沿用，缺少时才创建 `DOCUMENT_MAP.md`。v0.2 还明确六类跨模块触发，并区分 `IMPLEMENTED_UNVERIFIED`、`POC_VALIDATED`、`VERIFIED`。行为回归记录见 [v0.2 验证](tests/results/v0.2.md)。
 
+v0.2.1 的文档约定：`PROGRESS`/`SPEC` 首屏先给最多三行摘要；短切片只在当前 Release 的计划与进度中推进；原始运行证据默认放在被忽略的 `.evidence/`，正式 Release 验证需另有可长期取回的证明。参见[中文说明](README.zh-CN.md)与[行为复核](tests/results/v0.2.1.md)。
+
 #### Start a New Project
 ```text
 $vibe-workflow Check the Entry Gate and initialize Release v0.1 from our frozen requirements.

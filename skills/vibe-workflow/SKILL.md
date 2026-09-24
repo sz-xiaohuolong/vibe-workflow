@@ -23,7 +23,6 @@ description: Use when 软件项目任务跨越多个步骤、会话或 Release�
 8. 复杂任务严谨，简单任务不官僚。
 9. 没有 fresh verification evidence，不得声称完成。
 10. 优先调用专业 Skill，不复制其教程。
-11. 人类文档先给结论与下一步；原始运行证据不充当正文。
 
 ## 工程入口 Gate
 
@@ -163,6 +162,8 @@ STOP PATCHING
 存在已批准的 written plan 时，`subagent-driven-development` 或 `executing-plans` 拥有顶层执行编排；不得再并列启动另一个 `dispatching-parallel-agents` 顶层流程。只有计划执行 owner 明确判定子任务独立并下放，或没有 written plan 且只是独立调查时，才使用并行调度。
 
 ## Artifact 与 Context 索引
+
+创建面向人的文档时先给结论与下一步，原始运行证据不充当正文；具体格式和存放边界见下列 Artifact 规则。
 
 - 建立、接管或维护 Release/living docs、事实所有权、面向人类的摘要与证据存放时，读 [artifacts.md](references/artifacts.md)。
 - 执行 `$vibe-workflow init`、建立或刷新现有仓库的职责地图时，读 [init.md](references/init.md)。

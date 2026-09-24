@@ -49,11 +49,11 @@
 |---|---|---|---|---|
 | `待澄清` | `待澄清` | `待澄清` | `待澄清` | `待澄清` |
 
-## Requirement Matrix
+## 验收索引
 
-| REQ | AC | Source | Design | Task | Test | Status |
-|---|---|---|---|---|---|---|
-| REQ-001 | AC-001 | `<Brief section>` | `未关联` | `未关联` | `未关联` | `UNVERIFIED` |
+| REQ | AC | Source |
+|---|---|---|
+| REQ-001 | AC-001 | `<Brief section>` |
 
 <!-- SPEC 只展开 PROJECT_BRIEF 已冻结的产品意图；测试结果与切片进度归 PROGRESS/VERIFICATION。删除不适用的空章节与占位符。 -->
 

@@ -1,5 +1,7 @@
 # Artifact Model & Fact Ownership
 
+> 最新的 Release/Slice 边界、摘要格式和 `.evidence/` 约定以 [Skill Artifact 规则](../../skills/vibe-workflow/references/artifacts.md) 为准；本页保留原有概念说明。
+
 > Mapping engineering truth across living documents and release-scoped archives.
 
 ---
