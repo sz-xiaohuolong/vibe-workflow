@@ -1,5 +1,6 @@
 .DS_Store
 .agents/
 .cursor/
-.private-notes/
+private-docs/
+private-notes/
 writing/

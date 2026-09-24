@@ -143,6 +143,8 @@ $vibe-workflow init 审计当前仓库，沿用已有文档和构建入口，建
 
 v0.2 还明确六类跨模块触发条件，并在进度中区分 `IMPLEMENTED_UNVERIFIED`（已实现待验证）、`POC_VALIDATED`（已通过 POC）和 `VERIFIED`（已验证）；前两者不能作为正式功能完成证据。
 
+从 v0.2.1 起，项目文档默认先展示最多三行的人类摘要：当前事实、阻塞和下一步。Release 才建立版本目录；同一 Release 的短切片只在计划与进度中推进，不生成整套文档。新产生的运行日志、原始指标等放在项目根目录 `.evidence/`（默认忽略），`docs/` 保留可读结论与稳定证据链接；需要长期审计时另存 CI/artifact。已有项目沿用其等价路径，不自动迁移旧证据。详细约定见 [Artifact 规则](skills/vibe-workflow/references/artifacts.md)。
+
 存量接管与文档地图的设计参考了 [project-vibe-spec](https://github.com/dnwwdwd/project-vibe-spec)，并按本 Skill 的 Release 状态机与证据规则进行了独立整合。
 
 #### 启动新项目 / 新 Release

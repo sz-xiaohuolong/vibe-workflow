@@ -55,8 +55,8 @@
 |---|---|---|---|---|---|---|
 | REQ-001 | AC-001 | `<Brief section>` | `未关联` | `未关联` | `未关联` | `UNVERIFIED` |
 
+<!-- SPEC 只展开 PROJECT_BRIEF 已冻结的产品意图；测试结果与切片进度归 PROGRESS/VERIFICATION。删除不适用的空章节与占位符。 -->
+
 ## Limitations & Disclaimers
 
 - `<仅解释一次适用范围和已知限制；没有则写“无”或删除本节>`
-
-SPEC 可以工程化表达冻结需求，但不得创造 PROJECT_BRIEF 中没有的新产品能力；测试执行结果与切片进度只记录在 PROGRESS/VERIFICATION，不在本表同步。
