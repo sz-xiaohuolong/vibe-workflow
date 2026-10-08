@@ -142,20 +142,26 @@ STOP PATCHING
 
 只在对应条件成立且能力可用时调用：
 
-| 条件 | 首选 Skill |
+| 条件 | 首选 Skill / 工具 |
 |---|---|
-| Requirement 不完整 | `grill-me` 或等价 Requirement Clarification |
-| Architectural 设计 | **REQUIRED SUB-SKILL:** Use `superpowers:brainstorming` |
+| 0到1全新产品/模糊构想 | `gstack:office-hours`（YC逼问减法）➔ `grill-me`（锁定AC） |
+| Requirement 不完整 / 边界对质 | `grill-me` 或等价 Requirement Clarification |
+| Spike UI探索 / 方案对比 | `gstack:design-shotgun` 或 `gstack:design-html` |
+| Architectural 设计与多维评审 | **REQUIRED SUB-SKILL:** Use `superpowers:brainstorming`；方案评审可调用 `gstack:autoplan` |
 | 多步骤实施计划 | **REQUIRED SUB-SKILL:** Use `superpowers:writing-plans` |
 | 当前会话中按计划执行相互独立的 Task | Use `superpowers:subagent-driven-development` |
 | 在单独会话按既有计划和检查点执行 | Use `superpowers:executing-plans` |
 | 正式实现需要隔离 | **REQUIRED SUB-SKILL:** Use `superpowers:using-git-worktrees` |
 | Feature/Bug/Refactor 实现 | **REQUIRED SUB-SKILL:** Use `superpowers:test-driven-development` |
-| Bug、失败、异常 | **REQUIRED SUB-SKILL:** Use `superpowers:systematic-debugging` |
+| 疑难 Bug / 连续失败 / 根因调查 | `gstack:investigate` 或 **REQUIRED SUB-SKILL:** Use `superpowers:systematic-debugging` |
+| Web/API/UI 任务真机证据获取 | `gstack:qa` 或 `gstack:browse`（捕获日志/截图至 `.evidence/`） |
+| 生产级审查 / 并发 / 资源泄露 | `gstack:review` 或 Use `superpowers:requesting-code-review` |
+| 代码消肿 / 抽取公共库 | `gstack:deslop-shared-libs` |
+| 安全威胁门禁 (Risk Tags) | `gstack:cso`（STRIDE / OWASP 威胁建模） |
 | 无 written plan 的独立调查，或由计划执行流程明确下放并行 | Use `superpowers:dispatching-parallel-agents` |
-| 重要 Task/Feature 或合并前 | Use `superpowers:requesting-code-review` |
 | 任何完成声明前 | **REQUIRED SUB-SKILL:** Use `superpowers:verification-before-completion` |
-| 分支收尾 | Use `superpowers:finishing-a-development-branch` |
+| 分支收尾与发布 | 获批后使用 `gstack:ship` 或 Use `superpowers:finishing-a-development-branch` |
+| Release 封存经验沉淀 | `gstack:retro`（提炼规则写回 `AGENTS.md`） |
 
 外部 Skill 缺失时，明确说明降级并使用可用的等价能力或最小本地流程；不得假装调用。调用结果必须写回正确 artifact，而不是只留在聊天中。
 

@@ -59,6 +59,8 @@ POC 是独立的局部证据；从 POC 转正式交付时，先确认正式需�
 Task evidence 记录命令/步骤、时间、结果、环境/版本、失败数、限制和 artifact path；不要写未运行的检查。
 原始日志和运行 JSON 的默认存放、忽略及持久引用规则见 [artifacts.md](artifacts.md)；VERIFICATION/PROGRESS 写结论和证据指针，不复制 dump。
 
+**GUI/Web 真实证据标准**：针对涉及前端、页面交互、样式或用户流的任务，优先调用真实浏览器探针（如 `gstack:qa <url>`、`gstack:browse`、Chrome DevTools 或 Playwright）模拟真实用户操作。将控制台报错日志（Console Errors）、网络状态与渲染截图持久化存入 `.evidence/` 目录，作为证明可观察交付的核心证据；严禁无真机运行证据声称完成。
+
 ## Release Verification
 
 Release 进入 REVIEWING 前逐项验证：
@@ -103,16 +105,15 @@ Shipping Authorization: NOT_REQUESTED | PENDING | APPROVED | DENIED
 
 ## Review
 
-重要 Task/Feature 和合并前使用 `superpowers:requesting-code-review` 或等价独立 Review。Reviewer 获得批准的 requirement/design、精确 diff 范围和 verification evidence，不获得整个聊天历史或预期结论。
+重要 Task/Feature 和合并前使用 `superpowers:requesting-code-review` 或等价独立 Review（可用时调用 `gstack:review`）。Reviewer 获得批准的 requirement/design、精确 diff 范围和 verification evidence，不获得整个聊天历史或预期结论。
 
-Review 检查：
+审查通过以下四维审查透镜（Review Lenses）进行：
 
-- spec/AC compliance；
-- scope creep；
-- correctness、security、compatibility；
-- missing tests/evidence；
-- unrelated changes；
-- artifact consistency。
+1. **Scope / CEO 透镜**：核验 SPEC/AC compliance，拦截 scope creep 与未获批的过度设计。
+2. **Design Anti-Slop 透镜**：针对 UI/UX 审查是否存在廉价 AI 模板感（排版层次、间距、空状态、移动端适配）。
+3. **Staff 隐蔽 Bug 透镜**：排查并发竞态、时区处理、资源泄露、边缘异常与破坏性兼容性。
+4. **Codebase Deslop 透镜**：审查本次新增代码，排查是否在各模块重复编写局部 helper；若存在，调用 `gstack:deslop-shared-libs` 或自主抽取为共享库。
+5. **CSO 安全透镜**：若任务涉及安全/权限 Risk Tags，核对 STRIDE/OWASP 威胁建模证据（可用时调用 `gstack:cso`）。
 
 Critical/Important 问题解决并重新验证后才能推进。对错误 review 意见用技术证据回应，不盲从。
 

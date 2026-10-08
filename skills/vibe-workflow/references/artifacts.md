@@ -52,6 +52,8 @@ docs/vibe/bugs/
 
 `DOCUMENT_MAP.md` 仅在仓库没有既有地图时创建；与 `PROJECT.md` 内的地图二选一。以上目录只是新建项目的建议路径，不要求存量仓库迁移。
 
+`decisions/` 是可选目录，不因创建 Release、功能点或 Slice 而自动建立。只有选择存在有分量的备选方案、会长期影响架构或外部契约，或需要追溯人类批准依据与恢复方式时，才按既有约定记录独立 DEC；普通实现选择写在该 Release 的 `PROPOSED_DESIGN.md` 或任务记录中即可。即使需要 DEC，也沿用仓库已有的等价位置，不创建第二套决策台账。
+
 | Artifact | 职责 |
 |---|---|
 | AGENTS.md | Agent 长期行为规则、事实源入口、项目命令；不复制业务正文 |
@@ -70,7 +72,7 @@ docs/vibe/bugs/
 
 ## 原始证据与可读文档分离
 
-新生成的测试日志、运行 dump、原始指标 JSON 等暂存于项目根目录 `.evidence/<release-id>/<slice-or-task-id>/`，默认在目标项目 `.gitignore` 加入 `/.evidence/`；未建立 Release 的 `init` 审计或 Tiny Task 可用 `.evidence/init/` 或 `.evidence/task-<id>/`，并记录实际路径。沿用已有等价 `artifacts/`/CI artifact 位置时，在 Document Map 或 VERIFICATION 标明即可。`docs/` 保存人类可读的 Markdown 摘要、结果、命令、时间、环境、退出码及证据指针，不内嵌整段日志。配置、Schema、源数据和需版本控制的 JSON 并非“原始运行证据”，不能仅凭扩展名迁走或忽略。
+新生成的测试日志、运行 dump、原始指标 JSON、浏览器探针截屏（如 `qa-*.png`）与控制台日志（如 `console-*.jsonl`）等暂存于项目根目录 `.evidence/<release-id>/<slice-or-task-id>/`，默认在目标项目 `.gitignore` 加入 `/.evidence/`；未建立 Release 的 `init` 审计或 Tiny Task 可用 `.evidence/init/` 或 `.evidence/task-<id>/`，并记录实际路径。沿用已有等价 `artifacts/`/CI artifact 位置时，在 Document Map 或 VERIFICATION 标明即可。`docs/` 保存人类可读的 Markdown 摘要、结果、命令、时间、环境、退出码及证据指针，不内嵌整段日志。配置、Schema、源数据和需版本控制的 JSON 并非“原始运行证据”，不能仅凭扩展名迁走或忽略。
 
 忽略本地证据不等于丢失可追溯性。凡支撑 Release `VERIFIED`、`READY_TO_SHIP` 或长期审计的结果，VERIFICATION 必须记录可长期取回的证明（如 CI 运行链接与运行 ID、明确保留期的 artifact，或有意纳入版本控制的证据快照）及对应 commit；无 Git 时记录稳定 artifact ID、内容摘要与可恢复版本，不伪造 commit。不可重建的原始产物须在声明前稳定归档。只有 `.evidence/` 本机路径、没有远程可取回证明时，不得宣称该证据已可供跨机器复核。接管旧仓库时先识别既有引用和保留要求，不自动移动、删除旧 `docs/` 证据。
 
@@ -83,7 +85,7 @@ docs/vibe/bugs/
 - 当前架构：TECH_DESIGN，并由代码/配置核验。
 - 某 Release 尚未实现的目标技术方案：该 Release 的 PROPOSED_DESIGN；实现与验证后才把成立部分合并进 TECH_DESIGN。
 - 当前执行位置：PROGRESS，并由 Git/代码/证据核验。
-- 为什么这样决定：DEC。
+- 为什么做出重大且需长期追溯的选择：DEC；普通实现取舍见对应设计或任务记录。
 - 某历史版本当时是什么：该 Released Release 的封存 artifacts。
 
 发现冲突时不要选择最方便的文件静默覆盖。说明冲突、确定 owner、修正过期文档或进入 Requirement Change。

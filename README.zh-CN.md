@@ -106,10 +106,17 @@ Vibe Workflow 是全局生命周期调度器，在对应阶段优先调用生态
 
 | 工具 | 核心职责 | 何时处于活跃状态 |
 |---|---|---|
-| **[Grill Me](https://github.com/sz-xiaohuolong/vibe-workflow)** | 结构化需求访谈与边界确认 | 需求冻结之前 |
-| **Vibe Workflow** ⭐ | **生命周期状态机、决策门禁、上下文治理、证据核验** | **贯穿项目全生命周期** |
-| **[Superpowers](https://github.com/obra/superpowers)** | 专门的工程执行方法（TDD、系统化调试、Worktrees） | 在 Build、Debug 阶段按需调用 |
-| **Coding Agent** (Codex/Claude) | 代码生成与工具调用 | 执行具体的编码与命令任务 |
+| **[gstack](https://github.com/garrytan/gstack)** | **特种工程重武器库**：YC导师减法（`/office-hours`）、多维方案评审（`/autoplan`）、真机浏览器 QA（`/qa`/`/browse`）、Staff 审查与公共库消肿（`/review`/`/deslop-shared-libs`）、威胁建模（`/cso`） | 需求探索、方案评审、真机验证、代码审查与消肿阶段 |
+| **[Grill Me](https://github.com/sz-xiaohuolong/vibe-workflow)** | 结构化需求访谈、消除 Open Questions 与可测 AC 确认 | 需求冻结之前（Entry Gate 前置） |
+| **Vibe Workflow** ⭐ | **生命周期状态机、决策门禁、上下文治理、证据核验中枢** | **贯穿项目全生命周期** |
+| **[Superpowers](https://github.com/obra/superpowers)** | 专门的工程执行方法（TDD、系统化调试、Worktrees 隔离） | 在 Build、Debug 阶段按需调用 |
+| **Coding Agent** (Codex/Claude/Gemini) | 代码生成与工具调用 | 执行具体的编码与命令任务 |
+
+> 💡 **协同原则**：  
+> - **做需求**：0 到 1 构想先用 `gstack /office-hours` 砍伪需求，再由 `grill-me` 穷尽工程边界并锁定 AC；存量明确需求直接走 `grill-me`；  
+> - **做验证**：Web/UI 项目通过 `gstack /qa` 驱动真实浏览器抓取控制台报错与截屏存入 `.evidence/`，提供客观证据；  
+> - **做审查**：Release 合并前通过 `gstack /review` 查并发与时区隐患，通过 `gstack /deslop-shared-libs` 抽取重复公共库；  
+> - **做发布**：两权分立——在 `READY_TO_SHIP` 获批后可调度 `gstack /ship` 执行发布并用 `gstack /retro` 复盘沉淀经验至 `AGENTS.md`。
 
 ---
 
@@ -215,6 +222,7 @@ Vibe Workflow 严格遵循 open `SKILL.md` 规范 ([agentskills.io](https://agen
 
 ## 📚 深度技术文档
 
+- [用户使用教程](docs/USER_GUIDE.zh-CN.md) — 从安装、接管到 Release 验证的完整使用路径，以及项目文档职责说明。
 - [工程宪法 (The Engineering Constitution)](docs/CONSTITUTION.md) — 十大不可违背的法典与判例。
 - [生命周期与状态机 (Lifecycle Specification)](docs/concepts/lifecycle.md) — 状态迁移、准入条件与回退协议。
 - [决策门禁与 Schema 协议 (Decision Gates)](docs/concepts/decision-gates.md) — 数据库五步闭环与风险标签。

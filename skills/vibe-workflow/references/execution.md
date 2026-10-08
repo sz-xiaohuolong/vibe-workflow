@@ -58,7 +58,7 @@ BUG REPORT
 → checkpoint/commit
 ```
 
-使用 `superpowers:systematic-debugging`。复杂 Bug 可从 `assets/templates/BUG.md` 建立记录；简单 Bug 沿用现有 tracker，不强制新文件。
+使用 `superpowers:systematic-debugging` 或 `gstack:investigate`（遵循调试铁律：不定位根因绝不改代码，深入追踪调用链与数据流）。复杂 Bug 可从 `assets/templates/BUG.md` 建立记录；简单 Bug 沿用现有 tracker，不强制新文件。
 
 分支判断：
 
@@ -85,7 +85,7 @@ Retry 只适用于有新证据支持的 transient failure、明确 typo、环境
 3. 记录 Debug Snapshot：symptom、reproduction、evidence、attempts、diff、当前假设。
 4. `Operational Status = REPLAN_REQUIRED`。
 5. 建立 fresh context。
-6. 路由到 systematic debugging；必要时回到 DESIGN 或 PLAN。
+6. 路由到 systematic debugging 或 `gstack:investigate`；必要时回到 DESIGN 或 PLAN。
 
 用户说“再试一次”“只改一个参数”不能解除熔断。只有新证据把问题重新分类为合法 Retry，或新的计划经过必要 Gate 后，才恢复执行。
 

@@ -106,10 +106,16 @@ Vibe Workflow is an orchestrator, not a monolithic framework. It delegates speci
 
 | Tool | Core Responsibility | When Active |
 |---|---|---|
-| **[Grill Me](https://github.com/sz-xiaohuolong/vibe-workflow)** | Interactive requirement elicitation | Prior to Requirement Freeze |
+| **[gstack](https://github.com/garrytan/gstack)** | **Virtual Engineering Squad**: YC mentor challenge (`/office-hours`), multi-role reviews (`/autoplan`), real browser QA (`/qa`/`/browse`), staff review & codebase deslop (`/review`/`/deslop-shared-libs`), STRIDE/OWASP threat modeling (`/cso`) | Requirement exploration, multi-role review, real browser verification, code review & deslop |
+| **[Grill Me](https://github.com/sz-xiaohuolong/vibe-workflow)** | Interactive requirement elicitation, boundary extraction, testable AC | Prior to Requirement Freeze (Entry Gate) |
 | **Vibe Workflow** ⭐ | **Lifecycle state, decision gates, context governor, evidence verification** | **Throughout the entire project** |
 | **[Superpowers](https://github.com/obra/superpowers)** | Specialized execution (TDD, Systematic Debugging, Worktrees) | Invoked during Build & Debug stages |
-| **Coding Agent** (Codex/Claude) | Code generation and tool execution | Delegated task execution |
+| **Coding Agent** (Codex/Claude/Gemini) | Code generation and tool execution | Delegated task execution |
+
+> 💡 **Synergy Principles**:  
+> - **Requirements**: Use `gstack /office-hours` for 0-to-1 ideas to cut fake scope, then use `/grill-me` to lock technical contracts and testable ACs;  
+> - **Verification**: For Web/UI tasks, use `gstack /qa` to drive real Chromium browsers for screenshot and console error capture into `.evidence/`;  
+> - **Review & Deslop**: Prior to shipping, use `gstack /review` for concurrency/edge cases and `gstack /deslop-shared-libs` to extract duplicated helpers into shared libraries.
 
 ---
 

@@ -23,14 +23,15 @@ Gate 必须先于复杂度和调度。不要先说“只是 Tiny”再检查权�
 
 | Type | 判断 | 主要路径 |
 |---|---|---|
-| `NEW_PROJECT` | 没有已确认产品基线或现有系统 | Requirement Gate；通常 Architectural |
-| `FEATURE` | 新增或改变用户可观察能力 | 判断是否属于当前 frozen scope |
-| `BUG` | 实现偏离当前有效预期 | reproduce → root cause → regression test → fix |
-| `REFACTOR` | 保持行为，改变内部结构 | 明确不变项、测试保护、最小范围 |
-| `SPIKE` | 以学习/可行性为结果 | 定义问题、时限和丢弃边界；不把探针当生产实现 |
+| `NEW_PROJECT` | 没有已确认产品基线或现有系统 | 0到1建议先 `gstack:office-hours`（减法质询）➔ `grill-me`（锁定AC）；进入 Requirement Gate |
+| `FEATURE` | 新增或改变用户可观察能力 | 判断是否属于当前 frozen scope；边界不清先经 `grill-me` 对质 |
+| `BUG` | 实现偏离当前有效预期 | reproduce → root cause (`gstack:investigate`) → regression test → fix |
+| `REFACTOR` | 保持行为，改变内部结构 | 明确不变项、测试保护、最小范围；可借助 `gstack:deslop-shared-libs` 巡检 |
+| `SPIKE` | 以学习/可行性/UI原型选择为结果 | 定义问题、时限和丢弃边界（可调用 `gstack:design-shotgun` 产出对比原型）；探针产物仅供决策，不得当生产交付 |
 | `REQUIREMENT_CHANGE` | 改变冻结的产品意图 | 停止受影响工作，进入 Human Gate |
 
 如果 Bug 调查证明实现符合 SPEC、真正错误是产品预期，则改为 `REQUIREMENT_CHANGE`。
+Pre-Freeze 需求探索阶段：0 到 1 全新构想推荐先经由 `gstack:office-hours` 剔除伪需求并打磨核心 MVP，再由 `grill-me` 穷尽工程边界并生成可测 AC；存量系统明确需求直接由 `grill-me` 对质，不制造冗余商业逼问。
 
 ## Complexity
 

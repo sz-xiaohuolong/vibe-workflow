@@ -78,6 +78,7 @@ Operational Status 不会自动改变 Workflow State。例如 BUILDING 中发生
 - 措辞歧义使用有日期、有理由、有链接的勘误记录。
 - 当前行为改变时写入新 Release 的 Effective SPEC。
 - 当前架构写入 Living TECH_DESIGN；历史原因写入 DEC。
+- 封存与经验沉淀：分析本次 Release 的 Circuit Breaker 触发情况与耗时阻塞点（可调用 `gstack:retro`），将验证有效的 1~2 条工程防坑守则提炼追加到仓库 `AGENTS.md`，实现跨会话持续记忆。
 
 封存不是禁止纠错，而是禁止把今天的事实追溯覆盖为过去的事实。
 

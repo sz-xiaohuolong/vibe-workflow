@@ -91,13 +91,14 @@ investigate
 
 只有会锁定长期方向或跨外部边界的 Architecture 选择需要 Human Gate，例如：公共协议、核心数据模型、部署拓扑、跨平台兼容、重要供应商依赖。
 
-普通模块拆分和内部实现路径无需频繁询问。若确需 Gate，先调用 `superpowers:brainstorming` 或等价能力比较 2–3 个实质方案，再记录 DEC。
+普通模块拆分和内部实现路径无需频繁询问。若确需 Gate，先调用 `superpowers:brainstorming` 或等价能力比较 2–3 个实质方案，再记录 DEC。方案评审时可借助多维审查透镜：CEO 减法（砍过度设计）、设计审美（防 AI Slop 塑料感）及工程复杂度（或调用 `gstack:autoplan` 统一走查）。
 
 ## Security / Permission Gate
 
 UI 改动不能代表授权正确。改变匿名访问、AuthN/AuthZ、Secret、敏感日志、用户输入、公开 endpoint 或数据暴露时：
 
 - 调查真实执行层的权限检查。
+- 遵循 STRIDE 威胁建模与 OWASP 安全准则（可用时调用 `gstack:cso` 执行结构化威胁分析）。
 - 说明角色、资源、操作和失败行为。
 - 评估数据泄露、绕过和审计。
 - 得到明确产品/安全决定后再实现。
