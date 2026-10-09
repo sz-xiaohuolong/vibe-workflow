@@ -54,52 +54,60 @@ flowchart TD
 
 Slice 不自动生成新的 Release，也不需要各自复制一套 SPEC、计划和验证文档。已发布版本的后续修复应进入新的 patch Release 或后续 Release，不能直接改写旧版本的历史快照。
 
-### 2.3 状态与关卡
+### 2.3 七阶段敏捷生命周期与状态流转
+
+每个 Release 遵循标准的 **七阶段敏捷开发流程**，并在系统级测试（Testing）之前独立设置发布评审（Review），支持根据证据随时回退：
 
 ```mermaid
-flowchart LR
-    F[REQUIREMENTS_FROZEN] --> SP[SPECIFIED]
-    SP --> D[DESIGNED]
-    D --> PL[PLANNED]
-    PL --> B[BUILDING]
-    B --> V[VERIFYING]
-    V --> RV[REVIEWING]
-    RV --> RD[READY_TO_SHIP]
-    RD -->|明确的 Shipping Authorization| RE[RELEASED]
-    B -.需求变更获批后按影响回退.-> SP
-    B -.连续失败或关键假设失效.-> RP[REPLAN_REQUIRED]
-    RP -.重新设计或规划.-> D
-    V -.证据不足.-> B
+flowchart TD
+    S1["1. Thinking (思考)<br/>需求对质与冻结 (FROZEN)"] --> S2["2. Planning (规划)<br/>SPEC / 架构评审 / 依赖计划"]
+    S2 --> S3["3. Building (构建)<br/>Task Handoff / TDD 循环"]
+    S3 --> S4["4. Review (评审)<br/>Spec 合规与工程代码质量"]
+    S4 --> S5["5. Testing (测试)<br/>系统集成 / 真实浏览器探针"]
+    S5 --> S6["6. Shipping (交付)<br/>两权分立 / 自动化交付"]
+    S6 --> S7["7. Reflecting (复盘)<br/>结构化复盘 / 沉淀至 AGENTS.md"]
+    S7 -.->|下一轮迭代| S1
+
+    %% 回退路径 Failure Routes
+    S3 -.->|连续3次失败熔断| CB["Circuit Breaker ➔ REPLAN_REQUIRED"]
+    CB -.-> S2
+    S4 -.->|审查阻断/未达AC| S3
+    S5 -.->|测试失败/Bug| S3
+    S4 -.->|发现根本性需求偏差| S1
 ```
 
-`Operational Status` 与上述 `Workflow State` 分开记录，可为 `ACTIVE`、`WAITING_HUMAN`、`BLOCKED` 或 `REPLAN_REQUIRED`。例如开发中等待数据库方案批准时，Release 仍可处于 `BUILDING`，但操作状态应是 `WAITING_HUMAN`。
+`Operational Status` 与宏观阶段分开记录，可为 `ACTIVE`、`WAITING_HUMAN`、`BLOCKED` 或 `REPLAN_REQUIRED`。例如开发中等待数据库方案批准时，Release 仍可处于 `BUILDING`，但操作状态应是 `WAITING_HUMAN`。
 
 产品范围、公开兼容性、数据库结构、权限与安全、重要外部服务、不可逆操作，以及推送、PR、部署和发布等动作，都有相应的人工决策关卡。内部命名、私有辅助函数和局部测试组织通常由 Agent 自主决定。具体关卡以 [Skill 规则](../skills/vibe-workflow/SKILL.md) 为准。
 
-### 2.4 从需求到证据的追踪链
+### 2.4 从需求到证据的完整追踪链
 
 ```mermaid
 flowchart LR
     REQ[需求 REQ-003] --> AC[验收条件 AC-007]
-    AC --> DS[目标设计或决策]
-    DS --> TK[Slice / Task]
-    TK --> TEST[测试与用户流程]
-    TEST --> EV[新鲜的运行证据]
-    EV --> VR[VERIFICATION：结果与版本指针]
+    AC --> SEAM[外部可观察接缝 SEAM-002]
+    SEAM --> DS[目标设计或决策]
+    DS --> TK[Task Handoff Contract]
+    TK --> TEST[真实测试与浏览器探针]
+    TEST --> EV[新鲜运行证据 .evidence/]
+    EV --> VR[VERIFICATION：矩阵与指针]
 ```
 
 Release 验证要逐项回答“每条需求和验收条件是否有证据支持”。代码已写、概念验证通过和正式功能已验证是不同状态，应分别记录为 `IMPLEMENTED_UNVERIFIED`、`POC_VALIDATED` 和 `VERIFIED`。
 
-### 2.5 四份核心文档如何接力
+### 2.5 核心文档如何接力闭环
 
 | 阶段 | 文档 | 回答的问题 |
 |---|---|---|
-| 需求概要与冻结 | `PROJECT_BRIEF.md` | 本次 Release 为谁解决什么问题，范围、约束和可观察目标是什么？ |
-| 需求详细规格 | `SPEC.md` | 已冻结的意图具体表现为哪些用户行为、流程、错误、边界和验收条件？ |
-| 目标技术方案 | `PROPOSED_DESIGN.md` | 为实现这些 REQ/AC，准备如何改变架构、接口、数据与验证方式？方案是否获批？ |
-| 当前技术事实 | `TECH_DESIGN.md` | 代码、配置和运行证据证明项目现在实际采用什么架构？ |
+| 1. Thinking | `PROJECT_BRIEF.md` | 本次 Release 为谁解决什么问题，范围、约束和可观察目标是什么？ |
+| 2. Planning | `SPEC.md` | 已冻结的意图具体表现为哪些用户行为、流程、错误、边界和可观察 Test Seams？ |
+| 2. Planning | `PROPOSED_DESIGN.md` | 为实现这些 REQ/AC，准备如何改变架构、接口、数据与验证方式？方案是否获批？ |
+| 2. Planning | `IMPLEMENTATION_PLAN.md` | 按 Vertical Slice 拆分的 Task 依赖拓扑、Ready Frontier 与 Task Handoff Contract 是什么？ |
+| 3. Building | `TECH_DESIGN.md` (Living) | 代码、配置和运行证据证明项目现在实际采用什么架构？（经实现核验后持续更新） |
+| 5. Testing | `VERIFICATION.md` | 每个 REQ/AC 与 Test Seams 的实际测试结果、真实环境日志与截屏证据索引是什么？ |
+| 7. Reflecting | `RETRO.md` | 本次 Release 的返工瓶颈、漏测原因、规则沉淀与下一版本候选池是什么？ |
 
-这四份文档不是从粗到细反复改写同一份设计。`PROJECT_BRIEF.md` 是产品意图基线；`SPEC.md` 只能展开已冻结的产品意图，不能自行增加范围；`PROPOSED_DESIGN.md` 是本次 Release 的**目标技术设计**，不能充当需求决定；`TECH_DESIGN.md` 是随已实现且经核验的架构变化持续更新的 living document。接管已有项目时，可以先根据现有代码与配置建立 `TECH_DESIGN.md` 的当前事实；新方案实现并验证后，再把成立的部分并入其中。
+这几份文档不是从粗到细反复改写同一份设计。`PROJECT_BRIEF.md` 是产品意图基线；`SPEC.md` 只能展开已冻结的产品意图，不能自行增加范围；`PROPOSED_DESIGN.md` 是本次 Release 的**目标技术设计**，不能充当需求决定；`TECH_DESIGN.md` 是随已实现且经核验的架构变化持续更新的 living document。接管已有项目时，可以先根据现有代码与配置建立 `TECH_DESIGN.md` 的当前事实；新方案实现并验证后，再把成立的部分并入其中。
 
 ## 3. 如何使用
 
@@ -162,11 +170,16 @@ $vibe-workflow 评估增加用户头像对当前 v0.2 范围、接口和验收�
 
 变更获批后，按最早失效的阶段回退：产品行为变更回到 SPEC，模块或数据模型变更回到设计，任务顺序变化回到计划。同类失败连续三次、修复引发多处回归或关键架构假设失效时，应停止局部补丁，保存调试快照并重新规划。
 
-### 3.5 验证与发布
+### 3.5 评审、测试、发布与复盘
 
-Task 完成时检查相关测试、构建或类型检查、受影响的用户流程和 diff，并把命令、时间、环境、结果及证据位置记入进度。Release 级验证还需逐项覆盖 REQ/AC、回归、风险检查、文档一致性和评审发现。
-
-只有证据覆盖适用范围、阻断问题已解决，Release 才能进入 `READY_TO_SHIP`。随后，发布、部署等动作还需要针对目标、环境和动作的明确授权。成功后记录实际版本、产物或部署结果，并封存该 Release 的历史文档。
+- **Stage 4：Release Review (发布评审，置于系统测试前)**：
+  在耗费资源运行大型真实环境测试前，先调用 `gstack:review`（或 `superpowers:requesting-code-review`）审查规格合规性（Spec Compliance）、并发安全与代码坏味道，调用 `gstack:deslop-shared-libs` 抽取公共库。
+- **Stage 5：Release Testing (系统级真实环境验收)**：
+  运行真实浏览器探针（`gstack:qa <url>`、`gstack:browse` 或 Playwright）捕获控制台零报错日志与操作截图至 `.evidence/<release-id>/`，并在 `VERIFICATION.md` 中核验全部 REQ/AC。只有证据覆盖全部适用范围，才能进入 `READY_TO_SHIP`。
+- **Stage 6：Shipping (授权发布与自动化交付)**：
+  发布、部署动作遵循两权分立原则，必须取得人类针对环境与版本的明确授权。随后调用 `gstack:ship` 自动完成版本 Bump、Changelog 审计与 Git 交付。
+- **Stage 7：Reflecting (复盘与工程持续进化)**：
+  发布完成后调用 `gstack:retro` 生成 `RETRO.md`，提炼开发过程中的阻塞点与反模式，自动反哺写入 `AGENTS.md`，实现 Agent 的跨会话工程记忆。
 
 ## 4. 文档规范
 
@@ -189,7 +202,8 @@ docs/vibe/
     ├── SPEC.md
     ├── PROPOSED_DESIGN.md      # 有目标架构方案时使用
     ├── IMPLEMENTATION_PLAN.md
-    └── VERIFICATION.md         # 验证阶段填写
+    ├── VERIFICATION.md         # 验证阶段填写
+    └── RETRO.md                # 复盘阶段填写
 ```
 
 `PROJECT.md` 可以承载现有文档地图；此时不要再创建 `DOCUMENT_MAP.md`。Release 的核心事实职责需要保留，但文件内容应按实际范围保持精简；可选文件不为凑齐目录而新建。Tiny Task 通常只需精确请求、diff 和证据；受治理项目再按现有约定同步一条进度记录。
@@ -201,23 +215,24 @@ docs/vibe/
 - `SPEC.md` 写当前 Release 的完整有效行为；`CHANGE.md` 只写相对上一 Release 的差异。不要让 Agent 叠加多版差异来推导当前需求。
 - `PROPOSED_DESIGN.md` 写尚待实现的目标设计和批准状态；`TECH_DESIGN.md` 只写经过代码、配置或运行证据核验的当前架构。
 - 原始测试日志、运行 dump 和指标 JSON 默认放在项目根目录 `.evidence/<release-id>/<slice-or-task-id>/`，并忽略本地目录；Markdown 文档写可读结论、命令、时间、结果和证据指针。支撑正式 Release 声明的证据还需有可长期取回的 CI、归档产物或版本化快照。
-- Release 进入 `RELEASED` 后，原版需求、规格、方案、计划和验证记录作为历史快照保留。后续变化进入新 Release；必要纠错用有日期和依据的勘误记录。
+- Release 进入 `RELEASED` 且复盘封存后，原版需求、规格、方案、计划、验证和复盘记录作为历史快照保留。后续变化进入新 Release；必要纠错用有日期和依据的勘误记录。
 
 ### 4.3 每份文档的作用
 
 | 文档 | 何时使用 | 记录的核心事实 |
 |---|---|---|
-| `AGENTS.md` | Agent 开始或恢复任务时 | 长期行为规则、事实源入口、项目命令；不复制产品正文 |
+| `AGENTS.md` | Agent 开始或恢复任务时 | 长期行为规则、事实源入口、项目命令、跨会话反模式沉淀；不复制产品正文 |
 | `PROJECT.md` | 项目定位或当前版本变化时 | 项目边界、当前 Release、质量档位；可包含文档地图 |
 | `DOCUMENT_MAP.md` 或既有地图 | 接管与定位资料时 | 各职责的真实路径、状态和依据；只导航，不复制业务内容 |
 | `TECH_DESIGN.md` | 接管时记录已核验的现状；此后架构变化经实现和验证后持续更新 | 当前真实模块、接口、数据、权限、运行方式和验证入口 |
-| `PROGRESS.md` | 每次执行、阻塞或状态变化后 | 当前 State/Status、Slice/Task、稳定点、证据、下一步 |
+| `PROGRESS.md` | 每次执行、阻塞或状态变化后 | 当前 Stage/State/Status、Slice/Task、稳定点、证据、下一步 |
 | `PROJECT_BRIEF.md` | 每个新 Release 的需求概要与冻结阶段 | 问题、目标用户、范围、限制、验收目标和未决问题，作为需求基线 |
 | `CHANGE.md` | 需要说明相对上一 Release 的变化时 | 新增、修改、删除、修复及兼容或迁移提示 |
-| `SPEC.md` | 入口 Gate 通过后详细展开已冻结需求 | 当前 Release 的完整有效产品行为、REQ/AC、错误与边界 |
+| `SPEC.md` | 入口 Gate 通过后详细展开已冻结需求 | 当前 Release 的完整有效产品行为、REQ/AC、Test Seams、错误与边界 |
 | `PROPOSED_DESIGN.md` | 本次 Release 有目标技术方案时 | 待实现的目标架构、接口或数据影响、恢复与验证设计、批准状态 |
-| `IMPLEMENTATION_PLAN.md` | 实施前及计划调整时 | Slice、Task、依赖、涉及文件、验证方式和 REQ/AC 对应关系 |
-| `VERIFICATION.md` | Release 验证与评审阶段 | 每个 REQ/AC 的实际结果、证据、版本指针和未验证项 |
+| `IMPLEMENTATION_PLAN.md` | 实施前及计划调整时 | Slice、Task 依赖拓扑、Ready Frontier、Task Handoff Contract 与 REQ/AC 对应关系 |
+| `VERIFICATION.md` | Release 验证与评审阶段 | 每个 REQ/AC 与 Test Seams 的实际结果、真机证据索引、版本指针和未验证项 |
+| `RETRO.md` | Release 交付后的复盘阶段 | 返工根因、各阶段耗时瓶颈、规则提炼与下一版本候选 Backlog |
 | `DEC-xxx.md` | 重大、长期影响的选择需追溯时 | 备选方案、取舍、人类决定、影响和恢复方式 |
 | `BUG-xxx.md` | 排查与修复 Bug 时 | 症状、复现、证据、根因、修复和回归检查 |
 

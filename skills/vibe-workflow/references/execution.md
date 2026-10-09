@@ -18,39 +18,59 @@ Slice 3: 历史列表和删除完整闭环
 
 只有复杂 Release 才增加 Phase；不要为了流程制造层级。
 
-## Task Loop
+## Task Handoff Contract (统一任务派发契约)
+
+每个 Task 向执行 Agent 派发时，必须封装为标准的 Task Handoff Contract：
 
 ```text
-Select Next Task
-→ Assemble Task Context
+- Task ID: <TASK-ID>
+- Slice: <SLICE-ID>
+- Goal: <明确单一的可验证目标>
+- Related REQ/AC: <关联 SPEC 中的 REQ 与 AC>
+- Test Seam: <SEAM-ID 外部可观察接缝>
+- Dependencies: <前置任务依赖，必须在 Ready Frontier 状态下派发>
+- Allowed Modification Scope: <精确限定允许修改的文件或目录列表>
+- Explicit Out of Scope: <明确禁止改动的文件或外部模块>
+- Relevant Context: <Minimal Context Pack: 接口契约、类型定义或现有测试>
+- Risk Tags: <None / Auth / Security / Schema / Breaking>
+- Required Verification: <运行命令、预期输出或测试文件>
+- Expected Outputs: <实现代码、测试用例、新鲜运行证据>
+- Recovery Point: <稳定的 Git Commit 或恢复标记>
+```
+
+## Task Loop 与 TDD 显式调用
+
+```text
+Select Next Task (from Ready Frontier)
+→ Assemble Task Handoff Contract
 → Confirm frozen scope and applicable Gates
 → Inspect existing code/tests
-→ failing test / observable check
+→ [显式调用 superpowers:test-driven-development / 内置TDD] failing test
 → minimal implementation
-→ task verification
-→ inspect diff
+→ task verification (all green)
+→ inspect diff (no out-of-scope changes)
 → review when required
 → checkpoint/commit when available
 → update PROGRESS
 → Next Task
 ```
 
-实现 Feature、Bug、Refactor 时使用 `superpowers:test-driven-development` 或等价能力。这里不复制 TDD 步骤。
+**【显式 TDD 注入】**：派发任何 Feature、Bug、Refactor 任务时，必须在提示语中显式注入 **`**REQUIRED SUB-SKILL:** Use superpowers:test-driven-development`**。若环境未安装该外部技能，则严格执行内置原生 TDD 协议（编写失败用例 ➔ 最小实现 ➔ 验证全绿 ➔ 重构），严禁跳过红绿循环直接写业务代码。
 
 Task 完成前至少确认：
 
-- 改动仍在 REQ/AC 和当前 Task 范围内。
-- 相关测试/检查有 fresh output。
+- 改动严格在 Allowed Modification Scope 内，无越界代码。
+- 对应 Test Seam 产生新鲜的成功输出（fresh output）。
 - diff 不包含无关重构或用户现有改动。
 - PROGRESS 记录 evidence、稳定点和 Next Task。
 
-## Bug Workflow
+## Bug Workflow 与根因排查
 
 ```text
 BUG REPORT
 → reproduce
 → gather evidence
-→ root cause investigation
+→ root cause investigation (gstack:investigate / superpowers:systematic-debugging)
 → regression test
 → fix
 → verify
@@ -58,7 +78,7 @@ BUG REPORT
 → checkpoint/commit
 ```
 
-使用 `superpowers:systematic-debugging` 或 `gstack:investigate`（遵循调试铁律：不定位根因绝不改代码，深入追踪调用链与数据流）。复杂 Bug 可从 `assets/templates/BUG.md` 建立记录；简单 Bug 沿用现有 tracker，不强制新文件。
+**【显式排障调用】**：使用 `gstack:investigate` 或 `superpowers:systematic-debugging`（遵循调试铁律：不定位根因绝不盲目改代码，深入追踪调用链与数据流）。复杂 Bug 可从 `assets/templates/BUG.md` 建立记录；简单 Bug 沿用现有 tracker，不强制新文件。
 
 分支判断：
 

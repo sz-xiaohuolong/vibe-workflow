@@ -11,7 +11,7 @@
 3. 优先更新已有的 `PROJECT.md` Document Map、`DOCUMENT_MAP.md` 或等价索引。仓库没有地图时，在根目录创建 `DOCUMENT_MAP.md`，复制 [地图模板](../assets/templates/DOCUMENT_MAP.md)。地图只记录“职责 → 实际路径/外部位置 → 状态 → 依据”，不复制业务正文。一个仓库只保留一个权威地图；若原有两个，标出冲突并选现有惯用入口，不静默覆盖。
 4. 只为当前恢复工作所必需且确实缺失的职责补最小文档。若没有可靠需求，标为 `待澄清`；若只有代码事实，标为 `当前实现待确认`。不要为了凑模板创建空 PRD、SPEC、Release 或把 `Requirement Status` 写成 `FROZEN`。
 5. 沿用已有 `AGENTS.md`；只有缺少恢复入口时，增加地图路径和现有命令索引，保留用户规则。基于事实更新已有 PROGRESS 或建立最小进度记录；`Current Workflow State`、Release ID、Last Stable Commit 逐项核验，未知写 `待核验/未建立`。
-6. 向用户交付简短接管报告：沿用/新建的地图路径、现有事实源、可运行的检查及结果、当前实现与未确认产品意图的边界、阻塞项、下一 Gate/Task。后续进入 SPEC/Design/Build 仍执行工程入口 Gate。
+6. 向用户交付简短接管报告：沿用/新建的地图路径、现有事实源、可运行的检查及结果、当前实现与未确认产品意图的边界、阻塞项、下一 Gate/Task。后续进入七阶段标准流程（Thinking ➔ Planning ➔ Building ➔ Review ➔ Testing ➔ Shipping ➔ Reflecting）仍严格执行工程入口 Gate。
 
 ## 重复执行
 

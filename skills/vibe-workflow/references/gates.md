@@ -107,6 +107,18 @@ UI 改动不能代表授权正确。改变匿名访问、AuthN/AuthZ、Secret、
 
 新付费服务、Secret、网络数据传输或供应商锁定需要说明：成本、数据流、隐私/合规、失败模式、退出方案、替代方案和 Release 影响。试用 key 不构成接入授权。
 
+## 七阶段核心门禁一览
+
+| 阶段 | 守门门禁 (Gate) | 判定依据 | 未通过时的阻断行为 |
+|---|---|---|---|
+| **1. Thinking** | **Requirement Freeze Gate** | 需求无歧义、首轮禁止写文件、AC 明确 | 保持 `WAITING_HUMAN`，严禁建立 SPEC/PLAN 或写代码 |
+| **2. Planning** | **Design & Plan Gate** | 方案通过多维评审、Test Seams 明确、任务依赖拓扑就绪 | 保持 `DRAFT`，严禁派发任务进入 Building |
+| **3. Building** | **Task TDD & Handoff Gate** | 遵循红绿循环、局部单测全绿、无越界改动 | 严禁标为 `IMPLEMENTED`，连续 3 次失败触发熔断 |
+| **4. Review** | **Release Review Gate** | Spec 100% 合规、无 Scope Creep、代码质量全过 | 严禁进入 Testing，直接打回 Building 修复 |
+| **5. Testing** | **Release Verification Gate** | 所有适用 REQ/AC 达到 `VERIFIED`，真机/浏览器证据新鲜有效 | 严禁进入 `READY_TO_SHIP`，记录 Bug 回退修复 |
+| **6. Shipping** | **Human Shipping Gate** | 人类针对明确 target 做出授权 | 严禁执行 git push / deploy / release 等外部副作用 |
+| **7. Reflecting** | **Continuous Learning Gate** | 结构化复盘完成、经验沉淀入 `AGENTS.md` | 严禁篡改已封存历史或污染下版 Frozen Scope |
+
 ## Verification 与 Shipping 分离
 
 - Verification Gate 只由实际证据决定。
@@ -114,7 +126,7 @@ UI 改动不能代表授权正确。改变匿名访问、AuthN/AuthZ、Secret、
 
 人类风险接受不能把 `UNVERIFIED` 改成 `VERIFIED`，也不能让缺少 REQ/AC evidence 的 Release 成为 `READY_TO_SHIP`。
 
-V0.2 不支持 emergency release 旁路：
+V0.3 严格延续两权分立，不支持 emergency release 旁路：
 
 - `publish/deploy/release` 的必要前置条件是 Workflow State 已为 `READY_TO_SHIP`，之后仍需对精确 target 获得 Shipping Authorization。
 - push/PR 可在明确授权后用于协作，但必须保留真实 Verification Status，且不得描述为已验证、可发布或 Release 完成。

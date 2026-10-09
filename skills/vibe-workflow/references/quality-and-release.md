@@ -1,8 +1,8 @@
-# Quality、Risk、Verification、Review 与 Release
+# Quality、Risk、Review、Testing 与 Release
 
 ## 何时读取
 
-选择 QA 强度、处理高风险模块、验证 Task/Release、准备评审、声明完成或执行 Shipping Gate 时读取本文件。
+选择 QA 强度、处理高风险模块、执行 Release Review、运行真实环境测试、声明完成、执行发布或封存 Release 时读取本文件。
 
 ## Quality Profile
 
@@ -26,11 +26,11 @@ NETWORK_API  SECRETS  PERMISSIONS  PUBLIC_ENDPOINT
 MIGRATION  DESTRUCTIVE_OPERATION
 ```
 
-至少关注 Secret handling、input validation、AuthN/AuthZ、injection、data exposure、sensitive logs、destructive target 和 recovery。
+至少关注 Secret handling、input validation、AuthN/AuthZ、injection、data exposure、sensitive logs、destructive target 和 recovery。风险检查只覆盖实际受影响范围；不要求所有普通 Task 做完整安全审计。
 
-风险检查只覆盖实际受影响范围；不要求所有普通 Task 做完整安全审计。
+---
 
-## Task Verification
+## Task Verification 与交付三态
 
 ### Task Delivery Status
 
@@ -46,7 +46,6 @@ MIGRATION  DESTRUCTIVE_OPERATION
 POC 是独立的局部证据；从 POC 转正式交付时，先确认正式需求、实现边界和 AC，再运行正式环境所需验证。仅有 POC 的 REQ/AC 仍为 `UNVERIFIED`。代码已写但 CI 将来才运行时保持 `IMPLEMENTED_UNVERIFIED`。一个 Release 的 Verification Status 由其全部适用 REQ/AC 和 Release 检查决定，不能由单个 Task 状态自动晋级。
 
 根据项目运行能证明当前 Task 的最小充分检查：
-
 - relevant tests；
 - lint/typecheck/compile/build 中适用项；
 - 受影响的用户行为或接口；
@@ -56,102 +55,91 @@ POC 是独立的局部证据；从 POC 转正式交付时，先确认正式需�
 
 使用 fresh output。旧运行、CI 将来会跑、页面看起来正常、代码已存在或另一个 Agent 报告成功都不是当前证据。
 
-Task evidence 记录命令/步骤、时间、结果、环境/版本、失败数、限制和 artifact path；不要写未运行的检查。
-原始日志和运行 JSON 的默认存放、忽略及持久引用规则见 [artifacts.md](artifacts.md)；VERIFICATION/PROGRESS 写结论和证据指针，不复制 dump。
+---
 
-**GUI/Web 真实证据标准**：针对涉及前端、页面交互、样式或用户流的任务，优先调用真实浏览器探针（如 `gstack:qa <url>`、`gstack:browse`、Chrome DevTools 或 Playwright）模拟真实用户操作。将控制台报错日志（Console Errors）、网络状态与渲染截图持久化存入 `.evidence/` 目录，作为证明可观察交付的核心证据；严禁无真机运行证据声称完成。
+## 阶段 4：Release Review（发布评审，置于系统测试之前）
 
-## Release Verification
+在耗费高成本运行端到端真实测试之前，独立设置 Stage 4 Review，确保在代码与规格层面提前拦截隐患：
 
-Release 进入 REVIEWING 前逐项验证：
+```text
+Stage 3: Building (完成 Task 与单测)
+    ↓
+Stage 4: Review (规格合规性 + 工程质量 + 代码消肿)
+    ↓ (通过全部 Critical/Important)
+Stage 5: Testing (系统级真实环境/真实浏览器验收)
+```
 
-1. 所有适用 REQ/AC。
-2. 完整 tests、build、lint/typecheck。
-3. regression 和关键用户流程。
-4. migration、security、performance、observability（适用时）。
-5. docs consistency。
-6. Requirement Traceability。
-7. 未验证部分、环境限制和已知风险。
+### 1. 显式调用独立代码评审
+调用 `gstack:review`（或 `superpowers:requesting-code-review`），Reviewer 获得已冻结 SPEC/AC、精确 diff 范围和 Task 级单测证据，从独立视角审查。
 
-VERIFICATION 以 REQ/AC 为行，至少包含 evidence、result、commit/artifact 和 notes。测试全绿不代表未关联的 AC 已验证。
+### 2. 五维审查透镜 (Review Lenses)
+1. **Scope / CEO 透镜**：核验 SPEC/AC 覆盖度，拦截未获批的 Scope Creep 与过度设计。
+2. **Design Anti-Slop 透镜**：针对 UI/UX 审查是否存在廉价 AI 模板感（排版层次、间距、空状态、响应式）。
+3. **Staff 隐蔽 Bug 透镜**：排查并发竞态、时区处理、资源泄露、边缘异常与破坏性兼容性。
+4. **Codebase Deslop 透镜**：显式调用 `gstack:deslop-shared-libs`，审查多模块间是否重复实现局部 helper，提炼公共库。
+5. **CSO 安全透镜**：若任务涉及安全/权限 Risk Tags，显式调度 `gstack:cso` 进行 STRIDE/OWASP 威胁建模。
 
-## Completion Claim Gate
+Critical/Important 问题解决并重新通过复审后才能进入 Stage 5。发现根本性需求偏差时，必须回退至 Stage 1 走变更门禁。
 
-任何 `DONE`、`FIXED`、`VERIFIED`、`READY_TO_SHIP`、`tests pass`、`build succeeds` 前：
+---
 
-1. 明确哪个命令或用户路径证明该声明。
-2. 在当前工作状态运行完整检查。
-3. 阅读输出、exit code 和失败数。
-4. 检查 evidence 是否覆盖声明的范围和 REQ/AC。
-5. 只有全部支持时才作声明，并附 evidence 摘要。
+## 阶段 5：Release Testing（真实环境系统测试）
 
-使用 `superpowers:verification-before-completion`。若能力缺失，仍执行同一 evidence gate，不假装调用。
+### 1. Test Matrix (按项目类型定制策略)
+- **Web / 前端项目**：使用 Playwright、真实 Chromium 探针（`gstack:qa` / `gstack:browse`）模拟真实交互。
+- **API / 后端项目**：运行真实服务实例、API 集成测试套件与边界压力测试。
+- **CLI 项目**：运行真实子进程命令，断言退出码、stdout、stderr 与文件系统副作用。
+- **桌面 / 移动端项目**：在对应模拟器或真实环境执行打包与生命周期测试。
 
-## Verification 与 Authorization
+### 2. GUI/Web 真实运行证据标准 (.evidence/)
+针对涉及界面或用户交互的系统，**严禁仅凭纯 Mock 单元测试声称验收通过**：
+- 显式调用真实浏览器探针（`gstack:qa <url>`、`gstack:browse` 或 Playwright）；
+- 捕获控制台日志（Console Errors，必须为 0 报错）；
+- 捕获关键操作的页面截图与 Network HAR/请求日志；
+- 将原始截屏与日志统一归档于 `.evidence/<release-id>/` 目录，并在 `VERIFICATION.md` 中建立索引。
 
-分别记录：
+### 3. Completion Claim Gate
+任何 `DONE`、`FIXED`、`VERIFIED`、`READY_TO_SHIP` 声明前：
+1. 明确证明该声明的具体命令与用户路径；
+2. 运行完整检查并核对 exit code 与失败数；
+3. 核对证据是否覆盖全部适用 REQ/AC 与 Test Seams；
+4. 显式使用 `superpowers:verification-before-completion`（缺失时执行内置等价 gate）。
+
+---
+
+## 阶段 6：Shipping Gate 与两权分立
+
+### Verification 与 Authorization 两权分立
 
 ```text
 Verification Status: VERIFIED | PARTIAL | UNVERIFIED | FAILED
 Shipping Authorization: NOT_REQUESTED | PENDING | APPROVED | DENIED
 ```
 
-约束：
+- `APPROVED` 不改变 Verification Status；人类授权不能把未测试改写为通过。
+- 缺少适用 REQ/AC 证据时，绝对不能标 `READY_TO_SHIP`。
+- 风险接受记录可以说明人类决定，但不能把未知结果写成 `VERIFIED`。
 
-- `APPROVED` 不改变 Verification Status。
-- 缺少适用 REQ/AC evidence 时不能标 `READY_TO_SHIP`。
-- 风险接受记录可以说明人类决定，但不能把未知写成通过。
-- Agent 不以不同措辞暗示未证明的成功。
-
-## Review
-
-重要 Task/Feature 和合并前使用 `superpowers:requesting-code-review` 或等价独立 Review（可用时调用 `gstack:review`）。Reviewer 获得批准的 requirement/design、精确 diff 范围和 verification evidence，不获得整个聊天历史或预期结论。
-
-审查通过以下四维审查透镜（Review Lenses）进行：
-
-1. **Scope / CEO 透镜**：核验 SPEC/AC compliance，拦截 scope creep 与未获批的过度设计。
-2. **Design Anti-Slop 透镜**：针对 UI/UX 审查是否存在廉价 AI 模板感（排版层次、间距、空状态、移动端适配）。
-3. **Staff 隐蔽 Bug 透镜**：排查并发竞态、时区处理、资源泄露、边缘异常与破坏性兼容性。
-4. **Codebase Deslop 透镜**：审查本次新增代码，排查是否在各模块重复编写局部 helper；若存在，调用 `gstack:deslop-shared-libs` 或自主抽取为共享库。
-5. **CSO 安全透镜**：若任务涉及安全/权限 Risk Tags，核对 STRIDE/OWASP 威胁建模证据（可用时调用 `gstack:cso`）。
-
-Critical/Important 问题解决并重新验证后才能推进。对错误 review 意见用技术证据回应，不盲从。
-
-## READY_TO_SHIP Gate
-
+### READY_TO_SHIP Gate
 必须同时满足：
-
-- 当前 Release 的所有适用 REQ/AC 有结果。
-- 必需 checks 有 fresh evidence。
-- 无未解决的阻断 review finding。
-- migration/recovery/security 证据符合 profile 和 risk。
+- 当前 Release 的所有适用 REQ/AC 均达到 `VERIFIED`；
+- 必需 checks 有 fresh evidence，`.evidence/` 包含有效真机/浏览器证据；
+- 无未解决的阻断 review finding；
 - docs/traceability 一致。
-- Verification Status 为 `VERIFIED`。
 
-`READY_TO_SHIP` 仍不授权任何外部动作。
+### Human Shipping Gate
+Push、PR、publish、deploy、release 或不可逆外部副作用需要明确的人类授权。获得授权后，**显式调用 `gstack:ship`**（或 `superpowers:finishing-a-development-branch`）执行自动化版本 Bump、Changelog 审计、Commit、Tag 与 PR 创建。
 
-## Shipping Gate
+---
 
-Push、PR、publish、deploy、release 或不可逆外部副作用需要明确的人类授权。授权前可以准备命令、变更摘要、release notes 和 recovery plan，但不执行动作。
+## 阶段 7：Reflecting 与 Release 封存
 
-授权不是唯一前置条件：
-
-- `publish/deploy/release` 仅可从 `READY_TO_SHIP` 执行；V0.2 不提供 emergency release 旁路。
-- push/PR 可在明确授权后执行协作动作，但要保留真实 Verification Status，不得声称 Release 已验证或可发布。
-- 若人类要求发布 `UNVERIFIED/PARTIAL/BLOCKED` 的 Release，拒绝该发布动作并记录缺口；风险接受不改变状态事实。
-
-满足适用状态前置条件并获得授权后：
-
-1. 再核验精确 target、branch/artifact/environment。
-2. 执行获批动作，不扩大范围。
-3. 记录实际 result、版本/tag/URL 和失败恢复信息。
-4. 成功后进入 RELEASED；失败则保持真实状态并调查。
-
-## Release 封存检查
-
-进入 RELEASED 后确认：
-
-- PROJECT_BRIEF/SPEC/PROPOSED_DESIGN/PLAN/VERIFICATION 被视为历史快照。
-- Living PROJECT/TECH_DESIGN/PROGRESS 反映当前事实。
-- 重大变化有 DEC。
-- 后续维护创建新 Release，而不是追加旧 SPEC。
+进入 `RELEASED` 后：
+1. **显式调用 `gstack:retro`**：自动化分析提交历史、返工频率与耗时瓶颈；
+2. 生成 `RETRO.md` 并执行经验分类沉淀：
+   - 一次性缺陷 ➔ 归档 `BUG-xxx.md`；
+   - 重大架构决策 ➔ 沉淀 `DECISION.md`；
+   - 当前架构事实 ➔ 合并更新 living `TECH_DESIGN.md`；
+   - 重复性 Agent 错误 ➔ 提炼反模式写入 `AGENTS.md`；
+   - 新产品构想 ➔ 记录为下一 Release 候选 Backlog。
+3. 将本次 Release 所有 artifacts 封存为不可篡改历史快照。

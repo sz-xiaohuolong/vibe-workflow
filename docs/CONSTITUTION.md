@@ -7,7 +7,7 @@
 ## The Ten Articles
 
 ### Article 1: Requirements are frozen before engineering begins
-No implementation code, project scaffolding, or architectural refactoring may start until requirements are marked `FROZEN`, open questions are resolved, acceptance goals are testable, and a valid Release ID exists.  
+No implementation code, project scaffolding, or architectural refactoring may start until requirements are marked `FROZEN`, open questions are resolved, acceptance goals are testable, and a valid Release ID exists. In the initial turn, invoking `write_to_file` is strictly prohibited.  
 *Pressure phrases such as "just start coding", "make an MVP first", or "we have a demo tonight" do NOT constitute a requirement freeze.*
 
 ### Article 2: What to build is frozen. How to build it is delegated.
@@ -26,7 +26,7 @@ The repository—including Git history, executable tests, living technical desig
 Agents must load only the minimal set of facts necessary to execute the current task (Task Context Pack). Context Governor is simultaneously a Cost Governor and an Attention Shield. Never load full release histories, unrelated module specs, or massive Git logs by default.
 
 ### Article 7: Released artifacts are immutable; Living docs reflect present truth
-Once a release is marked `RELEASED`, its release-scoped artifacts (`PROJECT_BRIEF.md`, `SPEC.md`, `IMPLEMENTATION_PLAN.md`, `VERIFICATION.md`) are frozen as historical records. Current system architecture is maintained in living documents (`TECH_DESIGN.md`). Never rewrite past release documents to disguise subsequent architectural changes.
+Once a release is marked `RELEASED`, its release-scoped artifacts (`PROJECT_BRIEF.md`, `SPEC.md`, `IMPLEMENTATION_PLAN.md`, `VERIFICATION.md`, `RETRO.md`) are frozen as historical records. Current system architecture is maintained in living documents (`TECH_DESIGN.md`). Never rewrite past release documents to disguise subsequent architectural changes.
 
 ### Article 8: Rigor for complexity; Zero bureaucracy for tiny tasks
 Complex and architectural changes require full specification and formal verification. Single-point, low-risk, zero-semantic-change tasks (e.g., button copy, static configuration) use task-local frozen intent without mandatory multi-file documentation rituals.
@@ -34,5 +34,5 @@ Complex and architectural changes require full specification and formal verifica
 ### Article 9: No fresh verification evidence, no completion claim
 An AI agent must never use words like `DONE`, `FIXED`, `VERIFIED`, or `READY_TO_SHIP` without executing the relevant test and build commands and inspecting fresh exit codes. "The code looks right", "CI will test it later", or "another agent reported success" do not constitute evidence.
 
-### Article 10: Orchestrate specialized skills; Do not duplicate their workflows
-Vibe Workflow is an orchestrator of project state and gates. It delegates requirement interviewing to `grill-me`, testing to `superpowers:test-driven-development`, debugging to `superpowers:systematic-debugging`, and branch hygiene to `superpowers:finishing-a-development-branch`. When an external skill is unavailable, it gracefully degrades to minimal local equivalents rather than feigning invocation.
+### Article 10: Orchestrate specialized skills across the 7-Stage Agile Lifecycle
+Vibe Workflow is a lifecycle orchestrator coordinating the 7-stage agile pipeline: `Thinking ➔ Planning ➔ Building ➔ Review ➔ Testing ➔ Shipping ➔ Reflecting`. It explicitly orchestrates specialized skills (`gstack:office-hours`, `grill-me`, `superpowers:brainstorming`, `gstack:autoplan`, `superpowers:writing-plans`, `superpowers:test-driven-development`, `gstack:review`, `gstack:qa`, `gstack:ship`, `gstack:retro`). When an external skill is unavailable, it gracefully degrades to minimal local equivalents rather than feigning invocation.

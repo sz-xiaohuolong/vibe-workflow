@@ -71,52 +71,53 @@
 
 ---
 
-## 🔄 高层生命周期流转
+## 🔄 七阶段敏捷开发模型 (Standard 7-Stage Agile Lifecycle)
 
 ```mermaid
-flowchart LR
-    Gate{工程入口 Gate} --> Freeze[1. FROZEN<br/>PROJECT_BRIEF]
-    Freeze --> Spec[2. SPECIFIED<br/>Effective SPEC]
-    Spec --> Design[3. DESIGNED<br/>PROPOSED_DESIGN]
-    Design --> Plan[4. PLANNED<br/>IMPLEMENTATION_PLAN]
-    Plan --> Build[5. BUILDING<br/>垂直切片与TDD]
-    Build --> Verify[6. VERIFYING<br/>Fresh Verification]
-    Verify --> Review[7. REVIEWING<br/>独立代码/文档审查]
-    Review --> Ready{READY_TO_SHIP}
-    Ready -->|人类授权| Ship[8. RELEASED<br/>封存归档 & 架构合并]
+flowchart TD
+    S1["1. Thinking (思考)<br/>需求对质与冻结 (FROZEN)<br/>【首轮严禁写文件】"] --> S2["2. Planning (规划)<br/>SPEC / Test Seams / 架构评审 / 依赖计划"]
+    S2 --> S3["3. Building (构建)<br/>Task Handoff Contract / TDD 循环"]
+    S3 --> S4["4. Review (评审)<br/>Spec 合规与工程代码质量 / 代码消肿<br/>【置于系统测试前】"]
+    S4 --> S5["5. Testing (测试)<br/>系统集成 / 真实浏览器探针 (.evidence/)"]
+    S5 --> S6["6. Shipping (交付)<br/>两权分立 / 人类授权 / 自动化交付"]
+    S6 --> S7["7. Reflecting (复盘)<br/>结构化复盘 (RETRO.md) / 沉淀至 AGENTS.md"]
+    S7 -.->|下一轮迭代| S1
 
     %% Failure recovery loops
-    Build -.->|连续3次失败| CB[熔断 Circuit Breaker ➔ Replan]
-    CB -.-> Design
-    Build -.->|需求/范围变更| RG[Requirement Change Gate]
-    RG -.-> Spec
+    S3 -.->|连续3次失败| CB[熔断 Circuit Breaker ➔ Replan]
+    CB -.-> S2
+    S4 -.->|审查阻断/缺陷| S3
+    S5 -.->|真实测试失败/Bug| S3
+    S4 -.->|发现根本性需求偏差| S1
 
     classDef default fill:#0e131f,stroke:#26334d,color:#e2e8f0;
     classDef gate fill:#1e1a11,stroke:#f59e0b,color:#fef3c7;
-    class Gate,Ready gate;
+    class S1,S6 gate;
 ```
 
-*完整状态机转移规范、字段定义与回退矩阵，请参阅 [生命周期深度规范](docs/concepts/lifecycle.md)。*
+*完整状态机转移规范、字段定义与回退矩阵，请参阅 [生命周期深度规范](skills/vibe-workflow/references/lifecycle.md)。*
 
 ---
 
-## 🧩 专业生态协同矩阵
+## 🧩 专业生态协同矩阵 (V0.3 显式调用与优雅降级)
 
-Vibe Workflow 是全局生命周期调度器，在对应阶段优先调用生态内的专业工具：
+Vibe Workflow 是全局生命周期调度器，在对应阶段优先显式调用生态内的专业工具：
 
-| 工具 | 核心职责 | 何时处于活跃状态 |
-|---|---|---|
-| **[gstack](https://github.com/garrytan/gstack)** | **特种工程重武器库**：YC导师减法（`/office-hours`）、多维方案评审（`/autoplan`）、真机浏览器 QA（`/qa`/`/browse`）、Staff 审查与公共库消肿（`/review`/`/deslop-shared-libs`）、威胁建模（`/cso`） | 需求探索、方案评审、真机验证、代码审查与消肿阶段 |
-| **[Grill Me](https://github.com/sz-xiaohuolong/vibe-workflow)** | 结构化需求访谈、消除 Open Questions 与可测 AC 确认 | 需求冻结之前（Entry Gate 前置） |
-| **Vibe Workflow** ⭐ | **生命周期状态机、决策门禁、上下文治理、证据核验中枢** | **贯穿项目全生命周期** |
-| **[Superpowers](https://github.com/obra/superpowers)** | 专门的工程执行方法（TDD、系统化调试、Worktrees 隔离） | 在 Build、Debug 阶段按需调用 |
-| **Coding Agent** (Codex/Claude/Gemini) | 代码生成与工具调用 | 执行具体的编码与命令任务 |
+| 阶段 | 首选外部专业工具 | 核心职责 | 技能缺失时的优雅降级 |
+|---|---|---|---|
+| **1. Thinking** | **`gstack:office-hours`** ➔ **`grill-me`** | YC 逼问（窄切口/减法）➔ 需求边界逐项深水区对质，锁定 AC | 降级调用内置 `ask_question` 发起至少 3~5 个阻断式选择题 |
+| **2. Planning** | **`superpowers:brainstorming`** ➔ **`gstack:autoplan`** ➔ **`superpowers:writing-plans`** | 头脑风暴探索多方案 ➔ 架构/减法/数据流多维评审 ➔ 拆解带 Test Seams 与 Ready Frontier 的实施计划 | 降级使用内置设计走查与依赖拓扑矩阵 |
+| **3. Building** | **`superpowers:test-driven-development`**<br/>**`gstack:investigate`** (熔断时) | Task 派发强制注入 TDD 红绿循环；连续 3 次失败触发熔断与根因排查 | 降级执行内置原生失败测试先行与最小实现协议 |
+| **4. Review** | **`gstack:review`**<br/>**`gstack:deslop-shared-libs`**<br/>**`gstack:cso`** | **置于测试前**：审查 Spec Compliance、并发、时区、资源泄露；扫描跨模块重复代码并抽取公共库；威胁建模 | 降级执行内置严格 Diff 审查与边界核验 |
+| **5. Testing** | **`gstack:qa`** / **`gstack:browse`**<br/>**`superpowers:verification-before-completion`** | Web/UI 真实无头/真机浏览器探针模拟交互，捕获控制台日志与截屏至 `.evidence/` | 降级调用 Playwright / Chromium CLI 或原生测试套件 |
+| **6. Shipping** | **`gstack:ship`** | 获得人类明确授权后，自动化执行版本 Bump、Changelog 审计、Git Commit/Tag/PR | 降级输出标准提交与发布命令，等待人工确认 |
+| **7. Reflecting** | **`gstack:retro`** | 交付后自动化分析提交历史、返工频率与耗时瓶颈，沉淀规则至 `AGENTS.md` | 降级使用内置 `RETRO.md` 模板进行人工结构化复盘 |
 
-> 💡 **协同原则**：  
-> - **做需求**：0 到 1 构想先用 `gstack /office-hours` 砍伪需求，再由 `grill-me` 穷尽工程边界并锁定 AC；存量明确需求直接走 `grill-me`；  
-> - **做验证**：Web/UI 项目通过 `gstack /qa` 驱动真实浏览器抓取控制台报错与截屏存入 `.evidence/`，提供客观证据；  
-> - **做审查**：Release 合并前通过 `gstack /review` 查并发与时区隐患，通过 `gstack /deslop-shared-libs` 抽取重复公共库；  
-> - **做发布**：两权分立——在 `READY_TO_SHIP` 获批后可调度 `gstack /ship` 执行发布并用 `gstack /retro` 复盘沉淀经验至 `AGENTS.md`。
+> 💡 **显式调用原则**：  
+> - **做需求**：0 到 1 构想首轮严禁写文件，优先调用 `gstack:office-hours` + `grill-me` 穷尽工程边界；  
+> - **做验证**：Web/UI 项目必须通过真实浏览器探针抓取控制台零报错与截屏存入 `.evidence/`，拒绝假完成；  
+> - **做审查**：Release 级审查独立置于系统测试前，提前拦截规格漂移与并发漏洞；  
+> - **做复盘**：交付后产出 `RETRO.md`，将反模式守则沉淀至 `AGENTS.md`，实现跨会话持续进化。
 
 ---
 

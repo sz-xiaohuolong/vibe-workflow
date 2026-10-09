@@ -49,11 +49,17 @@
 |---|---|---|---|---|
 | `待澄清` | `待澄清` | `待澄清` | `待澄清` | `待澄清` |
 
+## Test Seams (可观察测试接缝)
+
+| Seam ID | 关联 REQ/AC | 接缝类型 (CLI/API/DOM/DB/Log) | 可观察边界与判定依据 |
+|---|---|---|---|
+| SEAM-001 | `REQ-001 / AC-001` | `<外部可观察接缝类型>` | `<外部输入、可捕获输出、状态变化或事件日志>` |
+
 ## 验收索引
 
-| REQ | AC | Source |
-|---|---|---|
-| REQ-001 | AC-001 | `<Brief section>` |
+| REQ | AC | Test Seam | Source |
+|---|---|---|---|
+| REQ-001 | AC-001 | `SEAM-001` | `<Brief section>` |
 
 <!-- SPEC 只展开 PROJECT_BRIEF 已冻结的产品意图；测试结果与切片进度归 PROGRESS/VERIFICATION。删除不适用的空章节与占位符。 -->
 

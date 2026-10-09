@@ -20,21 +20,35 @@
 |---|---|---|---|---|---|
 | SLICE-01 | `待定义` | `未关联` | `无/待确认` | `待定义` | `NOT_STARTED` |
 
-## Tasks
+## Task Dependency Graph & Ready Frontier
+
+```text
+[TASK-001] (Ready Frontier: 无依赖可立即就绪)
+    ↓ (完成交付)
+[TASK-002] (Blocked: 依赖 TASK-001)
+```
+
+- **Ready Frontier (当前可并行调度任务)**: `TASK-001`
+- **Blocked Tasks (等待前置依赖任务)**: `待定义`
+
+## Tasks (Task Handoff Contracts)
 
 ### TASK-001 — <任务名称>
 
 - Slice: `SLICE-01`
 - Goal: `待定义一个可验证交付`
 - REQ/AC: `未关联`
-- In Scope: `待定义`
-- Out of Scope: `待定义`
-- Files/Modules: `待确认`
+- Test Seam: `未关联 / 待定义 SEAM ID`
 - Dependencies: `无/待确认`
+- Ready Status: `READY`
+- Allowed Modification Scope: `待定义文件/模块`
+- Explicit Out of Scope: `待定义`
+- Relevant Context: `待补充核心上下文与设计契约`
 - Risk Tags: `None/待确认`
-- Planned Test/Evidence: `待定义`
+- Planned Test/Evidence: `待定义失败用例与验证命令`
 - Cross-module Impact: `不适用/写入入口、读取方、传播、刷新/恢复与失败路径待确认`
 - Checked Unaffected Modules: `不适用/待确认`
+- Expected Outputs: `代码实现、测试用例、测试证据`
 - Recovery Point: `待定义`
 - Status: `NOT_STARTED`
 

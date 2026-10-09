@@ -71,6 +71,7 @@ required_files=(
   assets/templates/DECISION.md
   assets/templates/BUG.md
   assets/templates/VERIFICATION.md
+  assets/templates/RETRO.md
 )
 
 for required_file in "${required_files[@]}"; do
@@ -107,6 +108,21 @@ rg -q '跨模块可观察触发' "$skill_dir/references/routing.md"
 rg -q 'POC_VALIDATED' "$skill_dir/references/quality-and-release.md"
 rg -q 'IMPLEMENTED_UNVERIFIED' "$skill_dir/assets/templates/PROGRESS.md"
 rg -q 'POC_VALIDATED' "$skill_dir/assets/templates/VERIFICATION.md"
+
+# V0.3 七阶段与契约断言
+test -f "$repo_dir/tests/scenarios-v0.3.md"
+rg -q '## S31' "$repo_dir/tests/scenarios-v0.3.md"
+rg -q '## S44' "$repo_dir/tests/scenarios-v0.3.md"
+rg -q 'Test Seams' "$skill_dir/assets/templates/SPEC.md"
+rg -q 'Ready Frontier' "$skill_dir/assets/templates/IMPLEMENTATION_PLAN.md"
+rg -q 'Task Handoff Contract' "$skill_dir/assets/templates/IMPLEMENTATION_PLAN.md"
+rg -q 'Current Stage' "$skill_dir/assets/templates/PROGRESS.md"
+rg -q 'Test Matrix' "$skill_dir/assets/templates/VERIFICATION.md"
+rg -q '\.evidence' "$skill_dir/assets/templates/VERIFICATION.md"
+rg -q 'Release Retrospective' "$skill_dir/assets/templates/RETRO.md"
+rg -q '1\. Thinking.*2\. Planning.*3\. Building.*4\. Review.*5\. Testing.*6\. Shipping.*7\. Reflecting' "$skill_dir/SKILL.md"
+rg -q 'Discovery Spike' "$skill_dir/references/routing.md"
+rg -q 'Task Handoff Contract' "$skill_dir/references/execution.md"
 
 if command -v skills-ref >/dev/null 2>&1; then
   skills-ref validate "$skill_dir"

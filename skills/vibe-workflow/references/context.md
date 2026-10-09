@@ -61,13 +61,27 @@
 AGENTS relevant rules
 PROJECT path map
 PROGRESS current task block
-SPEC relevant REQ/AC
+SPEC relevant REQ/AC and Test Seams
 PROPOSED_DESIGN relevant approved section, when applicable
 TECH_DESIGN current-state relevant section
-IMPLEMENTATION_PLAN current task
+IMPLEMENTATION_PLAN current task (Task Handoff Contract)
 related code and tests
 relevant DEC/BUG only
 ```
+
+## 七阶段 Minimal Context Pack 映射
+
+按阶段精准注入事实，严禁全量加载造成上下文污染与 Token 爆炸：
+
+| 阶段 | 允许加载的核心上下文 | 严禁加载的冗余内容 |
+|---|---|---|
+| **1. Thinking** | 用户原始输入、AGENTS.md、既有项目事实与地图 | 历史代码细节、SPEC 模板、长篇实现计划 |
+| **2. Planning** | 冻结的 PROJECT_BRIEF、living TECH_DESIGN、架构备选方案 | 具体的非关键业务代码、未获批的临时设想 |
+| **3. Building** | 当前 Task Handoff Contract、相关 SPEC/AC/Seams、最小受影响代码与单测 | 整个 Release 的非关联模块代码、全部 Git 日志 |
+| **4. Review** | 冻结 SPEC/AC、本次 Release 纯净 Diff、Task 级单测证据 | 漫长的调试过程、全部聊天上下文 |
+| **5. Testing** | Test Matrix、系统运行环境、端到端测试入口与探针配置 | 内部辅助函数的细枝末节、早先废弃的原型代码 |
+| **6. Shipping** | `VERIFICATION.md`、CHANGELOG、VERSION、部署配置 | 已经通过的单元测试过程细节 |
+| **7. Reflecting** | 本次 Release 返工记录、Circuit Breaker 快照、Bug 归档、AGENTS.md | 业务功能正文、外部网络参考资料 |
 
 ## 默认排除
 

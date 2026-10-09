@@ -71,51 +71,53 @@ It does not teach an LLM how to write a function; it provides the **state machin
 
 ---
 
-## 🔄 High-Level Lifecycle
+## 🔄 The 7-Stage Agile Lifecycle
 
 ```mermaid
-flowchart LR
-    Gate{Entry Gate} --> Freeze[1. FROZEN<br/>PROJECT_BRIEF]
-    Freeze --> Spec[2. SPECIFIED<br/>Effective SPEC]
-    Spec --> Design[3. DESIGNED<br/>PROPOSED_DESIGN]
-    Design --> Plan[4. PLANNED<br/>IMPLEMENTATION_PLAN]
-    Plan --> Build[5. BUILDING<br/>Vertical Slices & TDD]
-    Build --> Verify[6. VERIFYING<br/>Fresh Evidence]
-    Verify --> Review[7. REVIEWING<br/>Peer/Code Review]
-    Review --> Ready{READY_TO_SHIP}
-    Ready -->|Human Approval| Ship[8. RELEASED<br/>Archive & Living Sync]
+flowchart TD
+    S1["1. Thinking<br/>Requirement Clarification & Freeze<br/>[Zero file writing in turn 1]"] --> S2["2. Planning<br/>SPEC / Test Seams / Review / Plans"]
+    S2 --> S3["3. Building<br/>Task Handoff Contract / TDD Loop"]
+    S3 --> S4["4. Review<br/>Spec Compliance & Quality Review<br/>[Placed BEFORE testing]"]
+    S4 --> S5["5. Testing<br/>System Integration & Real Browser Probes (.evidence/)"]
+    S5 --> S6["6. Shipping<br/>Decoupled Gates / Human Auth / Ship Automation"]
+    S6 --> S7["7. Reflecting<br/>Structured Retro (RETRO.md) / AGENTS.md Lessons"]
+    S7 -.->|Next Iteration| S1
 
     %% Failure recovery loops
-    Build -.->|3 Failures| CB[Circuit Breaker ➔ Replan]
-    CB -.-> Design
-    Build -.->|Scope Creep| RG[Req Change Gate]
-    RG -.-> Spec
+    S3 -.->|3 Failures| CB[Circuit Breaker ➔ Replan]
+    CB -.-> S2
+    S4 -.->|Review Findings/Smells| S3
+    S5 -.->|Testing Failures/Bugs| S3
+    S4 -.->|Fundamental Spec Drift| S1
 
     classDef default fill:#0e131f,stroke:#26334d,color:#e2e8f0;
     classDef gate fill:#1e1a11,stroke:#f59e0b,color:#fef3c7;
-    class Gate,Ready gate;
+    class S1,S6 gate;
 ```
 
-*For complete transition contracts, state definitions, and rollback rules, see [Lifecycle Specification](docs/concepts/lifecycle.md).*
+*For complete transition contracts, state definitions, and rollback rules, see [Lifecycle Specification](skills/vibe-workflow/references/lifecycle.md).*
 
 ---
 
-## 🧩 Ecosystem Role Matrix
+## 🧩 Ecosystem Role Matrix (V0.3 Explicit Invocations & Fallbacks)
 
-Vibe Workflow is an orchestrator, not a monolithic framework. It delegates specialized engineering phases to purpose-built tools:
+Vibe Workflow is a lifecycle orchestrator coordinating the 7-stage agile pipeline:
 
-| Tool | Core Responsibility | When Active |
-|---|---|---|
-| **[gstack](https://github.com/garrytan/gstack)** | **Virtual Engineering Squad**: YC mentor challenge (`/office-hours`), multi-role reviews (`/autoplan`), real browser QA (`/qa`/`/browse`), staff review & codebase deslop (`/review`/`/deslop-shared-libs`), STRIDE/OWASP threat modeling (`/cso`) | Requirement exploration, multi-role review, real browser verification, code review & deslop |
-| **[Grill Me](https://github.com/sz-xiaohuolong/vibe-workflow)** | Interactive requirement elicitation, boundary extraction, testable AC | Prior to Requirement Freeze (Entry Gate) |
-| **Vibe Workflow** ⭐ | **Lifecycle state, decision gates, context governor, evidence verification** | **Throughout the entire project** |
-| **[Superpowers](https://github.com/obra/superpowers)** | Specialized execution (TDD, Systematic Debugging, Worktrees) | Invoked during Build & Debug stages |
-| **Coding Agent** (Codex/Claude/Gemini) | Code generation and tool execution | Delegated task execution |
+| Stage | Preferred External Skill | Core Responsibility | Graceful Fallback (When Skill Absent) |
+|---|---|---|---|
+| **1. Thinking** | **`gstack:office-hours`** ➔ **`grill-me`** | YC challenge (wedge/reduction) ➔ deep-water requirement grilling to freeze ACs | Built-in `ask_question` with 3-5 structured blocker questions |
+| **2. Planning** | **`superpowers:brainstorming`** ➔ **`gstack:autoplan`** ➔ **`superpowers:writing-plans`** | Multi-approach exploration ➔ multi-role review ➔ executable plan with Test Seams & Ready Frontier | Built-in architectural review and dependency matrix |
+| **3. Building** | **`superpowers:test-driven-development`**<br/>**`gstack:investigate`** (on CB) | Task dispatch with mandatory TDD red-green cycle; circuit breaking after 3 consecutive failures | Built-in failing test first & minimal implementation protocol |
+| **4. Review** | **`gstack:review`**<br/>**`gstack:deslop-shared-libs`**<br/>**`gstack:cso`** | **Placed before testing**: Spec compliance, concurrency, leaks, codebase deslop, STRIDE threat modeling | Built-in rigorous diff review and scope boundary check |
+| **5. Testing** | **`gstack:qa`** / **`gstack:browse`**<br/>**`superpowers:verification-before-completion`** | Real browser interaction, console error logging (zero errors), and screenshot archive in `.evidence/` | Native Playwright, Chromium CLI, or built-in test runners |
+| **6. Shipping** | **`gstack:ship`** | Automated version bump, changelog audit, git tag/commit/PR upon explicit human approval | Standard git commit and release commands |
+| **7. Reflecting** | **`gstack:retro`** | Automated commit & friction analysis, lessons learned written back into `AGENTS.md` | Built-in `RETRO.md` template for manual reflection |
 
-> 💡 **Synergy Principles**:  
-> - **Requirements**: Use `gstack /office-hours` for 0-to-1 ideas to cut fake scope, then use `/grill-me` to lock technical contracts and testable ACs;  
-> - **Verification**: For Web/UI tasks, use `gstack /qa` to drive real Chromium browsers for screenshot and console error capture into `.evidence/`;  
-> - **Review & Deslop**: Prior to shipping, use `gstack /review` for concurrency/edge cases and `gstack /deslop-shared-libs` to extract duplicated helpers into shared libraries.
+> 💡 **Explicit Invocation Principles**:  
+> - **Requirements**: Zero file creation in turn 1; invoke `gstack:office-hours` + `grill-me` to freeze boundaries;  
+> - **Verification**: Drive real browser probes for UI projects; store unforgeable logs and screenshots into `.evidence/`;  
+> - **Review**: Independent review stage placed before system testing to catch spec drift early;  
+> - **Reflecting**: Continuous improvement loop via `RETRO.md` and `AGENTS.md` rules.
 
 ---
 

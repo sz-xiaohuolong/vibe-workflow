@@ -27,11 +27,11 @@ Gate 必须先于复杂度和调度。不要先说“只是 Tiny”再检查权�
 | `FEATURE` | 新增或改变用户可观察能力 | 判断是否属于当前 frozen scope；边界不清先经 `grill-me` 对质 |
 | `BUG` | 实现偏离当前有效预期 | reproduce → root cause (`gstack:investigate`) → regression test → fix |
 | `REFACTOR` | 保持行为，改变内部结构 | 明确不变项、测试保护、最小范围；可借助 `gstack:deslop-shared-libs` 巡检 |
-| `SPIKE` | 以学习/可行性/UI原型选择为结果 | 定义问题、时限和丢弃边界（可调用 `gstack:design-shotgun` 产出对比原型）；探针产物仅供决策，不得当生产交付 |
+| `SPIKE` | 验证技术可行性或交互原型 | **Discovery Spike 协议**：限定时限与丢弃边界；探针产物仅供可行性决策，严禁直接作为正式实现并入主代码，严禁标记为正式功能完成 |
 | `REQUIREMENT_CHANGE` | 改变冻结的产品意图 | 停止受影响工作，进入 Human Gate |
 
 如果 Bug 调查证明实现符合 SPEC、真正错误是产品预期，则改为 `REQUIREMENT_CHANGE`。
-Pre-Freeze 需求探索阶段：0 到 1 全新构想推荐先经由 `gstack:office-hours` 剔除伪需求并打磨核心 MVP，再由 `grill-me` 穷尽工程边界并生成可测 AC；存量系统明确需求直接由 `grill-me` 对质，不制造冗余商业逼问。
+Pre-Freeze 需求探索阶段：0 到 1 全新构想必须优先经由 `gstack:office-hours` 剔除伪需求并打磨核心 MVP，再由 `grill-me` 穷尽工程边界并生成可测 AC（若技能缺失则由内置 `ask_question` 抛出结构化对质题）；存量系统明确需求直接由 `grill-me` 对质，不制造冗余商业逼问。严禁首轮直接创建正式文档或写业务代码。
 
 ## Complexity
 
@@ -105,17 +105,25 @@ Agent 自主决定：内部函数/类命名、私有接口、helper 抽取、局
 
 ## 串行与并行
 
-只有同时满足以下条件才允许 Execution Parallel：
+### Ready Frontier 并行调度法则
 
-- Task 没有未完成 Gate。
-- 没有前后依赖。
-- 不修改同一核心文件、Schema、迁移或共享写状态。
-- 每个 Task 有独立 Context、Acceptance 和验证。
-- 有明确 Integration/Review Gate。
+在 `IMPLEMENTATION_PLAN.md` 中，只有前置依赖已全部完成且验证通过的任务才属于 **Ready Frontier（就绪前沿）**。
 
-可以并行：独立文案、独立纯函数测试、互不相交模块的只读调查。
+只有同时满足以下条件才允许 Execution Parallel（多 Agent / 多任务并行分发）：
 
-必须串行：Schema 与依赖它的状态机、共享 API contract 的两端、同一核心文件、需要先做 Decision 的任务。
+- Task 属于当前的 **Ready Frontier**（前置依赖全部完成）。
+- Task 没有未完成的 Human / Risk Gate。
+- 不修改同一核心文件、Schema、迁移或共享写状态（互不相交的模块/上下文）。
+- 每个 Task 具有独立的 Task Handoff Contract、Acceptance 和单测验证。
+- 有明确的 Integration / Review Gate。
+
+**可以并行**：属于 Ready Frontier 的独立纯函数实现、互不相交模块的只读调查、独立子模块单元测试。
+
+**必须串行**：
+- Schema 与依赖它的状态机/读写模型。
+- 共享公共 API contract 的服务两端。
+- 修改同一核心代码文件。
+- 存在未完成的架构 Decision 或 Human Gate。
 
 Exploration Race 可让多个 Agent 独立提出方案；比较和决定完成前不得并行实现。
 

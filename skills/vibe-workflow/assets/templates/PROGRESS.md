@@ -8,6 +8,7 @@
 
 ## 定位信息
 
+- Current Stage: `<1. Thinking / 2. Planning / 3. Building / 4. Review / 5. Testing / 6. Shipping / 7. Reflecting>`
 - Current Requirement Baseline: `<路径或未建立>`
 - Last Stable Commit/Artifact: `未建立/待核验`
 - Last Updated: `<日期>`

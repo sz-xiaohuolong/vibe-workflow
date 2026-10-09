@@ -23,7 +23,8 @@ docs/vibe/releases/<release-id>/
 ├── SPEC.md
 ├── PROPOSED_DESIGN.md
 ├── IMPLEMENTATION_PLAN.md
-└── VERIFICATION.md
+├── VERIFICATION.md
+└── RETRO.md
 ```
 
 只有真正的 Release 才拥有上述目录；同一 Release 的 S1/S2/S3 记录在 `IMPLEMENTATION_PLAN.md` 的 Slice Map 和 living `PROGRESS.md` 中。每个 Slice 在 PROGRESS 清单中用一条记录写状态、证据链接和下一步，不为 Slice 新建 `releases/<release-id>-Sx/`、单独子目录或整套 SPEC/PLAN/REVIEW/VERIFICATION。复杂切片确需调查、设计或决策文件时，按实际职责添加单份文件并链接，不能因此升级为 Release。已有历史目录不自动搬迁或改写；在 Document Map 中标明其历史性质，后续按真实 Release 边界写入。
@@ -32,10 +33,11 @@ docs/vibe/releases/<release-id>/
 |---|---|---|
 | PROJECT_BRIEF | Problem、Target User、Scope、Constraints、Acceptance Goals、Requirement Version/Status | 低层实现设计 |
 | CHANGE | 相对上一 Release 的 Added/Changed/Removed/Fixed | 当前完整产品行为 |
-| SPEC | 当前 Release 的完整 Effective Product Behavior、REQ/AC、状态、错误、边界、non-goals | 私有实现细节 |
+| SPEC | 当前 Release 的完整 Effective Product Behavior、REQ/AC、Test Seams、状态、错误、边界、non-goals | 私有实现细节 |
 | PROPOSED_DESIGN | 当前 Release 尚未实现的目标技术方案、影响、恢复、验证设计和批准状态 | 当前真实架构 |
-| IMPLEMENTATION_PLAN | Slice/Task、依赖、文件、验证、REQ/AC 映射 | 新产品能力 |
-| VERIFICATION | 每个 REQ/AC 的实际证据、结果、限制、commit/artifact | 未执行检查的推测 |
+| IMPLEMENTATION_PLAN | Slice/Task、Ready Frontier 依赖拓扑、Task Handoff Contract、验证、REQ/AC 映射 | 新产品能力 |
+| VERIFICATION | 每个 REQ/AC 的实际证据、结果、限制、commit/artifact、.evidence 索引 | 未执行检查的推测 |
+| RETRO | 结构化复盘、返工根因、各阶段瓶颈、反模式提炼、下一 Release 候选池 | 历史结论篡改、下版冻结范围 |
 
 CHANGE 是 delta；SPEC 是完整当前行为。Agent 默认读取当前 Release 的 Effective SPEC，不叠加所有历史 delta 推导需求。
 
@@ -103,20 +105,22 @@ docs/vibe/bugs/
 ```text
 REQ-003
 → AC-007
+→ SEAM-002 (外部可观察测试接缝)
 → PROPOSED_DESIGN §4.2 / DEC-012
-→ SLICE-02 / TASK-09
-→ RecordingServiceTests
-→ PASS evidence
+→ SLICE-02 / TASK-09 (Task Handoff Contract)
+→ RecordingServiceTests / 真实浏览器探针
+→ PASS evidence 归档至 .evidence/<release-id>/
 → commit or result artifact
 ```
 
 分散维护但必须可连接：
 
-- SPEC：REQ → AC。
+- SPEC：REQ → AC → Test Seams。
 - PROPOSED_DESIGN/DEC：REQ/AC → 目标 Design；实现并验证后由 TECH_DESIGN 描述成立的当前架构。
-- IMPLEMENTATION_PLAN：REQ/AC → Slice/Task/Test。
+- IMPLEMENTATION_PLAN：REQ/AC/Seams → Slice/Task/Test (Task Handoff Contract)。
 - PROGRESS：Task → current evidence/status。
-- VERIFICATION：REQ/AC → evidence/result/commit。
+- VERIFICATION：REQ/AC/Seams → evidence/result/commit，并链接 `.evidence/` 原始证据。
+- RETRO：本次 Release 过程证据 ➔ 经验分类沉淀 ➔ 反哺 `AGENTS.md`。
 
 Release Verification 必须能逐项回答“REQ 是否真的完成”，不能只回答“代码写好了”。
 
@@ -130,7 +134,7 @@ Release Verification 必须能逐项回答“REQ 是否真的完成”，不能�
 | 架构/数据/公开接口变化 | PROPOSED_DESIGN、PLAN、PROGRESS；适用 Gate 时含 DEC | SPEC（产品行为受影响时）；实现验证后更新 TECH_DESIGN |
 | Bug 修复 | BUG、测试/evidence | TECH_DESIGN、PROGRESS、VERIFICATION |
 | Task 完成 | PROGRESS、Task evidence | PLAN 状态、BUG/DEC |
-| Release 完成 | VERIFICATION、PROGRESS | PROJECT、release notes |
+| Release 完成与复盘 | VERIFICATION、PROGRESS、RETRO | PROJECT、release notes、AGENTS.md |
 
 不相关文档无需机械修改。若容易造成误解，在当前记录中写明“不更新及理由”。
 
@@ -150,5 +154,6 @@ Release Verification 必须能逐项回答“REQ 是否真的完成”，不能�
 - `assets/templates/DECISION.md`
 - `assets/templates/BUG.md`
 - `assets/templates/VERIFICATION.md`
+- `assets/templates/RETRO.md`
 
 复制后将未知事实明确标为“待澄清/未验证”，不得猜测填充；未通过 Requirement Gate 时不得把模板状态改成 FROZEN。

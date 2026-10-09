@@ -9,11 +9,17 @@
 - Shipping Authorization: `NOT_REQUESTED`
 - Verified At: `未验证`
 
+## Test Matrix (测试策略与环境配置)
+
+- Project Type: `<Web / API / CLI / Desktop / Mobile>`
+- Primary Verification Harness: `<gstack:qa / Playwright / 真实 Chromium 探针 / 原生测试套件>`
+- Evidence Directory: `.evidence/<Release ID>/`
+
 ## Requirement Evidence Matrix
 
-| REQ | AC | Task Delivery Status | Test/Flow | Command/Steps | Result | Evidence | Commit/Artifact | Notes |
-|---|---|---|---|---|---|---|---|---|
-| REQ-001 | AC-001 | `NOT_STARTED/IMPLEMENTED_UNVERIFIED/POC_VALIDATED/VERIFIED` | `未关联` | `未运行` | `UNVERIFIED` | `无` | `无` | `待验证` |
+| REQ | AC | Test Seam | Task Delivery Status | Test/Flow | Command/Steps | Result | Evidence File (.evidence/) | Commit/Artifact | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+| REQ-001 | AC-001 | `SEAM-001` | `NOT_STARTED/IMPLEMENTED_UNVERIFIED/POC_VALIDATED/VERIFIED` | `未关联` | `未运行` | `UNVERIFIED` | `无` | `无` | `待验证` |
 
 ## Automated Checks
 
@@ -23,9 +29,9 @@
 | Lint/Typecheck | `未确认` | `未运行` | `未知` | `UNVERIFIED` | `无` |
 | Build | `未确认` | `未运行` | `未知` | `UNVERIFIED` | `无` |
 
-## Critical User Flows
+## Real Environment Evidence & Critical User Flows
 
-| Flow | Environment | Expected | Actual | Result | Evidence |
+| Flow / Test Seam | Environment | Expected | Actual | Result | Evidence (Console/Network/Screenshot) |
 |---|---|---|---|---|---|
 | `待定义` | `未确认` | `待确认` | `未运行` | `UNVERIFIED` | `无` |
 
