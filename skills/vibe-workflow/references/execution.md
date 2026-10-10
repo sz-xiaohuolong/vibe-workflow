@@ -2,7 +2,31 @@
 
 ## 何时读取
 
-进入 BUILDING、选择下一个 Task、处理 Bug/测试失败、连续修复失败、调度并行工作或沉淀项目经验时读取本文件。
+执行普通 Git 操作、进入 BUILDING、选择下一个 Task、处理 Bug/测试失败、连续修复失败、调度并行工作或沉淀项目经验时读取本文件。
+
+## Lightweight Git Workflow
+
+这是各阶段均可使用的保存/协作流程，不是新增生命周期阶段。仅要求 Git 操作时执行本节，不套用下方 Task 完成、TDD、Review 或 Release 契约。
+
+| 操作 | 授权范围与结果 |
+|---|---|
+| `COMMIT` | 将本次授权 diff 提交到当前明确分支；不隐含 push |
+| `PUSH_BRANCH` | 将已确定的本地分支/提交推到明确 remote/branch；不顺带提交工作树 |
+| `COMMIT_AND_PUSH` | 提交本次授权 diff 并推到已确定 remote/branch；同一次请求覆盖两步 |
+| `OPEN_PR` | 为明确 head/base 创建 PR；不隐含 merge 或发布。需要先推送 head 时，只执行已在用户授权范围内的推送 |
+
+必要检查与执行顺序：
+
+1. `git status`；确定当前分支、upstream、remote 和目标 branch；PR 另确定 head/base。可用当前仓库 upstream 与会话明确目标消除歧义；仍有多个合理目标、detached HEAD 或目标不明时先确认，不猜测。
+2. 核对实际操作范围：Commit 检查 staged/unstaged diff 与拟加入的 untracked 文件，按范围显式暂存；Push 检查将发送的提交及相对目标的 diff，不混入无关本地提交；PR 检查 head 相对 base 的 diff。必要时只刷新目标远程引用。识别未授权修改、Secret、危险操作及已知自动部署副作用，不为普通推送扩展成完整文档/安全审计。
+3. 必要时对拟提交 diff 执行 `git diff --check` 或 `git diff --cached --check`。发现危险或越界内容时排除，无法安全隔离才停止并说明具体问题。
+4. 核对已有验证证据对应的 commit/tree、改动范围、命令和环境是否仍适用。同一被测代码及相关环境未变时复用证据，不因 Commit / Push 重跑测试。缺失、过期、失败或仅覆盖部分功能时如实报告并保留验证状态；普通开发分支仍可授权推送。仅用户另要求验证、改动使相关证据失效且本次需作验证声明，或仓库强制检查要求时，运行最小相关检查；不自动补齐完整 Release Verification 或全量测试。
+5. 用户明确要求 Commit / Push / PR 且目标、范围和影响确定时直接执行，不再询问相同授权。force push（含 `--force-with-lease`）、amend/rebase 后覆盖远程历史或其他高风险操作必须获得针对该动作与目标的单独明确授权。non-fast-forward 或保护分支拒绝时停止并报告，不自动改为 force push。
+6. 用 Git 返回结果及必要的提交/远程引用核对报告 commit、branch、remote 或 PR 链接；Git 操作失败只报告实际结果。保留 Current Stage、Workflow State、Task/Release Verification Status 和 Shipping Authorization；若按仓库约定记录 checkpoint，不把未验证 commit 写成 Last Known Good/已验证稳定点。
+
+普通 Git 操作不自动触发完整 Release Verification、全量 Code Review、`gstack:ship`、版本 Bump、Release Tag、完整 Documentation Audit、Release Archive 或 Reflecting。代码未改、证据仍适用时也不重复验证；创建 PR 本身不启动 Stage 4 全量 Review。Git 成功只能支持“已提交/已推送/已创建 PR”，不能支持 `VERIFIED`、`READY_TO_SHIP` 或 `RELEASED` 声明。
+
+用户明确要求正式 Publish / Deploy / Release，或已知目标 push/PR 会直接触发这些动作时，执行 [quality-and-release.md](quality-and-release.md) 的完整 Shipping Gate。普通分支同步授权不包含生产部署或发布授权。
 
 ## Vertical Slice
 
@@ -54,6 +78,8 @@ Select Next Task (from Ready Frontier)
 → update PROGRESS
 → Next Task
 ```
+
+Task Loop 中的 checkpoint/commit 使用上述 Lightweight Git Workflow。任务实现与完成声明所需验证仍按 Task contract 执行，但已经完成且仍适用的检查不因 Git 操作重复运行。
 
 **【显式 TDD 注入】**：派发任何 Feature、Bug、Refactor 任务时，必须在提示语中显式注入 **`**REQUIRED SUB-SKILL:** Use superpowers:test-driven-development`**。若环境未安装该外部技能，则严格执行内置原生 TDD 协议（编写失败用例 ➔ 最小实现 ➔ 验证全绿 ➔ 重构），严禁跳过红绿循环直接写业务代码。
 

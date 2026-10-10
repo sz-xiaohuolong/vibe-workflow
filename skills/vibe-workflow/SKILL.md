@@ -26,6 +26,14 @@ description: Use when 软件项目任务跨越多个步骤、会话或 Release�
 
 ---
 
+## Lightweight Git Workflow（轻量 Git 工作流）
+
+用户只要求 `COMMIT`、`PUSH_BRANCH`、`COMMIT_AND_PUSH` 或 `OPEN_PR` 时，优先走 [execution.md](references/execution.md#lightweight-git-workflow)，不进入 Stage 6 Shipping。检查本次 Git 范围、目标、风险和已有证据即可；不自动启动完整 Release Verification、全量 Code Review、`gstack:ship`、版本 Bump、Release Tag、完整 Documentation Audit、Release Archive 或 Reflecting。
+
+明确的 Commit / Push / PR 请求在目标和影响范围确定时就是本次操作授权，不重复询问；目标不明、force push、覆盖历史或高风险副作用仍须单独确认。Git 操作不改变 Current Stage、Workflow State 或真实验证状态；未完成 Release Verification 的开发分支可以授权推送。正式 Publish / Deploy / Release，以及已知会触发这些动作的 Git 目标，继续遵循完整 Shipping Gate。
+
+---
+
 ## 七阶段敏捷开发工作流 (Standard 7-Stage Agile Lifecycle)
 
 每个 Release 均采用标准的七阶段敏捷生命周期，支持根据证据动态回退，形成持续演进闭环：
@@ -46,7 +54,7 @@ description: Use when 软件项目任务跨越多个步骤、会话或 Release�
 | **3. Building** | 组装任务包、TDD 循环、最小实现、分支隔离、CB 熔断 | Task 派发显式注入 `superpowers:test-driven-development`；并行调度 `superpowers:subagent-driven-development`；分支隔离调用 `superpowers:using-git-worktrees`；连续3次失败调用 `gstack:investigate` | 源码、单测、`PROGRESS.md`<br/>局部测试全绿、diff 无越界 |
 | **4. Review** | **置于系统测试前**：审查 Spec 契约合规、代码异味、消肿 | 显式调用 `gstack:review`（或 `superpowers:requesting-code-review`）；代码消肿调用 `gstack:deslop-shared-libs`；安全审查调用 `gstack:cso` | 评审记录、消肿重构提交<br/>无阻断 Critical/Important 问题 |
 | **5. Testing** | 系统级集成测试、真实无头/真机浏览器验收、证据归档 | 显式调度 `gstack:qa` 或 `gstack:browse`，驱动真实 Chromium 探针模拟交互；完成前显式调用 `superpowers:verification-before-completion` | `VERIFICATION.md` (逐项证据矩阵)<br/>`.evidence/<release-id>/` 原始日志/截图<br/>所有 AC 达到 `VERIFIED` |
-| **6. Shipping** | 独立发布授权、CI 审计、版本 Bump、Changelog 归档、发布 | 获得人类明确授权后，显式调用 `gstack:ship`（或 `superpowers:finishing-a-development-branch`）自动化交付 | Git Commit/Tag/PR、发布记录<br/>状态推进为 `RELEASED` |
+| **6. Shipping** | 正式发布：独立发布授权、CI 审计、版本 Bump、Changelog 归档、发布 | 获得人类明确发布授权后，显式调用 `gstack:ship`（或 `superpowers:finishing-a-development-branch`）自动化交付 | Release Commit/Tag/PR、发布记录<br/>状态推进为 `RELEASED` |
 | **7. Reflecting** | 结构化复盘、分析返工与耗时瓶颈、提炼反模式写入规则 | 显式调用 `gstack:retro` 执行自动化提交与流程分析 | `RETRO.md`、更新 `AGENTS.md`、更新 living `TECH_DESIGN.md` |
 
 ---
@@ -59,7 +67,7 @@ description: Use when 软件项目任务跨越多个步骤、会话或 Release�
 3. **Building 阶段**：向 Agent 派发任务时，Task Handoff Contract 必须显式注入 **`**REQUIRED SUB-SKILL:** Use superpowers:test-driven-development`**。遇到连续 3 次同类失败立即熔断，显式触发 `gstack:investigate`。
 4. **Review 阶段**：在端到端系统测试前，显式调用 `gstack:review` 独立审查 Spec Compliance 与代码健壮性，显式调用 `gstack:deslop-shared-libs` 抽取公用库。
 5. **Testing 阶段**：Web/UI 场景严禁纯 Mock 充数，显式调用 `gstack:qa` 或 `gstack:browse` 捕获真实 Chromium 控制台日志（0 报错）与界面截屏写入 `.evidence/`。
-6. **Shipping 阶段**：获得人类授权后，显式调用 `gstack:ship` 自动完成版本 Bump、Changelog 审计与 Git 交付。
+6. **Shipping 阶段**：正式 Publish / Deploy / Release 获得人类授权后，显式调用 `gstack:ship` 自动完成版本 Bump、Changelog 审计与发布交付；普通 Git 请求走 Lightweight Git Workflow。
 7. **Reflecting 阶段**：Release 交付后，显式调用 `gstack:retro` 自动化复盘，将反模式守则沉淀至 `AGENTS.md`。
 
 ### 优雅降级机制 (Graceful Degradation)
@@ -100,6 +108,8 @@ Tiny 任务可以使用用户的精确请求形成 task-local frozen intent；�
 
 ## 启动或继续工作
 
+仅执行 Git 请求时，直接采用 Lightweight Git Workflow 的最小上下文与检查，不为保存进度补齐需求基线或遍历七阶段文档。
+
 1. 从当前目录向上读取适用的 `AGENTS.md`。
 2. 查找唯一权威的 Document Map、当前项目索引和进度文档；优先按地图中的真实路径读取，缺失时再发现 `docs/vibe/PROJECT.md`、`docs/vibe/PROGRESS.md` 或等价文档。
 3. 用仓库、Git、代码和测试证据核验当前 Release、Stage、State、Slice、Task 与 Last Stable Commit。
@@ -133,7 +143,7 @@ REQUIREMENTS_FROZEN (Stage 1)
 ## 路由顺序与 Ready Frontier
 
 路由顺序不可颠倒：
-1. 检查 Product、Schema、Security、Destructive、External Service 和 Shipping Gate。
+1. 先区分普通 Git 操作与正式发布意图；普通 Git 走 Lightweight Git Workflow，其余检查 Product、Schema、Security、Destructive、External Service 和 Shipping Gate。
 2. 分类任务：`NEW_PROJECT | FEATURE | BUG | REFACTOR | SPIKE | REQUIREMENT_CHANGE`。
 3. 分类复杂度：`Tiny | Bounded | Architectural`。
 4. 确定 Document Budget 和 Quality Profile。
@@ -153,7 +163,7 @@ REQUIREMENTS_FROZEN (Stage 1)
 - Auth、Permission、Security 或数据暴露模型
 - 新外部付费服务、Secret 或重要网络数据边界
 - Destructive operation 或不可逆外部副作用
-- Push、PR、Publish、Deploy、Release
+- Publish、Deploy、Release；普通 Commit / Push / PR 按 Lightweight Git Workflow 判断已有授权与风险
 
 普通内部命名、私有接口、helper、局部目录和测试组织由 Agent 自主决定。方案 contract 见 [gates.md](references/gates.md)。
 
@@ -168,7 +178,7 @@ Shipping Authorization = 人类是否授权外部发布动作 (NOT_REQUESTED | P
 
 人类可以决定承担风险，但不能把缺失证据改写为 `VERIFIED` 或 `READY_TO_SHIP`。存在未覆盖的 REQ/AC 时保持 `UNVERIFIED` 或 `BLOCKED`；不得用“负责人接受风险”绕过事实状态。
 
-`publish/deploy/release` 只有在 Workflow State 已为 `READY_TO_SHIP` 且获得精确 Shipping Authorization 后才可执行；push/PR 也需要明确授权，且不得暗示 Release 已验证或可发布。
+`publish/deploy/release` 只有在 Workflow State 已为 `READY_TO_SHIP` 且获得精确 Shipping Authorization 后才可执行。普通 commit/push/PR 的操作授权独立于 Shipping Authorization，不以 READY_TO_SHIP 为前置条件，也不代表 Release 已验证或可发布。
 
 Task 进度须区分 `IMPLEMENTED_UNVERIFIED`、`POC_VALIDATED` 与 `VERIFIED`；POC 和已写代码不能推动 Release 进入 READY_TO_SHIP。详情见 [quality-and-release.md](references/quality-and-release.md)。
 

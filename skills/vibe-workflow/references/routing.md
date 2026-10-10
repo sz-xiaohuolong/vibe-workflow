@@ -6,6 +6,8 @@
 
 ## 路由顺序
 
+先识别操作意图：仅保存或共享当前开发进度的 `COMMIT | PUSH_BRANCH | COMMIT_AND_PUSH | OPEN_PR` 直接走 [Lightweight Git Workflow](execution.md#lightweight-git-workflow)，不按 Feature/Release 重走复杂度、Document Budget 和 Shipping。若请求同时包含开发任务，开发部分仍按下述路由执行；Git 部分按已获授权的范围执行。正式 Publish / Deploy / Release 或已知会触发发布的 Git 目标继续过 Shipping Gate。
+
 ```text
 Applicable repository rules
 → Product/Risk/Decision Gates
@@ -78,7 +80,7 @@ Pre-Freeze 需求探索阶段：0 到 1 全新构想必须优先经由 `gstack:o
 - Database schema、Migration、Destructive data operation
 - Public API、Compatibility、Platform boundary
 - Secret、Paid external service、Network data boundary
-- Push、PR、Publish、Deploy、Release
+- Publish、Deploy、Release；普通 Git 的目标、授权及危险操作由 Lightweight Git Workflow 检查
 
 代码行数不是风险等级。一行匿名下载条件修改属于 Security Gate；nullable 字段仍属于 Schema Gate。
 

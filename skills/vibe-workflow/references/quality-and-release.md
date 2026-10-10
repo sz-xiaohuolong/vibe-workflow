@@ -4,6 +4,8 @@
 
 选择 QA 强度、处理高风险模块、执行 Release Review、运行真实环境测试、声明完成、执行发布或封存 Release 时读取本文件。
 
+用户仅要求 Commit / Push / PR 时采用 [Lightweight Git Workflow](execution.md#lightweight-git-workflow)，不启动本文件的完整 Release Review/Testing/Shipping。已有证据的适用性按代码范围和环境判断；Git 成功不提供新的功能验证证据，不改变 Workflow State 或 Verification Status。
+
 ## Quality Profile
 
 优先使用项目已声明的 profile；没有时：明确 throwaway prototype 可用 Prototype，普通项目默认 Standard，面向真实用户/生产或高风险系统使用 Production。profile 显著改变成本或交付承诺时向用户展示建议和影响。
@@ -128,7 +130,9 @@ Shipping Authorization: NOT_REQUESTED | PENDING | APPROVED | DENIED
 - docs/traceability 一致。
 
 ### Human Shipping Gate
-Push、PR、publish、deploy、release 或不可逆外部副作用需要明确的人类授权。获得授权后，**显式调用 `gstack:ship`**（或 `superpowers:finishing-a-development-branch`）执行自动化版本 Bump、Changelog 审计、Commit、Tag 与 PR 创建。
+正式 publish、deploy、release 需要对精确 target 的明确 Shipping Authorization，且仍须满足上述 READY_TO_SHIP Gate。获得授权后，**显式调用 `gstack:ship`**（或 `superpowers:finishing-a-development-branch`）执行发布所需的版本 Bump、Changelog 审计、Release Commit、Tag 与 PR 创建。
+
+普通 `COMMIT | PUSH_BRANCH | COMMIT_AND_PUSH | OPEN_PR` 的明确操作授权独立于 Shipping Authorization；不要求 READY_TO_SHIP，可同步未验证的开发分支，不调用 `gstack:ship`。已知目标会自动触发正式部署/发布时仍适用完整 Shipping Gate，不能借普通 Git 请求绕过。
 
 ---
 

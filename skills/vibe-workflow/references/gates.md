@@ -61,6 +61,8 @@ Change Proposal 必须包含：
 
 调查完成、代码写法已知、方案文档已创建都不等于获批。方案影响发生实质变化时，状态回到 `WAITING_HUMAN` 并重新确认。
 
+普通 Git 操作采用 [Lightweight Git Workflow](execution.md#lightweight-git-workflow)：用户明确要求 Commit / Push / PR，且仓库、diff 范围与目标已确定时，该请求就是本次操作的明确授权；`COMMIT_AND_PUSH` 的授权覆盖同一范围内的提交和推送，不再重复申请。普通 Git 操作授权不等于 Shipping Authorization。目标分支不明、force push（包括 `--force-with-lease`）、覆盖历史、未授权危险修改或已知部署副作用须单独明确确认；普通 Push 授权不能被扩大使用。
+
 ## Schema / Migration Gate
 
 任何表、字段、索引、约束、关系、数据回填、删除或等价 ORM schema 变更都遵循：
@@ -116,18 +118,18 @@ UI 改动不能代表授权正确。改变匿名访问、AuthN/AuthZ、Secret、
 | **3. Building** | **Task TDD & Handoff Gate** | 遵循红绿循环、局部单测全绿、无越界改动 | 严禁标为 `IMPLEMENTED`，连续 3 次失败触发熔断 |
 | **4. Review** | **Release Review Gate** | Spec 100% 合规、无 Scope Creep、代码质量全过 | 严禁进入 Testing，直接打回 Building 修复 |
 | **5. Testing** | **Release Verification Gate** | 所有适用 REQ/AC 达到 `VERIFIED`，真机/浏览器证据新鲜有效 | 严禁进入 `READY_TO_SHIP`，记录 Bug 回退修复 |
-| **6. Shipping** | **Human Shipping Gate** | 人类针对明确 target 做出授权 | 严禁执行 git push / deploy / release 等外部副作用 |
+| **6. Shipping** | **Human Shipping Gate** | Release 就绪，人类针对明确发布 target 做出授权 | 严禁执行未经授权的 publish / deploy / release；普通 Git 另走轻量流程 |
 | **7. Reflecting** | **Continuous Learning Gate** | 结构化复盘完成、经验沉淀入 `AGENTS.md` | 严禁篡改已封存历史或污染下版 Frozen Scope |
 
 ## Verification 与 Shipping 分离
 
 - Verification Gate 只由实际证据决定。
-- Shipping Gate 只决定是否执行 push/PR/publish/deploy/release 等外部动作。
+- Shipping Gate 决定是否执行正式 publish/deploy/release；普通 commit/push/PR 的操作授权独立判断。
 
 人类风险接受不能把 `UNVERIFIED` 改成 `VERIFIED`，也不能让缺少 REQ/AC evidence 的 Release 成为 `READY_TO_SHIP`。
 
 V0.3 严格延续两权分立，不支持 emergency release 旁路：
 
 - `publish/deploy/release` 的必要前置条件是 Workflow State 已为 `READY_TO_SHIP`，之后仍需对精确 target 获得 Shipping Authorization。
-- push/PR 可在明确授权后用于协作，但必须保留真实 Verification Status，且不得描述为已验证、可发布或 Release 完成。
+- 普通 commit/push/PR 可按 Lightweight Git Workflow 的已有明确授权执行，无须完整 Release Verification；保留原 Current Stage、Workflow State 与真实 Verification Status，不得因 Git 成功声称已验证、可发布或 Release 完成。
 - 人类若要求发布未验证版本，拒绝执行该发布动作，记录缺口与后果；不得用“已接受风险”绕开生命周期状态。

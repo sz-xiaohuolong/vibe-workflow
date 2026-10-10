@@ -63,3 +63,4 @@ baseline 已经稳定通过的场景不因为“保险”而添加更重规则�
 - 不得默认读取全部历史 Release。
 - 不得声称未运行的验证通过。
 - 不得执行或建议隐式授权的 push、PR、publish、deploy、release 或破坏性操作。
+- Lightweight Git Workflow：S45–S49、S52 不得因普通 Git 请求启动完整 Shipping 或重复申请已确定的操作授权；S50、S51、S53 保留正式发布、危险历史覆盖与目标确认门禁。

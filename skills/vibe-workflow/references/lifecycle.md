@@ -19,6 +19,8 @@ Project
 
 Release 是对外有意义的范围/验收/发布边界；Slice 是同一 Release 中可运行、可验证的业务切片，Task 是更小的原子工作项。
 
+普通 `COMMIT`、`PUSH_BRANCH`、`COMMIT_AND_PUSH`、`OPEN_PR` 是当前阶段内的保存/协作动作，执行 [Lightweight Git Workflow](execution.md#lightweight-git-workflow)。它们不进入 Stage 6、不推进 Current Stage 或 Workflow State、不改写验证状态，也不触发 Release 封存或 Reflecting；`BUILDING` 的开发分支即使 Release 未验证，也可在明确授权后推送。正式 Publish / Deploy / Release 才进入下述 Shipping 契约。
+
 ---
 
 ## 七阶段敏捷开发模型 (The 7-Stage Lifecycle)
@@ -124,7 +126,7 @@ Release 是对外有意义的范围/验收/发布边界；Slice 是同一 Releas
 - **Failure Route**：测试失败 ➔ 记录 Bug ➔ 回退至 Stage 3（Building）修复 ➔ 经过 Stage 4（Review）复审 ➔ 重新进入 Stage 5 验收。
 
 ### 阶段 6：Shipping（交付）
-- **Entry Gate**：Stage 5 验收完毕，Workflow State 达到 `READY_TO_SHIP`。
+- **Entry Gate**：用户要求正式 Publish / Deploy / Release，Stage 5 验收完毕，Workflow State 达到 `READY_TO_SHIP`；普通 Git 操作不适用此阶段。
 - **Required Inputs**：`VERIFICATION.md`、变更日志、版本号、部署环境信息。
 - **Actions**：
   1. Preflight 检查：Git 状态干净、构建成功、无未解决阻塞项；
