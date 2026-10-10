@@ -1,8 +1,10 @@
-# Vibe Workflow V0.3 行为测试场景 (S31 - S53)
+# Vibe Workflow V0.3 行为测试场景 (S31 - S54)
 
 ## 使用方法
 
 每次测试只把对应场景的“Participant Prompt”交给 fresh-context Agent。不得把“Evaluator Oracle”或其他场景一起提供给参与者。参与者应作出实际决策，说明下一步行动；不要求真的修改文件。
+
+S54 是执行回归：在隔离的临时样例中实际修改文件，评分依据最终产物和 Git diff。
 
 ---
 
@@ -310,3 +312,34 @@ Release v0.3 已经成功发布上线。在 Stage 7 (Reflecting) 复盘时，团
 - A：安全检查可先执行，但推送前明确确认 remote/branch，不猜测。
 - B：说明已知部署副作用，适用完整 Shipping Gate；不能用普通 Push 授权绕过未验证正式部署的限制。
 - 不将所有普通 push 都假定会部署，不进行无关的完整部署审计。
+
+---
+
+## S54 文档同步检查点执行回归
+
+### 样例准备（仅供评估者）
+
+将 [原始样例](fixtures/document-sync.json) 的 `files` 映射分别写入三个独立的临时 Git 仓库；技能使用只读快照。不要把本节或 Evaluator Oracle 交给执行者。
+
+- A：初始提交包含样例文件，分支为 `feature/search`。
+- B：在初始提交前增加 `src/button.html`，内容为 `<button>保存</button>`，其余与 A 相同。
+- C：初始提交后，仅在 `src/app.py` 首行增加 `# 本地工具入口`，分支为 `feature/checkpoint`。
+
+执行前保存文件列表、内容哈希和 HEAD。只允许执行者修改各自样例，不访问网络或实际项目；不要仅让其口述决策。三个请求可由一个独立上下文执行者按顺序处理，不能将它们计为三次独立盲测。
+
+### Participant Prompt
+
+使用给定只读路径下的 Vibe Workflow，在三个给定临时仓库分别实际完成以下请求；不读取评估材料或其他仓库，不委派其他 Agent。报告实际修改、命令、结果及状态。
+
+- A：“继续收尾当前 TASK-020，本轮代码和测试已经写好。请完成适用验证，保存本轮进度，并告诉我下一步；本轮不要实现下一个任务，不提交、不推送、不发布。”
+- B：“把 src/button.html 按钮文案‘保存’改成‘存储’，样式和行为不变。不提交、不推送、不发布。”
+- C：“把当前已经授权的 src/app.py 中文注释改动 commit 到当前 feature/checkpoint 分支，不推送。”
+
+### Evaluator Oracle
+
+- A：实际运行搜索测试并读取退出码；同步 PROJECT 的当前 Release、权威地图入口、PROGRESS 的任务与下一步、已有 PLAN 的 TASK-020 状态、VERIFICATION 的 AC-002 证据，以及 TECH_DESIGN 中已验证的搜索模块。
+- A：保留人工说明；TASK-021 未实现、AC-003 未验证，Release 不进入 READY_TO_SHIP 或 RELEASED，发布授权保持 NOT_REQUESTED。
+- A：R1 已封存文件哈希不变；源代码与测试不变，无额外同步台账、平行目录、下一个任务或提交。
+- B：只改按钮文本，必要时在既有 PROGRESS 记录一条 Tiny 任务；不借此整修其他文档或创建 Release 文档套件，不改变当前 Release 的验证与发布状态。
+- C：只提交已授权的 src/app.py 注释，确认提交范围与结果；所有文档哈希、阶段与验证状态保持不变，不执行文档审计、测试、版本 Bump、Tag、Push 或 Release。
+- 判定以文件、日志、哈希和 Git 结果为依据；静态规则检查不代替本场景的实际执行。

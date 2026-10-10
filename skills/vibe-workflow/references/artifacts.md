@@ -129,14 +129,23 @@ Release Verification 必须能逐项回答“REQ 是否真的完成”，不能�
 | 变化 | 必须更新 | 按需更新 |
 |---|---|---|
 | 新 Release（包括已封存版本的后续修复） | PROJECT_BRIEF、SPEC、PLAN、PROGRESS | PROPOSED_DESIGN、DEC、CHANGE；实现后按证据更新 TECH_DESIGN |
+| 切换当前 Release | PROJECT 的当前 Release、PROGRESS 的定位信息、权威地图的当前入口 | 当前定位或边界发生变化时更新 PROJECT 对应段落 |
 | 当前 Release 内新 Feature/Slice | PROGRESS 清单一条；PLAN 的 Slice Map 按需更新 | 影响既有 REQ/AC 时更新对应验证行；无独立文档套件；若改变冻结范围，先过 Requirement Change Gate |
 | 产品行为变化 | 当前 Release baseline/SPEC、CHANGE | PROJECT、PROPOSED_DESIGN、DEC |
 | 架构/数据/公开接口变化 | PROPOSED_DESIGN、PLAN、PROGRESS；适用 Gate 时含 DEC | SPEC（产品行为受影响时）；实现验证后更新 TECH_DESIGN |
+| 架构变化实现并验证后 | TECH_DESIGN 中受影响的模块、接口与运行命令 | 当前 Release 的 PROPOSED_DESIGN 实现状态 |
 | Bug 修复 | BUG、测试/evidence | TECH_DESIGN、PROGRESS、VERIFICATION |
-| Task 完成 | PROGRESS、Task evidence | PLAN 状态、BUG/DEC |
-| Release 完成与复盘 | VERIFICATION、PROGRESS、RETRO | PROJECT、release notes、AGENTS.md |
+| Task 完成、阻塞或验证结果变化 | PROGRESS、Task evidence；已有 PLAN 与 VERIFICATION 的对应任务状态或验收行 | BUG/DEC；首次记录验证时沿用现有证据位置 |
+| READY_TO_SHIP 判定、发布后收尾 | 核对 PROJECT、PROGRESS、权威地图、PLAN、VERIFICATION、TECH_DESIGN 中相关版本、状态、路径与证据，修正过期内容 | 沿用职责等价文档，只处理适用项 |
+| Release 完成与复盘 | VERIFICATION、PROGRESS、RETRO；PROJECT 的当前版本与定位 | release notes、AGENTS.md |
 
 不相关文档无需机械修改。若容易造成误解，在当前记录中写明“不更新及理由”。
+
+### 文档同步检查点
+
+上述事件发生后，在同一轮结束或推进阶段前，按更新矩阵核对受影响的事实源，只修改变化的字段或段落。同步依据是代码、配置与实际证据；不得为消除文档差异把未验证项改为通过，也不得回写已封存的历史文档。恢复会话时发现的相关过期内容也在本轮同步。
+
+影响当前任务或交付判断的版本、状态、路径或证据冲突，须先核验并修正，再推进阶段或作完成声明；证据缺失时记录缺口并保留未验证状态。沿用现有路径，不新建同步台账，不为 Tiny 任务补齐 Release 文档套件，也不因普通 Commit / Push / PR 启动完整文档审计。
 
 ## 模板选择
 

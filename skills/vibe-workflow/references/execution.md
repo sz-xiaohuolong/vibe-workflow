@@ -74,8 +74,8 @@ Select Next Task (from Ready Frontier)
 → task verification (all green)
 → inspect diff (no out-of-scope changes)
 → review when required
+→ 按更新矩阵同步受影响文档
 → checkpoint/commit when available
-→ update PROGRESS
 → Next Task
 ```
 
@@ -89,6 +89,7 @@ Task 完成前至少确认：
 - 对应 Test Seam 产生新鲜的成功输出（fresh output）。
 - diff 不包含无关重构或用户现有改动。
 - PROGRESS 记录 evidence、稳定点和 Next Task。
+- 已按 [文档同步检查点](artifacts.md#文档同步检查点) 同步受影响文档，避免只更新 PROGRESS 而遗漏已有计划、验证记录或当前架构。
 
 ## Bug Workflow 与根因排查
 
@@ -167,6 +168,8 @@ Task 开始、完成、阻塞或触发 Gate/Circuit Breaker 时，同一轮更�
 - Next Task。
 
 PROGRESS 不复制 SPEC、TECH_DESIGN 或完整日志，只链接 owner。
+
+任务状态或证据变化时，同一轮按 [更新矩阵](artifacts.md#更新矩阵) 同步相关事实源；需要保存本轮改动时，将这些必要同步纳入本次范围。仅执行普通 Git 请求仍走 Lightweight Git Workflow，不额外补齐文档。
 
 ## Learning Loop
 
