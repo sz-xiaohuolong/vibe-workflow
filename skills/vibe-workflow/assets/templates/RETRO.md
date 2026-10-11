@@ -17,7 +17,7 @@
 
 ### Thinking (需求澄清)
 - 需求澄清轮次: `<次数>`
-- 外部技能调度: `<gstack:office-hours / grill-me / 内置 ask_question>`
+- 需求对质方式: `<Matt 的 grilling（自动）/ grill-me（用户显式调用）/ 内置结构化提问>`
 - 逃逸至后期的需求歧义: `<无 / 记录具体项>`
 
 ### Planning (规划与设计)

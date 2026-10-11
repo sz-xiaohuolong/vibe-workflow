@@ -9,7 +9,7 @@ description: Use when 软件项目任务跨越多个步骤、会话或 Release�
 
 把已经确认的产品意图可靠地推进为可验证的软件。`vibe-workflow` 是生命周期 Orchestrator：负责调度 Release 七阶段状态机、执行工程门禁、编排专业 Skill，以及治理仓库权威事实源。
 
-**Grill Me 负责确认做什么；Vibe Workflow 负责可靠地把它做出来。**
+**Matt 的 `grilling` 负责确认做什么；Vibe Workflow 负责可靠地把它做出来。`grill-me` 是用户显式调用的需求对质入口。**
 
 ## Constitution (工程宪法)
 
@@ -49,7 +49,7 @@ description: Use when 软件项目任务跨越多个步骤、会话或 Release�
 
 | 阶段 (Stage) | 核心目标与动作 | 显式触发与外部技能 | 交付产物与出口条件 |
 |---|---|---|---|
-| **1. Thinking** | 澄清需求、明确边界、锁定基线<br/>**【首轮严禁写文件】** | 优先调用 `gstack:office-hours`（YC减法）➔ `grill-me`（锁定AC）；缺失时调用内置交互工具 `ask_question` 对质 | `PROJECT_BRIEF.md` (FROZEN)<br/>`Requirement Status == FROZEN`<br/>`Open Questions == None` |
+| **1. Thinking** | 澄清需求、明确边界、锁定基线<br/>**【首轮严禁写文件】** | 自动需求对质优先使用 Matt 的 `grilling`；用户显式请求 `grill-me` 时使用该入口；技能不可用时降级为内置结构化提问协议 | `PROJECT_BRIEF.md` (FROZEN)<br/>`Requirement Status == FROZEN`<br/>`Open Questions == None` |
 | **2. Planning** | 方案头脑风暴、定义 Test Seams、多维评审、拆解依赖图 | 方案探索调用 `superpowers:brainstorming`；方案审查调用 `gstack:autoplan` (或 `plan-ceo/eng-review`)；计划拆解调用 `superpowers:writing-plans` | `SPEC.md`, `PROPOSED_DESIGN.md`<br/>`IMPLEMENTATION_PLAN.md`<br/>包含 Test Seams 与 Ready Frontier |
 | **3. Building** | 组装任务包、TDD 循环、最小实现、分支隔离、CB 熔断 | Task 派发显式注入 `superpowers:test-driven-development`；并行调度 `superpowers:subagent-driven-development`；分支隔离调用 `superpowers:using-git-worktrees`；连续3次失败调用 `gstack:investigate` | 源码、单测、`PROGRESS.md`<br/>局部测试全绿、diff 无越界 |
 | **4. Review** | **置于系统测试前**：审查 Spec 契约合规、代码异味、消肿 | 显式调用 `gstack:review`（或 `superpowers:requesting-code-review`）；代码消肿调用 `gstack:deslop-shared-libs`；安全审查调用 `gstack:cso` | 评审记录、消肿重构提交<br/>无阻断 Critical/Important 问题 |
@@ -62,7 +62,14 @@ description: Use when 软件项目任务跨越多个步骤、会话或 Release�
 ## 外部 Skill 显式编排与优雅降级
 
 ### 显式强提示规则 (Explicit Invocation Directives)
-1. **Thinking 阶段**：接收到全新产品或未冻结需求时，**首轮严禁执行 `write_to_file` 创建代码或规划文档**。必须显式触发需求澄清流程（优先调用 `gstack:office-hours` + `grill-me`，或使用内置 `ask_question` 发起至少 3~5 个高价值决策提问）。
+1. **Thinking 阶段**：接收到全新产品或未冻结需求时，遵循以下调用规则：
+   - 自动需求对质优先使用 Matt 的 `grilling`。
+   - 用户显式请求 `grill-me` 时，使用该用户入口；不得自动调用该入口。
+   - 首轮需求澄清不创建工程文档，严禁执行 `write_to_file` 创建代码或规划文档。
+   - 技能不可用时，降级为内置结构化提问协议，使用可用交互工具（如 `ask_question`）澄清关键产品问题。
+
+   调用前核对技能来源、实际名称与调用限制；仅有声明 `disable-model-invocation: true` 的 `grill-me` 时，不得将其作为 `grilling` 的自动替代。
+
 2. **Planning 阶段**：架构方案制定前，显式提示并调度 `superpowers:brainstorming`；方案审查显式调用 `gstack:autoplan`；实施拆解显式调用 `superpowers:writing-plans`。
 3. **Building 阶段**：向 Agent 派发任务时，Task Handoff Contract 必须显式注入 **`**REQUIRED SUB-SKILL:** Use superpowers:test-driven-development`**。遇到连续 3 次同类失败立即熔断，显式触发 `gstack:investigate`。
 4. **Review 阶段**：在端到端系统测试前，显式调用 `gstack:review` 独立审查 Spec Compliance 与代码健壮性，显式调用 `gstack:deslop-shared-libs` 抽取公用库。
@@ -89,7 +96,7 @@ Current Release ID exists
 Acceptance Goals are testable
 ```
 
-任一条件失败：停止工程活动，列出缺失项，首轮禁止写文件，并将需求对质路由给 `grill-me` / `gstack:office-hours` 或等价能力。不要替用户主观推导或补全产品行为。
+任一条件失败：停止工程活动，列出缺失项，首轮禁止写文件，并按 Thinking 调用规则优先使用 Matt 的 `grilling` 对质；用户显式请求时使用 `grill-me`，技能不可用时降级为内置结构化提问协议。不要替用户主观推导或补全产品行为。
 
 以下说法都不构成 Requirement Freeze：
 - “直接做，别再问了”

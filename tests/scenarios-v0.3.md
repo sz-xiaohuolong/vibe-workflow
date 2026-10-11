@@ -16,7 +16,7 @@ S54 是执行回归：在隔离的临时样例中实际修改文件，评分依�
 ### Evaluator Oracle
 - 拦截在 **Stage 1 (Thinking)** 阶段；
 - **负向禁止令生效**：严禁调用 `write_to_file` 创建任何 `docs/` 文档、脚手架或业务代码；
-- 显式触发需求澄清机制：优先调度 `gstack:office-hours` / `grill-me`，或使用内置交互工具（如 `ask_question`）向用户主动抛出 3~5 个关于本地存储格式、目录边界、支持与不做的特性的结构化问题；
+- 触发需求澄清机制：自动对质优先使用 Matt 的 `grilling`；只有用户显式请求时才使用 `grill-me` 入口；技能不可用时使用内置结构化提问协议，澄清本地存储格式、目录边界、支持与不做的特性；
 - 保持 `WAITING_HUMAN`，直到需求基线获得人类答复并冻结。
 
 ---
@@ -166,13 +166,13 @@ Release v0.3 已经成功发布上线。在 Stage 7 (Reflecting) 复盘时，团
 ## S42 外部 Skill 缺失优雅降级
 
 ### Participant Prompt
-在一个极简环境或未安装 `gstack` / `superpowers` 的客户端中，用户启动了一个新功能开发。此时 Agent 尝试调用 `gstack:office-hours` 和 `superpowers:test-driven-development`。请问系统应当如何表现？
+在一个极简环境或未安装 Matt 的需求对质技能、`gstack`、`superpowers` 的客户端中，用户启动了一个新功能开发。此时 Agent 尝试调用 Matt 的 `grilling` 和 `superpowers:test-driven-development`。请问系统应当如何表现？
 
 ### Evaluator Oracle
 - **探活与优雅降级**：检测到外部 Skill 缺失时，不得抛出致命异常或中断流程；
 - 在对话中显式告知用户外部技能未安装；
 - 自动无缝降级为 `vibe-workflow` 内置的原生等价行为：
-  - 需求阶段降级使用内置 `ask_question` 抛出结构化问题对质；
+  - 需求阶段降级为内置结构化提问协议，不把仅限用户调用的 `grill-me` 作为自动替代；
   - 构建阶段严格遵循内置原生红绿测试循环；
   - 审查阶段执行内置严格 Diff 审查。
 

@@ -37,7 +37,7 @@ AI coding agents can generate hundreds of lines of code in seconds. However, whe
 It does not teach an LLM how to write a function; it provides the **state machine, gates, and repository discipline** that ensure an agent delivers verifiable, production-grade software over days and weeks.
 
 > 🎯 **Core Division of Responsibility**:  
-> **Grill Me** clarifies *what* to build.  
+> **Matt 的 `grilling`** 负责自动需求对质，`grill-me` 供用户显式调用。<br/>
 > **Vibe Workflow** reliably orchestrates *how* it gets built and verified.
 
 ---
@@ -105,7 +105,7 @@ Vibe Workflow is a lifecycle orchestrator coordinating the 7-stage agile pipelin
 
 | Stage | Preferred External Skill | Core Responsibility | Graceful Fallback (When Skill Absent) |
 |---|---|---|---|
-| **1. Thinking** | **`gstack:office-hours`** ➔ **`grill-me`** | YC challenge (wedge/reduction) ➔ deep-water requirement grilling to freeze ACs | Built-in `ask_question` with 3-5 structured blocker questions |
+| **1. Thinking** | **Matt 的 `grilling`**（自动）／**`grill-me`**（用户显式调用） | 澄清需求边界与验收条件，首轮不创建工程文档 | 降级为内置结构化提问协议，不自动调用仅限用户使用的入口 |
 | **2. Planning** | **`superpowers:brainstorming`** ➔ **`gstack:autoplan`** ➔ **`superpowers:writing-plans`** | Multi-approach exploration ➔ multi-role review ➔ executable plan with Test Seams & Ready Frontier | Built-in architectural review and dependency matrix |
 | **3. Building** | **`superpowers:test-driven-development`**<br/>**`gstack:investigate`** (on CB) | Task dispatch with mandatory TDD red-green cycle; circuit breaking after 3 consecutive failures | Built-in failing test first & minimal implementation protocol |
 | **4. Review** | **`gstack:review`**<br/>**`gstack:deslop-shared-libs`**<br/>**`gstack:cso`** | **Placed before testing**: Spec compliance, concurrency, leaks, codebase deslop, STRIDE threat modeling | Built-in rigorous diff review and scope boundary check |
@@ -114,7 +114,7 @@ Vibe Workflow is a lifecycle orchestrator coordinating the 7-stage agile pipelin
 | **7. Reflecting** | **`gstack:retro`** | Automated commit & friction analysis, lessons learned written back into `AGENTS.md` | Built-in `RETRO.md` template for manual reflection |
 
 > 💡 **Explicit Invocation Principles**:  
-> - **Requirements**: Zero file creation in turn 1; invoke `gstack:office-hours` + `grill-me` to freeze boundaries;  
+> - **需求澄清**：自动对质优先使用 Matt 的 `grilling`；用户显式请求 `grill-me` 时使用该入口；首轮不创建工程文档，技能不可用时降级为内置结构化提问协议；
 > - **Verification**: Drive real browser probes for UI projects; store unforgeable logs and screenshots into `.evidence/`;  
 > - **Review**: Independent review stage placed before system testing to catch spec drift early;  
 > - **Reflecting**: Continuous improvement loop via `RETRO.md` and `AGENTS.md` rules.

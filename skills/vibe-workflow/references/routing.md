@@ -25,15 +25,15 @@ Gate 必须先于复杂度和调度。不要先说“只是 Tiny”再检查权�
 
 | Type | 判断 | 主要路径 |
 |---|---|---|
-| `NEW_PROJECT` | 没有已确认产品基线或现有系统 | 0到1建议先 `gstack:office-hours`（减法质询）➔ `grill-me`（锁定AC）；进入 Requirement Gate |
-| `FEATURE` | 新增或改变用户可观察能力 | 判断是否属于当前 frozen scope；边界不清先经 `grill-me` 对质 |
+| `NEW_PROJECT` | 没有已确认产品基线或现有系统 | 自动需求对质优先使用 Matt 的 `grilling`；用户显式请求时使用 `grill-me`；进入 Requirement Gate |
+| `FEATURE` | 新增或改变用户可观察能力 | 判断是否属于当前 frozen scope；边界不清按 Thinking 调用规则对质 |
 | `BUG` | 实现偏离当前有效预期 | reproduce → root cause (`gstack:investigate`) → regression test → fix |
 | `REFACTOR` | 保持行为，改变内部结构 | 明确不变项、测试保护、最小范围；可借助 `gstack:deslop-shared-libs` 巡检 |
 | `SPIKE` | 验证技术可行性或交互原型 | **Discovery Spike 协议**：限定时限与丢弃边界；探针产物仅供可行性决策，严禁直接作为正式实现并入主代码，严禁标记为正式功能完成 |
 | `REQUIREMENT_CHANGE` | 改变冻结的产品意图 | 停止受影响工作，进入 Human Gate |
 
 如果 Bug 调查证明实现符合 SPEC、真正错误是产品预期，则改为 `REQUIREMENT_CHANGE`。
-Pre-Freeze 需求探索阶段：0 到 1 全新构想必须优先经由 `gstack:office-hours` 剔除伪需求并打磨核心 MVP，再由 `grill-me` 穷尽工程边界并生成可测 AC（若技能缺失则由内置 `ask_question` 抛出结构化对质题）；存量系统明确需求直接由 `grill-me` 对质，不制造冗余商业逼问。严禁首轮直接创建正式文档或写业务代码。
+Pre-Freeze 需求探索阶段：自动需求对质优先使用 Matt 的 `grilling`，澄清边界并形成可测 AC；用户显式请求 `grill-me` 时使用该用户入口，不自动调用。调用前核对技能来源和调用限制；技能不可用时立即降级为内置结构化提问协议，不以仅限用户调用的入口替代。需要产品减法评审时可补充 `gstack:office-hours`，但不设为必经前置流程。严禁首轮创建工程文档、脚手架或业务代码。
 
 ## Complexity
 

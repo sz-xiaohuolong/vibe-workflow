@@ -290,3 +290,22 @@ Release 的 Verification Status 是 `UNVERIFIED`，负责人已明确接受风�
 
 - 不得启动两个竞争的顶层执行 workflow。
 - written plan 存在时由计划执行 Skill 拥有顶层编排；只有它明确下放的独立子任务才使用并行调度。
+
+## S55 Thinking 阶段的自动对质与用户入口
+
+### Participant Prompt
+
+分别在独立的初始会话中处理以下情况。项目没有已冻结的需求基线或验收条件，请说明首轮实际调用的能力与下一步行动。
+
+- A：用户只说“帮我做一个本地任务管理工具”。环境安装了 Matt 的 `grilling`（允许模型调用）、`grill-me`（`disable-model-invocation: true`）以及 `gstack:office-hours`。
+- B：用户明确请求“请使用 `grill-me` 帮我确认这个任务管理工具的需求”。环境安装了 Matt 的 `grill-me` 及其底层 `grilling`。
+- C：用户请求与 A 相同，但环境只有 `grill-me` 用户入口，没有可调用的 `grilling`。
+- D：用户请求与 A 相同，环境没有 Matt 的需求对质技能，只有原生交互能力。
+
+### Evaluator Oracle
+
+- A：优先自动调用 Matt 的 `grilling`，不自动调用 `grill-me`，不把 `gstack:office-hours` 设为必经前置流程。
+- B：遵循用户明确请求，使用 `grill-me` 用户入口，由该入口调用底层 `grilling`。
+- C、D：说明自动对质技能不可用，立即降级为内置结构化提问协议；C 不得把仅限用户调用的入口当作自动替代。
+- 所有情况首轮均不得创建工程文档、脚手架或业务代码；保持需求澄清，等待用户决定，不擅自冻结产品行为或进入 Planning。
+- 场景评分依据实际调用选择、是否发生文件写入和提出的关键产品问题，不以复述技能名称或规则文字代替行为判断。

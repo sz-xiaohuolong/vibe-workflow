@@ -37,7 +37,7 @@
 它不教大模型怎么写某个具体函数，而是提供**状态机、人类决策关卡 (Gates) 和仓库工程纪律**，确保 Agent 在数天甚至数周的长期演进中，交付可验证、生产级的软件。
 
 > 🎯 **核心权责分工**：  
-> **Grill Me** 负责确认做什么 (What to build)；  
+> **Matt 的 `grilling`** 负责自动需求对质，`grill-me` 供用户显式调用；<br/>
 > **Vibe Workflow** 负责可靠地把它做出来并验证 (How to execute and verify)。
 
 ---
@@ -105,7 +105,7 @@ Vibe Workflow 是全局生命周期调度器，在对应阶段优先显式调用
 
 | 阶段 | 首选外部专业工具 | 核心职责 | 技能缺失时的优雅降级 |
 |---|---|---|---|
-| **1. Thinking** | **`gstack:office-hours`** ➔ **`grill-me`** | YC 逼问（窄切口/减法）➔ 需求边界逐项深水区对质，锁定 AC | 降级调用内置 `ask_question` 发起至少 3~5 个阻断式选择题 |
+| **1. Thinking** | **Matt 的 `grilling`**（自动）／**`grill-me`**（用户显式调用） | 澄清需求边界与验收条件，首轮不创建工程文档 | 降级为内置结构化提问协议，不自动调用仅限用户使用的入口 |
 | **2. Planning** | **`superpowers:brainstorming`** ➔ **`gstack:autoplan`** ➔ **`superpowers:writing-plans`** | 头脑风暴探索多方案 ➔ 架构/减法/数据流多维评审 ➔ 拆解带 Test Seams 与 Ready Frontier 的实施计划 | 降级使用内置设计走查与依赖拓扑矩阵 |
 | **3. Building** | **`superpowers:test-driven-development`**<br/>**`gstack:investigate`** (熔断时) | Task 派发强制注入 TDD 红绿循环；连续 3 次失败触发熔断与根因排查 | 降级执行内置原生失败测试先行与最小实现协议 |
 | **4. Review** | **`gstack:review`**<br/>**`gstack:deslop-shared-libs`**<br/>**`gstack:cso`** | **置于测试前**：审查 Spec Compliance、并发、时区、资源泄露；扫描跨模块重复代码并抽取公共库；威胁建模 | 降级执行内置严格 Diff 审查与边界核验 |
@@ -114,7 +114,7 @@ Vibe Workflow 是全局生命周期调度器，在对应阶段优先显式调用
 | **7. Reflecting** | **`gstack:retro`** | 交付后自动化分析提交历史、返工频率与耗时瓶颈，沉淀规则至 `AGENTS.md` | 降级使用内置 `RETRO.md` 模板进行人工结构化复盘 |
 
 > 💡 **显式调用原则**：  
-> - **做需求**：0 到 1 构想首轮严禁写文件，优先调用 `gstack:office-hours` + `grill-me` 穷尽工程边界；  
+> - **做需求**：自动对质优先使用 Matt 的 `grilling`；用户显式请求 `grill-me` 时使用该入口；首轮不创建工程文档，技能不可用时降级为内置结构化提问协议；
 > - **做验证**：Web/UI 项目必须通过真实浏览器探针抓取控制台零报错与截屏存入 `.evidence/`，拒绝假完成；  
 > - **做审查**：Release 级审查独立置于系统测试前，提前拦截规格漂移与并发漏洞；  
 > - **做复盘**：交付后产出 `RETRO.md`，将反模式守则沉淀至 `AGENTS.md`，实现跨会话持续进化。

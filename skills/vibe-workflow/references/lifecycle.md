@@ -58,12 +58,14 @@ Release 是对外有意义的范围/验收/发布边界；Slice 是同一 Releas
 - **Actions**：
   1. 识别任务属性（NEW_PROJECT / FEATURE / BUG / SPIKE / REQUIREMENT_CHANGE / TINY）；
   2. **【显式调用与负向禁止令】首轮严禁执行 `write_to_file` 创建任何实现或规划文档！**
-     - 若可用，显式优先触发 `gstack:office-hours`（执行 YC 6 问：需求真实性、Narrowest Wedge、Non-goals 减法）；
-     - 进一步调用 `grill-me` 针对边界条件、数据模型、验收指标进行逐项深水区对质；
-     - 若上述外部技能未安装，**强制显式调用内置交互工具（如 `ask_question`）**，抛出 3~5 个关于边界、不做的范围、数据格式的结构化问题，等待人类答复；
+     - 自动需求对质优先使用 Matt 的 `grilling`，澄清边界条件、数据模型与验收指标；
+     - 用户显式请求 `grill-me` 时使用该用户入口；调用前核对技能来源和调用限制，不自动调用声明 `disable-model-invocation: true` 的入口；
+     - 首轮需求澄清不创建工程文档；外部技能自身的文档写入动作也必须遵守当前阶段限制；
+     - 技能不可用时立即降级为内置结构化提问协议，使用可用交互工具（如 `ask_question`）澄清关键产品问题，等待人类答复；
+     - 需要产品减法评审时可补充 `gstack:office-hours`，但不设为自动对质的必经前置流程；
   3. 若需验证技术可行性，允许受控 Discovery Spike（限定时限与丢弃边界，探针代码不入主分支）；
   4. 人类对质答复完成后，锁定需求基线，确定可独立测试的 Acceptance Goals。
-- **External Skills**：`gstack:office-hours`、`grill-me`、`gstack:design-shotgun`（Spike 原型）。
+- **External Skills**：Matt 的 `grilling`（自动需求对质）、`grill-me`（用户显式调用）、`gstack:office-hours`（可选产品评审）、`gstack:design-shotgun`（Spike 原型）。
 - **Outputs**：`PROJECT_BRIEF.md`（状态锁定为 `FROZEN`，`Open Questions == None`）。
 - **Exit Gate**：满足 `Requirement Status == FROZEN` 且 `Open Questions == None`，验收目标可独立判定。
 - **Failure Route**：若存在未解决歧义，保持 `WAITING_HUMAN`，禁止进入 Planning 阶段。
@@ -161,9 +163,9 @@ Release 是对外有意义的范围/验收/发布边界；Slice 是同一 Releas
 ## 优雅降级与能力探测机制 (Graceful Degradation)
 
 若运行环境未安装上述外部 Skill，Agent 必须遵循：
-1. **先探测**：检查环境是否具备对应的外部 Skill 或 Slash Command；
+1. **先探测**：检查环境是否具备对应的外部 Skill 或 Slash Command，并核对来源、实际名称与调用限制；仅限用户调用的入口不得作为自动编排的替代；
 2. **后降级**：若未安装，**在回复中显式告知用户**，并立即无缝降级为 `vibe-workflow` 内置的原生等价行为：
-   - 缺少 `gstack:office-hours` / `grill-me` ➔ 降级使用内置 `ask_question` 抛出 3~5 个阻断式选择题对质；
+   - Matt 的 `grilling` 不可用，或用户显式请求的 `grill-me` 不可用 ➔ 降级使用内置结构化提问协议；不自动调用仅限用户使用的入口；
    - 缺少 `superpowers:test-driven-development` ➔ 严格执行内置原生失败单测先行循环；
    - 缺少 `gstack:qa` / `gstack:browse` ➔ 降级使用 Playwright / Chromium CLI 或原生测试探针捕获证据；
    - 缺少 `gstack:retro` ➔ 降级使用内置 `RETRO.md` 模板进行人工结构化复盘。
