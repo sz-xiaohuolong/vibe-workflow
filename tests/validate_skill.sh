@@ -54,6 +54,7 @@ required_files=(
   references/lifecycle.md
   references/init.md
   references/routing.md
+  references/orchestration.md
   references/artifacts.md
   references/context.md
   references/gates.md
@@ -88,10 +89,10 @@ if rg -n 'TODO|TBD|Briefly describe|Add the task-specific' \
 fi
 
 rg -q 'Requirement Status == FROZEN' "$skill_dir/SKILL.md"
-rg -q 'publish/deploy/release.*READY_TO_SHIP' "$skill_dir/SKILL.md"
+rg -q 'READY_TO_SHIP' "$skill_dir/SKILL.md"
 rg -q 'subagent-driven-development' "$skill_dir/SKILL.md"
 rg -q 'executing-plans' "$skill_dir/SKILL.md"
-rg -q 'written plan.*顶层执行编排' "$skill_dir/SKILL.md"
+rg -q 'orchestration.md' "$skill_dir/SKILL.md"
 rg -q '^\| Release `<ID>` \|' "$skill_dir/assets/templates/PROGRESS.md"
 rg -q '^\- \[ \] `SLICE-01`' "$skill_dir/assets/templates/PROGRESS.md"
 rg -q 'Triggered: `待核验`' "$skill_dir/assets/templates/PROGRESS.md"

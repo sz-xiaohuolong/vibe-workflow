@@ -41,7 +41,9 @@ Pre-Freeze 需求探索阶段：自动需求对质优先使用 Matt 的 `grillin
 
 同时满足：影响单点、行为明确、低风险、无跨模块共享状态、无 Gate、可在一个小验证闭环内完成。
 
-使用用户精确请求作为 task-local frozen intent。通常不新建正式 PROJECT_BRIEF、SPEC、TECH_DESIGN 或 PLAN。若项目已有 PROGRESS/CHANGE 约定，只做最小同步。
+使用用户精确请求作为 task-local frozen intent。直接执行“相关文件 → 修改 → 最小检查 → 报告”，不要求 Release ID，不新建 PROJECT_BRIEF、SPEC、TECH_DESIGN、PLAN 或证据目录。已有 PROGRESS/CHANGE 约定只做最小同步。
+
+Tiny 默认由当前 Agent 原地执行，不启动需求访谈、autoplan、子代理、worktree、完整 Review/QA 或 retro。Production 项目也按本次实际风险选择检查。无行为变化的文档、文案、静态值编辑不强制 TDD；实际行为变化仍需相关验证，风险 Gate 优先。
 
 若当前用户消息已精确指定单点、低风险且无语义变化的修改，它已经是该 Tiny Task 的明确人类决定；不要因为旧 baseline 的字面值不同而制造第二次 Human Gate。只有仍需 Agent 选择产品含义、边界、风险或 Acceptance 时，才升级为 `REQUIREMENT_CHANGE`。
 
@@ -49,15 +51,15 @@ Pre-Freeze 需求探索阶段：自动需求对质优先使用 Matt 的 `grillin
 
 ### Bounded
 
-有一个有限业务闭环，可能跨少量文件，但边界、Acceptance 和风险已知。记录 Task/Feature contract、相关 AC、实现任务和验证；没有架构选择时不强制完整设计文档。
+有一个有限业务闭环，可能跨少量文件或会话，边界、Acceptance 和风险已知。沿用现有记录保存目标、AC、必要任务和验证，不强制新 Release、设计文档、多角色评审或子代理。已有批准直接作为输入，无未决产品选择时不重新访谈。
 
 示例：在当前 Release 已批准范围内增加“删除录音”完整闭环。
 
 ### Architectural
 
-满足任一项：新项目/子系统、跨多个领域、改变长期接口/数据/权限、存在多个实质方案、多会话执行、迁移、跨外部系统且锁定长期契约或部署方式、失败难以回退。
+满足任一项：新项目/子系统、跨多个领域且实质耦合、改变长期接口/数据/权限、存在影响长期方向的实质方案、迁移、跨外部系统且锁定长期契约或部署方式、失败难以回退。
 
-需要完整 Requirement baseline、Effective SPEC、Technical Design/Decision、Implementation Plan 和 Release Verification。
+需要完整的需求、规格、设计/决定、计划与验证职责，但沿用已有等价文档，不按文件数量衡量完整性。仅多文件、多会话或短计划不构成 Architectural。
 
 ### 跨模块可观察触发
 
@@ -70,7 +72,7 @@ Pre-Freeze 需求探索阶段：自动需求对质优先使用 Matt 的 `grillin
 5. 改动权限、密钥或数据暴露面。
 6. Schema/迁移及依赖它的状态机、读写路径。
 
-至少列出写入入口、读取方、传播/刷新/恢复路径、失败与取消路径、受影响及已检查未受影响的模块，并把对应行为映射到 AC 和验证。若触及长期公共契约、核心模型、迁移、多会话或难以回退的选择，升级 Architectural；第 5、6 类还须先通过 Security/Schema Gate。跨模块 Bug 沿用 BUG 记录并补影响范围，不因此强制新建完整 Release 文档。无共享状态、无跨边界影响的局部纯函数改动不因技术关键词出现而升级。
+至少列出写入入口、读取方、传播/刷新/恢复路径、失败与取消路径、受影响及已检查未受影响的模块，并把对应行为映射到 AC 和验证。若触及长期公共契约、核心模型、迁移或难以回退的选择，升级 Architectural；第 5、6 类还须先通过 Security/Schema Gate。跨模块 Bug 沿用 BUG 记录并补影响范围，不因此强制新建完整 Release 文档。无共享状态、无跨边界影响的局部纯函数改动不因技术关键词出现而升级。
 
 ## Gate 覆盖规则
 
@@ -91,8 +93,8 @@ Pre-Freeze 需求探索阶段：自动需求对质优先使用 Matt 的 `grillin
 | Tiny，未采用 vibe docs | 不强制新增文档；精确请求 + diff + evidence |
 | Tiny，已有受治理项目 | 按现有约定更新 PROGRESS/CHANGE 中相关一行 |
 | Bounded | Task/Feature contract、AC、相关 tests/evidence |
-| Architectural | Release artifact 全套及必要 DEC |
-| Bug | BUG record；只有复杂/跨模块时增加详细影响与进度 |
+| Architectural | 受影响的规格、目标设计、计划和验证事实；沿用等价文档，必要时记录 DEC；正式 Release 才建立发布基线 |
+| Bug | 简单修复沿用现有任务/Issue；复杂或跨模块时才增加 BUG 记录与影响分析 |
 | Spike | 问题、范围、证据、结论、是否丢弃；不得标成功能完成 |
 
 不要为了流程创建空目录、重复台账或没有事实所有权的文档。
@@ -131,6 +133,6 @@ Exploration Race 可让多个 Agent 独立提出方案；比较和决定完成�
 
 ## 计划执行与并行的优先级
 
-若存在已批准的 written plan，先选择一个顶层执行 owner：当前会话使用 `superpowers:subagent-driven-development`，单独会话/检查点执行使用 `superpowers:executing-plans`。不要同时再启动 `superpowers:dispatching-parallel-agents` 作为竞争的顶层 workflow。
+简单计划由当前 Agent 直接执行。复杂、已批准的 written plan 若确需委派，选择一个顶层 owner：当前会话可用 `superpowers:subagent-driven-development`，检查点执行可用 `superpowers:executing-plans`，不能并列运行。SDD 的实现子代理按任务串行，不用于并行实现。
 
-`dispatching-parallel-agents` 只用于：没有 written plan 的独立调查/分析，或顶层计划执行 owner 已明确下放的无依赖子任务。并行仍须满足本文件的 Gate、依赖、共享写状态和 Integration/Review 条件。
+`dispatching-parallel-agents` 可用于独立调查/分析；并行实现只有在宿主允许、无共享写状态、各自隔离工作区且具备集成验证时才由唯一 owner 调度。SDD 运行期间不另开并行实现器。预计上下文、协调和重复验证成本高于收益时保持串行。

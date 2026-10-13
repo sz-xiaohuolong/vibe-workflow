@@ -49,14 +49,14 @@
 | **模糊加急需求** | 擅自猜测缺失边界，产出一堆玩具代码。 | **触发入口 Gate 拦截**：四项可观察条件未全部满足前，严禁写代码。 |
 | **中途随口加功能** | 顺手修改代码，破坏既有架构并引入依赖冲突。 | **触发 Requirement Change Gate**：暂停受影响工作，提交变更影响提案待人类批准。 |
 | **同类 Bug 连续失败** | 盲目重试 Patch，直至代码结构崩塌。 | **触发 Circuit Breaker 熔断**：连续 3 次失败立即停手，保存现场并强制重新规划。 |
-| **完成交付汇报** | “全部搞定！”（实际上 build 都跑不通）。 | **触发 Evidence Gate 门禁**：无新鲜、通过的测试/构建证据，严禁声称“Done”。 |
+| **完成交付汇报** | “全部搞定！”（实际上 build 都跑不通）。 | **触发 Evidence Gate 门禁**：没有对应当前输入与环境的有效证据，不声称完成。 |
 | **跨会话记忆恢复** | 依赖模糊的聊天记录；产生架构幻觉。 | **Repository is Memory**：只从 Git、测试和已验证的 living docs 恢复状态。 |
 
 ---
 
 ## ⚡ 五大核心工程支柱
 
-1. **需求冻结与入口门禁 (Requirements Freeze & Entry Gate)**：工程开始前必须满足四项可观察条件：`Requirement Status == FROZEN`、`Open Questions == None`、`Release ID 存在`、`验收目标可测`。
+1. **需求冻结与入口门禁**：完整 Release 开始前须满足需求 `FROZEN`、无阻塞问题、Release ID 和可测验收目标。Tiny/Bounded 使用已确认的任务范围，已有授权不重复申请。
 2. **Repository is Memory, Chat is Conversation**：聊天上下文是瞬态的。Git、测试和仓库现有事实文档承载持久状态；`docs/vibe/` 只是新项目的建议结构。
 3. **证据 (Verification) 与发布 (Shipping) 两权分立**：Release 先凭证据达到 `READY_TO_SHIP`，再取得精确发布授权；风险接受不能把缺失证据改写为 `VERIFIED`。
 4. **熔断机制 (Circuit Breaker，拒绝无脑重试)**：当出现连续 3 次同类失败、修 A 坏 B 或基础假设失效时：
@@ -75,12 +75,12 @@
 
 ```mermaid
 flowchart TD
-    S1["1. Thinking (思考)<br/>需求对质与冻结 (FROZEN)<br/>【首轮严禁写文件】"] --> S2["2. Planning (规划)<br/>SPEC / Test Seams / 架构评审 / 依赖计划"]
+    S1["1. Thinking (思考)<br/>需求对质与冻结 (FROZEN)<br/>【首轮需求探索不写工程文件】"] --> S2["2. Planning (规划)<br/>SPEC / Test Seams / 架构评审 / 依赖计划"]
     S2 --> S3["3. Building (构建)<br/>Task Handoff Contract / TDD 循环"]
     S3 --> S4["4. Review (评审)<br/>Spec 合规与工程代码质量 / 代码消肿<br/>【置于系统测试前】"]
-    S4 --> S5["5. Testing (测试)<br/>系统集成 / 真实浏览器探针 (.evidence/)"]
+    S4 --> S5["5. Testing (测试)<br/>系统集成 / 按需真实探针"]
     S5 --> S6["6. Shipping (交付)<br/>两权分立 / 人类授权 / 自动化交付"]
-    S6 --> S7["7. Reflecting (复盘)<br/>结构化复盘 (RETRO.md) / 沉淀至 AGENTS.md"]
+    S6 --> S7["7. Reflecting (复盘)<br/>按需复盘 / 有价值经验沉淀"]
     S7 -.->|下一轮迭代| S1
 
     %% Failure recovery loops
@@ -101,23 +101,24 @@ flowchart TD
 
 ## 🧩 专业生态协同矩阵 (V0.3 显式调用与优雅降级)
 
-Vibe Workflow 是全局生命周期调度器，在对应阶段优先显式调用生态内的专业工具：
+Vibe Workflow 根据任务范围选择能力；以下是可选能力，不是每次必须完整执行的技能链。调用名称以宿主实际注册项为准，例如 `gstack:review` 可能显示为 `gstack-review`。
 
-| 阶段 | 首选外部专业工具 | 核心职责 | 技能缺失时的优雅降级 |
-|---|---|---|---|
-| **1. Thinking** | **Matt 的 `grilling`**（自动）／**`grill-me`**（用户显式调用） | 澄清需求边界与验收条件，首轮不创建工程文档 | 降级为内置结构化提问协议，不自动调用仅限用户使用的入口 |
-| **2. Planning** | **`superpowers:brainstorming`** ➔ **`gstack:autoplan`** ➔ **`superpowers:writing-plans`** | 头脑风暴探索多方案 ➔ 架构/减法/数据流多维评审 ➔ 拆解带 Test Seams 与 Ready Frontier 的实施计划 | 降级使用内置设计走查与依赖拓扑矩阵 |
-| **3. Building** | **`superpowers:test-driven-development`**<br/>**`gstack:investigate`** (熔断时) | Task 派发强制注入 TDD 红绿循环；连续 3 次失败触发熔断与根因排查 | 降级执行内置原生失败测试先行与最小实现协议 |
-| **4. Review** | **`gstack:review`**<br/>**`gstack:deslop-shared-libs`**<br/>**`gstack:cso`** | **置于测试前**：审查 Spec Compliance、并发、时区、资源泄露；扫描跨模块重复代码并抽取公共库；威胁建模 | 降级执行内置严格 Diff 审查与边界核验 |
-| **5. Testing** | **`gstack:qa`** / **`gstack:browse`**<br/>**`superpowers:verification-before-completion`** | Web/UI 真实无头/真机浏览器探针模拟交互，捕获控制台日志与截屏至 `.evidence/` | 降级调用 Playwright / Chromium CLI 或原生测试套件 |
-| **6. Shipping** | **`gstack:ship`** | 获得人类明确授权后，自动化执行版本 Bump、Changelog 审计、Git Commit/Tag/PR | 降级输出标准提交与发布命令，等待人工确认 |
-| **7. Reflecting** | **`gstack:retro`** | 交付后自动化分析提交历史、返工频率与耗时瓶颈，沉淀规则至 `AGENTS.md` | 降级使用内置 `RETRO.md` 模板进行人工结构化复盘 |
+| 阶段 | 按需选择的技能 | 调用边界与降级 |
+|---|---|---|
+| **1. Thinking** | Matt `grilling`；用户显式请求时用 `grill-me` | 只澄清未决产品问题；首轮需求探索不创建工程文档。缺失时内置结构化提问。 |
+| **2. Planning** | `gstack:autoplan` 或单项评审；`superpowers:writing-plans` | 冻结需求不重新访谈；brainstorming 7 不作固定前置。复用既有计划，复杂多维方案才用 autoplan。 |
+| **3. Building** | `superpowers:test-driven-development`；必要时选一种执行或排障技能 | 行为改动用 TDD/回归验证，文案不造测试；简单任务直接执行。SDD 的实现任务串行，不与另一编排器竞争。 |
+| **4. Review** | `gstack:review` 或 `superpowers:requesting-code-review` | 一个主审查；实际安全或重复代码问题才追加 cso/deslop。Tiny 自查，Bounded 聚焦受影响部分。 |
+| **5. Testing** | `gstack:qa-only`、`gstack:browse` 或原生测试 | 纯验收不自动修复提交；qa 的副作用须在授权范围内。有效证据可复用，缺少真实环境须记录缺口。 |
+| **6. Shipping** | 默认原生 Git + 项目发布命令；显式要求 PR 才按需 ship | 个人开发直接提交/推送，不强制 PR 或功能分支；同步远程不隐含发版，发布须核验目标与版本结果。 |
+| **7. Reflecting** | `gstack:retro` 或简短总结 | 有复杂过程或用户需求才跑 retro；有价值经验才更新 AGENTS，不为仪式新建文档。 |
 
-> 💡 **显式调用原则**：  
-> - **做需求**：自动对质优先使用 Matt 的 `grilling`；用户显式请求 `grill-me` 时使用该入口；首轮不创建工程文档，技能不可用时降级为内置结构化提问协议；
-> - **做验证**：Web/UI 项目必须通过真实浏览器探针抓取控制台零报错与截屏存入 `.evidence/`，拒绝假完成；  
-> - **做审查**：Release 级审查独立置于系统测试前，提前拦截规格漂移与并发漏洞；  
-> - **做复盘**：交付后产出 `RETRO.md`，将反模式守则沉淀至 `AGENTS.md`，实现跨会话持续进化。
+调用前明确目标、范围、输出路径、副作用、验证预算和停止点；不能遵守边界时使用更窄能力或内置协议。完整规则见[编排契约](skills/vibe-workflow/references/orchestration.md)。
+
+**轻量任务**：精确、单点、低风险的修改直接读取相关文件、修改、最小检查、汇报；不要求 Release ID、整套文档、子代理、worktree 或 `.evidence/`。多文件或多会话本身不意味着必须走架构流程；权限、迁移等实际风险仍先检查。
+
+**验证与存储**：相同被测输入和相关环境下的真实证据可复用，通过后停止；变化使证据失效时重验受影响部分。Web 行为验收需要真实运行，截图按视觉需要采集，HAR/视频/trace 默认关闭。项目可在 `AGENTS.md` 覆盖证据预算，见[使用指南](docs/USER_GUIDE.zh-CN.md#44-按项目配置证据策略)。
+
 
 ---
 
@@ -151,7 +152,7 @@ $vibe-workflow init 审计当前仓库，沿用已有文档和构建入口，建
 
 v0.2 还明确六类跨模块触发条件，并在进度中区分 `IMPLEMENTED_UNVERIFIED`（已实现待验证）、`POC_VALIDATED`（已通过 POC）和 `VERIFIED`（已验证）；前两者不能作为正式功能完成证据。
 
-从 v0.2.1 起，项目文档默认先展示最多三行的人类摘要：当前事实、阻塞和下一步。Release 才建立版本目录；同一 Release 的短切片只在计划与进度中推进，不生成整套文档。新产生的运行日志、原始指标等放在项目根目录 `.evidence/`（默认忽略），`docs/` 保留可读结论与证据指针；正式 Release 的已验证声明还须有可长期取回的证明，必要时归档至 CI/artifact。已有项目沿用其等价路径，不自动迁移旧证据。详细约定见 [Artifact 规则](skills/vibe-workflow/references/artifacts.md)。
+从 v0.2.1 起，项目文档默认先展示最多三行的人类摘要：当前事实、阻塞和下一步。Release 才建立版本目录；同一 Release 的短切片只在计划与进度中推进，不生成整套文档。默认保留摘要；确有需要的运行日志、原始指标才放在项目根目录 `.evidence/`（默认忽略），`docs/` 保留可读结论与证据指针；正式 Release 的已验证声明还须有可长期取回的证明，必要时归档至 CI/artifact。已有项目沿用其等价路径，不自动迁移旧证据。详细约定见 [Artifact 规则](skills/vibe-workflow/references/artifacts.md)。
 
 内容按读者目的组织借鉴了 [Diátaxis 官方指南](https://diataxis.fr/how-to-use-diataxis/)；它并不要求预建四类目录。摘要卡和 `.evidence/` 是本 Skill 为上述问题制定的约定，并非 Diátaxis 的硬性规则。
 

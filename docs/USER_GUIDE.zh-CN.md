@@ -52,11 +52,11 @@ flowchart TD
     S1 --> T2[Task：页面与流程验证]
 ```
 
-Slice 不自动生成新的 Release，也不需要各自复制一套 SPEC、计划和验证文档。已发布版本的后续修复应进入新的 patch Release 或后续 Release，不能直接改写旧版本的历史快照。
+Slice 不自动生成新的 Release，也不需要各自复制一套 SPEC、计划和验证文档。已发布版本的后续修改先作为任务或下一版候选记录；形成实际发布边界时才创建 patch/后续 Release，不能改写旧版本历史快照。
 
 ### 2.3 七阶段敏捷生命周期与状态流转
 
-每个 Release 遵循标准的 **七阶段敏捷开发流程**，并在系统级测试（Testing）之前独立设置发布评审（Review），支持根据证据随时回退：
+七阶段是完整 Release 的状态模型；Tiny/Bounded 按本次风险走轻量路径，不逐阶段重跑所有技能。完整 Release 遵循 **七阶段敏捷开发流程**，并在系统级测试（Testing）之前独立设置发布评审（Review），支持根据证据随时回退：
 
 ```mermaid
 flowchart TD
@@ -78,7 +78,7 @@ flowchart TD
 
 `Operational Status` 与宏观阶段分开记录，可为 `ACTIVE`、`WAITING_HUMAN`、`BLOCKED` 或 `REPLAN_REQUIRED`。例如开发中等待数据库方案批准时，Release 仍可处于 `BUILDING`，但操作状态应是 `WAITING_HUMAN`。
 
-产品范围、公开兼容性、数据库结构、权限与安全、重要外部服务、不可逆操作，以及推送、PR、部署和发布等动作，都有相应的人工决策关卡。内部命名、私有辅助函数和局部测试组织通常由 Agent 自主决定。具体关卡以 [Skill 规则](../skills/vibe-workflow/SKILL.md) 为准。
+产品范围、公开兼容性、数据库结构、权限与安全、重要外部服务、不可逆操作，需要相应的明确决定；已有授权可沿用。普通 Commit/Push/PR 走轻量 Git，不进入 Shipping；正式部署和发布须核对验证状态及精确目标授权。内部命名、私有辅助函数和局部测试组织通常由 Agent 自主决定。具体关卡以 [Skill 规则](../skills/vibe-workflow/SKILL.md) 为准。
 
 ### 2.4 从需求到证据的完整追踪链
 
@@ -89,7 +89,7 @@ flowchart LR
     SEAM --> DS[目标设计或决策]
     DS --> TK[Task Handoff Contract]
     TK --> TEST[真实测试与浏览器探针]
-    TEST --> EV[新鲜运行证据 .evidence/]
+    TEST --> EV[有效结果 / CI / 按需原始证据]
     EV --> VR[VERIFICATION：矩阵与指针]
 ```
 
@@ -174,14 +174,20 @@ $vibe-workflow 评估增加用户头像对当前 v0.2 范围、接口和验收�
 
 ### 3.5 评审、测试、发布与复盘
 
-- **Stage 4：Release Review (发布评审，置于系统测试前)**：
-  在耗费资源运行大型真实环境测试前，先调用 `gstack:review`（或 `superpowers:requesting-code-review`）审查规格合规性（Spec Compliance）、并发安全与代码坏味道，调用 `gstack:deslop-shared-libs` 抽取公共库。
-- **Stage 5：Release Testing (系统级真实环境验收)**：
-  运行真实浏览器探针（`gstack:qa <url>`、`gstack:browse` 或 Playwright）捕获控制台零报错日志与操作截图至 `.evidence/<release-id>/`，并在 `VERIFICATION.md` 中核验全部 REQ/AC。只有证据覆盖全部适用范围，才能进入 `READY_TO_SHIP`。
-- **Stage 6：Shipping (授权发布与自动化交付)**：
-  发布、部署动作遵循两权分立原则，必须取得人类针对环境与版本的明确授权。随后调用 `gstack:ship` 自动完成版本 Bump、Changelog 审计与 Git 交付。
-- **Stage 7：Reflecting (复盘与工程持续进化)**：
-  发布完成后调用 `gstack:retro` 生成 `RETRO.md`，提炼开发过程中的阻塞点与反模式，自动反哺写入 `AGENTS.md`，实现 Agent 的跨会话工程记忆。
+- **Stage 4：Review**：Tiny 自查、Bounded 聚焦受影响部分；复杂 Release 在高成本系统测试前选一个主审查。确有重复实现问题才使用 deslop，不为审查制造重构。
+- **Stage 5：Testing**：按受影响行为运行必要测试，复用仍适用的真实结果。只读验收优先 qa-only/browse/原生工具；截图和日志按验收与诊断需要采集。完整 Release 的适用 REQ/AC 全部有证据后才到 `READY_TO_SHIP`。
+- **Stage 6：Shipping**：个人开发默认沿用明确分支直接提交/推送，用项目命令发布；已有授权不重复申请，不默认开 PR、功能分支、worktree 或运行 ship。只有显式要求 PR 才创建，分支保护拒绝直推时报告限制并等待选择。核验实际目标、版本及适用结果后记录发布完成。
+- **Stage 7：Reflecting**：简单交付在既有记录简短总结；复杂过程或用户要求时才用 retro，有价值的重复经验才更新 AGENTS。
+
+个人项目可以直接这样区分操作：
+
+| 请求 | 实际流程 |
+|---|---|
+| “把这次改动同步到远程” | 核对 diff、分支与已有证据 → 提交并推送；不自动发版或开 PR |
+| “把已验证的版本发布为 vX.Y.Z” | 核对范围、版本和目标授权 → 项目约定的版本/变更说明 → 提交、推送及必要 Tag/Release/发布命令 → 核验结果；不加 PR 环节 |
+| “为这次修改开一个 PR” | 核对 head/base、范围与授权 → 推送所需分支并创建 PR；不自动合并或发布 |
+
+小版本发布的范围、验证和授权可以集中在既有发布记录中，不要求为 Shipping 补齐整套文档。
 
 ## 4. 文档规范
 
@@ -216,7 +222,7 @@ docs/vibe/
 - 未知事实写“待澄清”或“未验证”；未通过入口 Gate 时不能把模板中的需求状态写成 `FROZEN`。
 - `SPEC.md` 写当前 Release 的完整有效行为；`CHANGE.md` 只写相对上一 Release 的差异。不要让 Agent 叠加多版差异来推导当前需求。
 - `PROPOSED_DESIGN.md` 写尚待实现的目标设计和批准状态；`TECH_DESIGN.md` 只写经过代码、配置或运行证据核验的当前架构。
-- 原始测试日志、运行 dump 和指标 JSON 默认放在项目根目录 `.evidence/<release-id>/<slice-or-task-id>/`，并忽略本地目录；Markdown 文档写可读结论、命令、时间、结果和证据指针。支撑正式 Release 声明的证据还需有可长期取回的 CI、归档产物或版本化快照。
+- 默认保留可读结论、命令、时间、输入/环境依据和结果指针；需要保留的原始日志才暂存 `.evidence/<release-id>/<slice-or-task-id>/`，并忽略本地目录。Tiny 不要求目录。相同输入和环境的有效结果可复用；支撑正式 Release 声明的证明须长期可取回。
 - Release 进入 `RELEASED` 且复盘封存后，原版需求、规格、方案、计划、验证和复盘记录作为历史快照保留。后续变化进入新 Release；必要纠错用有日期和依据的勘误记录。
 
 ### 4.3 每份文档的作用
@@ -239,6 +245,38 @@ docs/vibe/
 | `BUG-xxx.md` | 排查与修复 Bug 时 | 症状、复现、证据、根因、修复和回归检查 |
 
 模板位于 [`skills/vibe-workflow/assets/templates/`](../skills/vibe-workflow/assets/templates/)。复制适用模板后删除空章节和占位符；现有仓库已有等价文档时继续使用原文档。
+
+### 与其他编排技能共同使用
+
+Superpowers 的 `using-superpowers` 启动器含“先检查技能、进入计划前先 brainstorming”的默认流程。本 Skill 不会改写它的全局钩子。显式调用 `$vibe-workflow` 可以指定当前任务的编排入口；项目长期采用时，也可在现有 `AGENTS.md` 中明确：
+
+```markdown
+本项目以 vibe-workflow 管理任务范围、阶段、验证预算和外部技能调用。
+已冻结需求不重复访谈；Tiny 直接执行最小闭环。
+Superpowers、gstack 和 Matt skills 按本次能力需求使用，不叠加第二套顶层编排。
+```
+
+这将偏好放在用户可维护的项目规则中；外部技能的全局配置和其他项目不会被自动修改。
+
+### 4.4 按项目配置证据策略
+
+可将下列规则放入项目现有 `AGENTS.md`；按项目实际调整数值，无须创建专用配置文件。它们是 Agent 的执行约定，不会安装后台清理器，也不能限制 Codex 自身或第三方工具的日志增长。
+
+```markdown
+## 验证与证据
+
+- 默认 summary：保留命令、结果、代码/环境依据和证据指针。
+- 相关检查通过且没有新改动时停止；已有证据仍适用时复用。
+- 必要原始日志每份最多保留 2 MiB 的相关输出，节选需注明；验收要求完整日志时完整归档。
+- HAR、视频、trace 默认关闭；仅为实际视觉验收或故障诊断采集必要内容。
+- 可重建原始输出保留 1 个成功样本、最多 3 次有价值的失败样本。
+- 项目本地证据软预算 200 MiB；超额停止可选重型采集，必需验证应改用合适归档并明确缺口。
+- 7 天以上文件只列为清理候选；活跃、被引用、固定保留、不可重建的证据受保护。
+- 当前任务自建且不再被引用的中间文件可清理；历史证据须有清理授权。
+- 正式发布的证明须稳定可读；先验证归档、更新引用，再删除本地副本。
+```
+
+完整语义见[证据预算与保留策略](../skills/vibe-workflow/references/artifacts.md#证据预算与保留策略)。预算不是跳过验收的理由，保留期也不是自动删除授权。没有实际需要时不调用外部技能，不生成证据文件。
 
 ## 5. 一个完整的使用示例
 

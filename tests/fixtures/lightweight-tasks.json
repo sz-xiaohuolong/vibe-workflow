@@ -1,0 +1,19 @@
+{
+  "tiny": {
+    "files": {
+      "AGENTS.md": "所有解释使用简体中文。修改保持请求范围。\n",
+      "README.md": "# 工作台\n\n静态示例，无构建或测试命令。\n",
+      "index.html": "<!doctype html>\n<html lang=\"zh-CN\"><meta charset=\"utf-8\"><title>工作台</title><button>保存草槁</button></html>\n"
+    },
+    "participant_prompt": "使用候选 vibe-workflow，将 index.html 的按钮文字“保存草槁”修正为“保存草稿”。"
+  },
+  "bounded": {
+    "files": {
+      "AGENTS.md": "使用简体中文。使用 Python 标准库，不安装依赖。任务记录在 TASK.md。\n",
+      "TASK.md": "# 当前任务\n\n需求已由用户确认：parse_limit 接受非负十进制整数字符串，空字符串或纯空白返回默认值 20；负数及其他格式抛 ValueError。不改公开接口、默认值或其他解析规则。\n\n计划已批准：检查解析与已有测试，修复空白输入，运行相关回归测试，在本记录补结果。无未决问题，不需要新 Release。\n\n## 当前进度\n\n待实现：空白输入处理。\n",
+      "limits.py": "def parse_limit(raw):\n    text = raw.strip()\n    if not text.isdecimal():\n        raise ValueError(\"invalid limit\")\n    return int(text)\n",
+      "test_limits.py": "import unittest\nfrom limits import parse_limit\n\nclass LimitTests(unittest.TestCase):\n    def test_blank_uses_default(self):\n        for raw in [\"\", \" \", \"\\t\\n\"]:\n            with self.subTest(raw=raw):\n                self.assertEqual(parse_limit(raw), 20)\n\n    def test_number(self):\n        for raw, expected in [(\"0\", 0), (\"12\", 12), (\" 12 \", 12)]:\n            self.assertEqual(parse_limit(raw), expected)\n\n    def test_invalid(self):\n        for raw in [\"-1\", \"x\", \"1.2\", \"+1\"]:\n            with self.subTest(raw=raw):\n                with self.assertRaises(ValueError):\n                    parse_limit(raw)\n\nif __name__ == \"__main__\":\n    unittest.main()\n"
+    },
+    "participant_prompt": "使用候选 vibe-workflow，继续完成 TASK.md 中已批准的任务，请实际修复并验证。"
+  }
+}

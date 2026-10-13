@@ -74,9 +74,40 @@ docs/vibe/bugs/
 
 ## 原始证据与可读文档分离
 
-新生成的测试日志、运行 dump、原始指标 JSON、浏览器探针截屏（如 `qa-*.png`）与控制台日志（如 `console-*.jsonl`）等暂存于项目根目录 `.evidence/<release-id>/<slice-or-task-id>/`，默认在目标项目 `.gitignore` 加入 `/.evidence/`；未建立 Release 的 `init` 审计或 Tiny Task 可用 `.evidence/init/` 或 `.evidence/task-<id>/`，并记录实际路径。沿用已有等价 `artifacts/`/CI artifact 位置时，在 Document Map 或 VERIFICATION 标明即可。`docs/` 保存人类可读的 Markdown 摘要、结果、命令、时间、环境、退出码及证据指针，不内嵌整段日志。配置、Schema、源数据和需版本控制的 JSON 并非“原始运行证据”，不能仅凭扩展名迁走或忽略。
+原始日志、dump、截图和指标只有在帮助验收或排障时才落盘；默认沿用 CI/artifact 或项目既有路径。确需本地原始文件时用 `.evidence/<release-id>/<task-id>/`，没有 Release 则用 `.evidence/task-<id>/`，在项目 `.gitignore` 忽略 `/.evidence/`。Tiny 成功结果可只在回复或既有进度记录命令、范围和结果，不创建目录。配置、Schema、源数据不能仅凭 JSON 扩展名当作可清理证据。
 
-忽略本地证据不等于丢失可追溯性。凡支撑 Release `VERIFIED`、`READY_TO_SHIP` 或长期审计的结果，VERIFICATION 必须记录可长期取回的证明（如 CI 运行链接与运行 ID、明确保留期的 artifact，或有意纳入版本控制的证据快照）及对应 commit；无 Git 时记录稳定 artifact ID、内容摘要与可恢复版本，不伪造 commit。不可重建的原始产物须在声明前稳定归档。只有 `.evidence/` 本机路径、没有远程可取回证明时，不得宣称该证据已可供跨机器复核。接管旧仓库时先识别既有引用和保留要求，不自动移动、删除旧 `docs/` 证据。
+可读记录保留命令、被测 commit/tree 或内容摘要、时间、环境、真实结果、覆盖范围、限制与证据指针，不粘贴整份日志。一份原始证据多处引用，不为每个技能复制。
+
+## 证据预算与保留策略
+
+项目在 `AGENTS.md` 或已登记的等价规则里覆盖以下默认值；不把技能仓库的设置自动写入所有项目，也不自动迁移/删除已有证据。
+
+| 项目 | 默认策略 |
+|---|---|
+| 采集级别 | summary：只记可核对结果；故障或特定验收才提升 targeted；full 需明确范围、理由和预算 |
+| 成功原始记录 | 每个检查保留最近 1 次必要样本；已有 CI 证明时只保留链接与运行 ID |
+| 失败记录 | 同一问题保留最近 3 次有诊断价值的尝试；唯一根因样本与未解决故障固定保留 |
+| 日志体积 | 每份本地日志默认最多保留 2 MiB 的必要输出；超出时摘录并明确标为“节选”，记录完整来源；不得截掉失败结论或声称节选是完整日志 |
+| 高成本采集 | HAR、视频、trace 默认关闭；截图限关键验收状态 |
+| 临时保留期 | 7 天后仅成为清理候选；活跃、被引用、固定保留、不可重建证据不按年龄删除 |
+| 本地软预算 | 每项目 200 MiB；超额时停止可选的重型采集，检查用量并压缩/归档，必需验证不能静默跳过 |
+
+这些数值是新证据的可调整缺省，不是生产日志保留要求。开始大批采集前估算体积；不要先录满再讨论清理。若完整日志本身是验收要求，输出到项目认可的保留位置，不能用默认截断满足该项验收。
+
+项目可按需要加入，例如：
+
+```text
+证据策略：summary；失败调查按需 targeted。
+本地软预算 100 MiB，临时保留 3 天；成功样本 1 次，失败尝试 2 次。
+HAR/视频默认关闭；发布证明保留在 CI，VERIFICATION 记录运行 ID 和有效期。
+只清理当前任务自己生成、无引用的中间文件；历史清理先列候选。
+```
+
+### 清理条件
+
+先核对文件生成者、当前任务/故障状态、VERIFICATION/PROGRESS/CI 引用与固定保留要求。当前任务自建且无引用的重复中间产物可清理；历史文件须有用户或项目既有清理授权，先列精确候选及大小。年龄或超预算本身不授权删除，不使用跨项目通配符清理。
+
+支撑发布 VERIFIED/READY_TO_SHIP 或长期审计的证明必须可长期取回：保留带 commit、命令和结果的受版本控制摘要、有效 CI 运行记录或明确保留期的 artifact。不可重建且支撑结论的原始产物须稳定归档。替换本地引用时，先归档并验证能读取，更新指针后才能清理；归档失败保留原文件。临时路径不能被表述为跨机器可复核证明。
 
 ## 事实所有权
 
@@ -109,7 +140,7 @@ REQ-003
 → PROPOSED_DESIGN §4.2 / DEC-012
 → SLICE-02 / TASK-09 (Task Handoff Contract)
 → RecordingServiceTests / 真实浏览器探针
-→ PASS evidence 归档至 .evidence/<release-id>/
+→ PASS evidence 摘要或必要原始文件指针
 → commit or result artifact
 ```
 
@@ -119,7 +150,7 @@ REQ-003
 - PROPOSED_DESIGN/DEC：REQ/AC → 目标 Design；实现并验证后由 TECH_DESIGN 描述成立的当前架构。
 - IMPLEMENTATION_PLAN：REQ/AC/Seams → Slice/Task/Test (Task Handoff Contract)。
 - PROGRESS：Task → current evidence/status。
-- VERIFICATION：REQ/AC/Seams → evidence/result/commit，并链接 `.evidence/` 原始证据。
+- VERIFICATION：REQ/AC/Seams → evidence/result/commit，并链接适用的本地/CI 证据。
 - RETRO：本次 Release 过程证据 ➔ 经验分类沉淀 ➔ 反哺 `AGENTS.md`。
 
 Release Verification 必须能逐项回答“REQ 是否真的完成”，不能只回答“代码写好了”。
@@ -128,18 +159,18 @@ Release Verification 必须能逐项回答“REQ 是否真的完成”，不能�
 
 | 变化 | 必须更新 | 按需更新 |
 |---|---|---|
-| 新 Release（包括已封存版本的后续修复） | PROJECT_BRIEF、SPEC、PLAN、PROGRESS | PROPOSED_DESIGN、DEC、CHANGE；实现后按证据更新 TECH_DESIGN |
+| 新 Release（实际形成新的发布边界时） | PROJECT_BRIEF、SPEC、PLAN、PROGRESS | PROPOSED_DESIGN、DEC、CHANGE；实现后按证据更新 TECH_DESIGN |
 | 切换当前 Release | PROJECT 的当前 Release、PROGRESS 的定位信息、权威地图的当前入口 | 当前定位或边界发生变化时更新 PROJECT 对应段落 |
 | 当前 Release 内新 Feature/Slice | PROGRESS 清单一条；PLAN 的 Slice Map 按需更新 | 影响既有 REQ/AC 时更新对应验证行；无独立文档套件；若改变冻结范围，先过 Requirement Change Gate |
 | 产品行为变化 | 当前 Release baseline/SPEC、CHANGE | PROJECT、PROPOSED_DESIGN、DEC |
 | 架构/数据/公开接口变化 | PROPOSED_DESIGN、PLAN、PROGRESS；适用 Gate 时含 DEC | SPEC（产品行为受影响时）；实现验证后更新 TECH_DESIGN |
 | 架构变化实现并验证后 | TECH_DESIGN 中受影响的模块、接口与运行命令 | 当前 Release 的 PROPOSED_DESIGN 实现状态 |
-| Bug 修复 | BUG、测试/evidence | TECH_DESIGN、PROGRESS、VERIFICATION |
+| Bug 修复 | 现有任务/Issue 与适用测试/evidence；复杂时 BUG | TECH_DESIGN、PROGRESS、VERIFICATION |
 | Task 完成、阻塞或验证结果变化 | PROGRESS、Task evidence；已有 PLAN 与 VERIFICATION 的对应任务状态或验收行 | BUG/DEC；首次记录验证时沿用现有证据位置 |
 | READY_TO_SHIP 判定、发布后收尾 | 核对 PROJECT、PROGRESS、权威地图、PLAN、VERIFICATION、TECH_DESIGN 中相关版本、状态、路径与证据，修正过期内容 | 沿用职责等价文档，只处理适用项 |
-| Release 完成与复盘 | VERIFICATION、PROGRESS、RETRO；PROJECT 的当前版本与定位 | release notes、AGENTS.md |
+| Release 完成与复盘 | 验证、进度与当前版本事实；既有记录中的必要复盘结论 | 复杂 Release 的 RETRO、release notes、有新经验时的 AGENTS.md |
 
-不相关文档无需机械修改。若容易造成误解，在当前记录中写明“不更新及理由”。
+以上职责只在本次变化适用且存在相应事实源时同步，Tiny/Bounded 不为套矩阵新建整套文档。不相关文档无需机械修改。若容易造成误解，在当前记录中写明“不更新及理由”。
 
 ### 文档同步检查点
 

@@ -49,14 +49,14 @@ It does not teach an LLM how to write a function; it provides the **state machin
 | **Vague Rush Requests** | Agent guesses missing specs, generates throwaway code. | **Entry Gate Trips**: Halts execution until requirements are `FROZEN`. |
 | **Mid-flight Scope Changes** | Agent silently hacks in features, breaking existing architecture. | **Requirement Change Gate**: Halts work, isolates impact, requires human approval. |
 | **Repeated Failures** | Agent blind-patches until codebase collapses. | **Circuit Breaker**: Halts at 3 failures, snapshots state, and forces replanning. |
-| **Completion Claims** | "All done!" (Code looks plausible, build is broken). | **Evidence Gate**: Strict rejection of "Done" without fresh passing test logs. |
+| **Completion Claims** | "All done!" (Code looks plausible, build is broken). | **证据门禁**：完成声明必须有对应当前输入与环境的有效结果。 |
 | **Memory Across Sessions** | Relies on fading chat history; hallucinates past state. | **Repository as Memory**: Rehydrates exclusively from Git and living docs. |
 
 ---
 
 ## ⚡ Five Core Engineering Pillars
 
-1. **Requirements Freeze & Entry Gates**: Engineering never begins on ambiguous intent. Four observable conditions are required: `Requirement Status == FROZEN`, `Open Questions == None`, `Release ID exists`, and `Acceptance Goals are testable`.
+1. **需求冻结与入口门禁**：完整 Release 开始前须满足需求 `FROZEN`、无阻塞问题、Release ID 和可测验收目标。Tiny/Bounded 使用已确认的任务范围，已有授权不重复申请。
 2. **Repository is Memory, Chat is Conversation**：Git、测试与仓库现有事实文档承载持久状态；`docs/vibe/` 只是新项目的建议结构。
 3. **Decoupled Verification & Shipping Gates**：发布必须先达到 `READY_TO_SHIP`，再获得精确授权；风险接受不能把缺失证据改成 `VERIFIED`。
 4. **Circuit Breaker (Zero Retry Loops)**: When an agent encounters 3 consecutive failures, cascades regressions, or disproves core assumptions, it must:
@@ -75,12 +75,12 @@ It does not teach an LLM how to write a function; it provides the **state machin
 
 ```mermaid
 flowchart TD
-    S1["1. Thinking<br/>Requirement Clarification & Freeze<br/>[Zero file writing in turn 1]"] --> S2["2. Planning<br/>SPEC / Test Seams / Review / Plans"]
+    S1["1. Thinking<br/>Requirement Clarification & Freeze<br/>[首轮需求探索不写工程文件]"] --> S2["2. Planning<br/>SPEC / Test Seams / Review / Plans"]
     S2 --> S3["3. Building<br/>Task Handoff Contract / TDD Loop"]
     S3 --> S4["4. Review<br/>Spec Compliance & Quality Review<br/>[Placed BEFORE testing]"]
-    S4 --> S5["5. Testing<br/>System Integration & Real Browser Probes (.evidence/)"]
+    S4 --> S5["5. Testing<br/>系统集成 / 按需真实探针"]
     S5 --> S6["6. Shipping<br/>Decoupled Gates / Human Auth / Ship Automation"]
-    S6 --> S7["7. Reflecting<br/>Structured Retro (RETRO.md) / AGENTS.md Lessons"]
+    S6 --> S7["7. Reflecting<br/>按需复盘 / 有价值经验沉淀"]
     S7 -.->|Next Iteration| S1
 
     %% Failure recovery loops
@@ -101,23 +101,24 @@ flowchart TD
 
 ## 🧩 Ecosystem Role Matrix (V0.3 Explicit Invocations & Fallbacks)
 
-Vibe Workflow is a lifecycle orchestrator coordinating the 7-stage agile pipeline:
+Vibe Workflow 根据任务范围选择能力；以下是可选能力，不是每次必须完整执行的技能链。调用名称以宿主实际注册项为准，例如 `gstack:review` 可能显示为 `gstack-review`。
 
-| Stage | Preferred External Skill | Core Responsibility | Graceful Fallback (When Skill Absent) |
-|---|---|---|---|
-| **1. Thinking** | **Matt 的 `grilling`**（自动）／**`grill-me`**（用户显式调用） | 澄清需求边界与验收条件，首轮不创建工程文档 | 降级为内置结构化提问协议，不自动调用仅限用户使用的入口 |
-| **2. Planning** | **`superpowers:brainstorming`** ➔ **`gstack:autoplan`** ➔ **`superpowers:writing-plans`** | Multi-approach exploration ➔ multi-role review ➔ executable plan with Test Seams & Ready Frontier | Built-in architectural review and dependency matrix |
-| **3. Building** | **`superpowers:test-driven-development`**<br/>**`gstack:investigate`** (on CB) | Task dispatch with mandatory TDD red-green cycle; circuit breaking after 3 consecutive failures | Built-in failing test first & minimal implementation protocol |
-| **4. Review** | **`gstack:review`**<br/>**`gstack:deslop-shared-libs`**<br/>**`gstack:cso`** | **Placed before testing**: Spec compliance, concurrency, leaks, codebase deslop, STRIDE threat modeling | Built-in rigorous diff review and scope boundary check |
-| **5. Testing** | **`gstack:qa`** / **`gstack:browse`**<br/>**`superpowers:verification-before-completion`** | Real browser interaction, console error logging (zero errors), and screenshot archive in `.evidence/` | Native Playwright, Chromium CLI, or built-in test runners |
-| **6. Shipping** | **`gstack:ship`** | Automated version bump, changelog audit, git tag/commit/PR upon explicit human approval | Standard git commit and release commands |
-| **7. Reflecting** | **`gstack:retro`** | Automated commit & friction analysis, lessons learned written back into `AGENTS.md` | Built-in `RETRO.md` template for manual reflection |
+| 阶段 | 按需选择的技能 | 调用边界与降级 |
+|---|---|---|
+| **1. Thinking** | Matt `grilling`；用户显式请求时用 `grill-me` | 只澄清未决产品问题；首轮需求探索不创建工程文档。缺失时内置结构化提问。 |
+| **2. Planning** | `gstack:autoplan` 或单项评审；`superpowers:writing-plans` | 冻结需求不重新访谈；brainstorming 7 不作固定前置。复用既有计划，复杂多维方案才用 autoplan。 |
+| **3. Building** | `superpowers:test-driven-development`；必要时选一种执行或排障技能 | 行为改动用 TDD/回归验证，文案不造测试；简单任务直接执行。SDD 的实现任务串行，不与另一编排器竞争。 |
+| **4. Review** | `gstack:review` 或 `superpowers:requesting-code-review` | 一个主审查；实际安全或重复代码问题才追加 cso/deslop。Tiny 自查，Bounded 聚焦受影响部分。 |
+| **5. Testing** | `gstack:qa-only`、`gstack:browse` 或原生测试 | 纯验收不自动修复提交；qa 的副作用须在授权范围内。有效证据可复用，缺少真实环境须记录缺口。 |
+| **6. Shipping** | 默认原生 Git + 项目发布命令；显式要求 PR 才按需 ship | 个人开发直接提交/推送，不强制 PR 或功能分支；同步远程不隐含发版，发布须核验目标与版本结果。 |
+| **7. Reflecting** | `gstack:retro` 或简短总结 | 有复杂过程或用户需求才跑 retro；有价值经验才更新 AGENTS，不为仪式新建文档。 |
 
-> 💡 **Explicit Invocation Principles**:  
-> - **需求澄清**：自动对质优先使用 Matt 的 `grilling`；用户显式请求 `grill-me` 时使用该入口；首轮不创建工程文档，技能不可用时降级为内置结构化提问协议；
-> - **Verification**: Drive real browser probes for UI projects; store unforgeable logs and screenshots into `.evidence/`;  
-> - **Review**: Independent review stage placed before system testing to catch spec drift early;  
-> - **Reflecting**: Continuous improvement loop via `RETRO.md` and `AGENTS.md` rules.
+调用前明确目标、范围、输出路径、副作用、验证预算和停止点；不能遵守边界时使用更窄能力或内置协议。完整规则见[编排契约](skills/vibe-workflow/references/orchestration.md)。
+
+**轻量任务**：精确、单点、低风险的修改直接读取相关文件、修改、最小检查、汇报；不要求 Release ID、整套文档、子代理、worktree 或 `.evidence/`。多文件或多会话本身不意味着必须走架构流程；权限、迁移等实际风险仍先检查。
+
+**验证与存储**：相同被测输入和相关环境下的真实证据可复用，通过后停止；变化使证据失效时重验受影响部分。Web 行为验收需要真实运行，截图按视觉需要采集，HAR/视频/trace 默认关闭。项目可在 `AGENTS.md` 覆盖证据预算，见[使用指南](docs/USER_GUIDE.zh-CN.md#44-按项目配置证据策略)。
+
 
 ---
 
@@ -149,7 +150,7 @@ $vibe-workflow init 审计当前仓库，沿用已有文档与构建入口，建
 
 `init` 可重复执行；已有地图优先沿用，缺少时才创建 `DOCUMENT_MAP.md`。v0.2 还明确六类跨模块触发，并区分 `IMPLEMENTED_UNVERIFIED`、`POC_VALIDATED`、`VERIFIED`。行为回归记录见 [v0.2 验证](tests/results/v0.2.md)。
 
-v0.2.1 的文档约定：`PROGRESS`/`SPEC` 首屏先给最多三行摘要；短切片只在当前 Release 的计划与进度中推进；原始运行证据默认放在被忽略的 `.evidence/`，正式 Release 验证需另有可长期取回的证明。参见[中文说明](README.zh-CN.md)与[行为复核](tests/results/v0.2.1.md)。
+v0.2.1 的文档约定：`PROGRESS`/`SPEC` 首屏先给最多三行摘要；短切片只在当前 Release 的计划与进度中推进；必要原始证据按需暂存于被忽略的 `.evidence/`，默认保留摘要与结果指针，正式 Release 验证需另有可长期取回的证明。参见[中文说明](README.zh-CN.md)与[行为复核](tests/results/v0.2.1.md)。
 
 #### Start a New Project
 ```text

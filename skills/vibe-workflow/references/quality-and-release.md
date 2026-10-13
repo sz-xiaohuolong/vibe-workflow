@@ -1,149 +1,125 @@
-# Quality、Risk、Review、Testing 与 Release
+# 验证、评审与发布
 
 ## 何时读取
 
-选择 QA 强度、处理高风险模块、执行 Release Review、运行真实环境测试、声明完成、执行发布或封存 Release 时读取本文件。
+选择验证范围、处理高风险模块、评审、系统验收、完成声明或发布时读取。仅 Commit / Push / PR 使用 [Lightweight Git Workflow](execution.md#lightweight-git-workflow)，不启动完整 Release 流程。
 
-用户仅要求 Commit / Push / PR 时采用 [Lightweight Git Workflow](execution.md#lightweight-git-workflow)，不启动本文件的完整 Release Review/Testing/Shipping。已有证据的适用性按代码范围和环境判断；Git 成功不提供新的功能验证证据，不改变 Workflow State 或 Verification Status。
+## Quality Profile 与本次范围
 
-## Quality Profile
+优先项目 profile；缺省普通项目 Standard，明确丢弃的原型 Prototype，高风险交付 Production。profile 描述质量目标，不是每个 Task 都要重跑的清单。
 
-优先使用项目已声明的 profile；没有时：明确 throwaway prototype 可用 Prototype，普通项目默认 Standard，面向真实用户/生产或高风险系统使用 Production。profile 显著改变成本或交付承诺时向用户展示建议和影响。
-
-| Profile | 最低检查 |
+| Profile | 按改动选择的检查 |
 |---|---|
-| Prototype | build/run、核心测试、关键人工流程、已知限制 |
-| Standard | unit/integration、lint/typecheck、build、回归、基本安全、关键用户流程 |
-| Production | Standard + 深入安全、迁移、性能（相关时）、observability、部署/恢复验证 |
+| Prototype | 可运行探针、核心假设、已知限制；结果只支持 POC |
+| Standard | 相关单测/集成、适用 lint/typecheck/build、受影响用户路径与风险 |
+| Production | Standard + 实际涉及的安全、迁移、性能、可观察性及发布/恢复检查 |
 
-不要用 Production 清单压在普通 UI Tiny Task 上；也不要以 Prototype 标签跳过当前核心行为验证。
+Production 项目中的纯文案 Tiny 仍按 Tiny 验证；一行权限条件改变仍需安全检查与批准。Risk Tags 包括 AUTH、PAYMENT、DATABASE、FILE_SYSTEM、USER_INPUT、NETWORK_API、SECRETS、PERMISSIONS、PUBLIC_ENDPOINT、MIGRATION、DESTRUCTIVE_OPERATION，只扩大实际受影响范围。
 
-## Risk Tags
+## 验证预算与停止条件
 
-出现以下标签时提高验证强度，并读取项目相应安全/领域规则：
+开始前在当前任务记录或对话明确：本次要支持的声明、受影响路径、最小检查集合、已有可复用证据。无须建立单独预算台账。
 
-```text
-AUTH  PAYMENT  DATABASE  FILE_SYSTEM  USER_INPUT
-NETWORK_API  SECRETS  PERMISSIONS  PUBLIC_ENDPOINT
-MIGRATION  DESTRUCTIVE_OPERATION
-```
-
-至少关注 Secret handling、input validation、AuthN/AuthZ、injection、data exposure、sensitive logs、destructive target 和 recovery。风险检查只覆盖实际受影响范围；不要求所有普通 Task 做完整安全审计。
-
----
-
-## Task Verification 与交付三态
-
-### Task Delivery Status
-
-进度状态只描述当前 Task/功能的交付程度，独立于 Release 的 `Verification Status` 和 `Shipping Authorization`：
-
-| 状态 | 可写入条件 | 不得推断 |
+| 路径 | 默认执行预算 | 升级原因 |
 |---|---|---|
-| `NOT_STARTED` / `IN_PROGRESS` / `BLOCKED` | 实际执行位置或阻塞证据 | 已实现或已验证 |
-| `IMPLEMENTED_UNVERIFIED`（已实现待验证） | 代码或 artifact 已存在，但适用检查未运行、已过期或未覆盖 AC | `DONE`、`VERIFIED` |
-| `POC_VALIDATED`（已通过 POC） | 有明确范围内的概念可行性演示或探针证据 | 正式功能已实现、Release AC 已通过 |
-| `VERIFIED`（已验证） | 当前实现的适用 AC、自动化检查和受影响运行路径均有 fresh evidence；不适用项有理由 | Shipping Authorization 已获批 |
+| Tiny 无行为变化 | diff 与必要静态/局部检查；不新写镜像测试，不启动完整服务或 QA | 发现实际行为、共享状态或风险边界变化 |
+| Tiny 行为 / Bounded | 最小相关测试集，一次受影响真实路径验证（适用时） | 失败、新风险、共享依赖变化或覆盖不足 |
+| Architectural / Release | 风险与 AC 覆盖矩阵；复用有效局部/CI 结果，只补缺口 | 公共契约、依赖/环境变动、集成风险或项目强制全量检查 |
 
-POC 是独立的局部证据；从 POC 转正式交付时，先确认正式需求、实现边界和 AC，再运行正式环境所需验证。仅有 POC 的 REQ/AC 仍为 `UNVERIFIED`。代码已写但 CI 将来才运行时保持 `IMPLEMENTED_UNVERIFIED`。一个 Release 的 Verification Status 由其全部适用 REQ/AC 和 Release 检查决定，不能由单个 Task 状态自动晋级。
+“最小”不是固定测试数量，必须能证明本次承诺；一次命令可覆盖多项 AC，一份证据只存一次并由多处引用。先低成本检查，再付费、长耗时或全量测试。高成本步骤须与本次范围相称；新增付费服务仍过授权 Gate。
 
-根据项目运行能证明当前 Task 的最小充分检查：
-- relevant tests；
-- lint/typecheck/compile/build 中适用项；
-- 受影响的用户行为或接口；
-- migration/permission/security checks（适用时）；
-- diff inspection；
-- 关联 REQ/AC 的 evidence。
+适用检查通过且无新变化就停止。重跑必须有具体原因：修复使证据失效、环境改变、失败调查或明确额外验收要求。换技能、切阶段、提交、格式调整、上下文压缩都不是独立重跑理由。不得为了“更放心”无限扩测试，不以减少成本为理由忽略必需检查。
 
-使用 fresh output。旧运行、CI 将来会跑、页面看起来正常、代码已存在或另一个 Agent 报告成功都不是当前证据。
+## fresh evidence 的适用性
 
----
+fresh 指与当前被测对象对应，不等于每轮对话重新执行。复用前读取原始运行结果或可信 CI 记录，核对：
 
-## 阶段 4：Release Review（发布评审，置于系统测试之前）
+- 被测 commit/tree 或相关文件摘要；未提交改动须可识别。
+- 命令、测试范围、真实退出码/失败数、时间与环境。
+- 相关依赖、配置、测试输入和外部服务状态是否改变。
 
-在耗费高成本运行端到端真实测试之前，独立设置 Stage 4 Review，确保在代码与规格层面提前拦截隐患：
+无关文档提交可复用已有代码验证，说明范围即可；依赖锁文件、公共模块、构建配置、环境或相关外部状态变化时重验受影响部分。线上健康具有时效性，不能沿用上次部署前的健康结果替代本次发布后检查。只有 Agent 的“通过”摘要、缺失原始结果或无法确定输入的旧日志不算可复用证据。
 
-```text
-Stage 3: Building (完成 Task 与单测)
-    ↓
-Stage 4: Review (规格合规性 + 工程质量 + 代码消肿)
-    ↓ (通过全部 Critical/Important)
-Stage 5: Testing (系统级真实环境/真实浏览器验收)
-```
+## Task Delivery Status
 
-### 1. 显式调用独立代码评审
-调用 `gstack:review`（或 `superpowers:requesting-code-review`），Reviewer 获得已冻结 SPEC/AC、精确 diff 范围和 Task 级单测证据，从独立视角审查。
+| 状态 | 条件 |
+|---|---|
+| NOT_STARTED / IN_PROGRESS / BLOCKED | 实际执行位置或阻塞 |
+| IMPLEMENTED_UNVERIFIED | 实现存在，但必要检查未运行、失效、失败或覆盖不足 |
+| POC_VALIDATED | 指定范围的可行性已有证据，不代表正式功能完成 |
+| VERIFIED | 本次适用 AC 与受影响路径都有有效证据，不适用检查已说明理由 |
 
-### 2. 五维审查透镜 (Review Lenses)
-1. **Scope / CEO 透镜**：核验 SPEC/AC 覆盖度，拦截未获批的 Scope Creep 与过度设计。
-2. **Design Anti-Slop 透镜**：针对 UI/UX 审查是否存在廉价 AI 模板感（排版层次、间距、空状态、响应式）。
-3. **Staff 隐蔽 Bug 透镜**：排查并发竞态、时区处理、资源泄露、边缘异常与破坏性兼容性。
-4. **Codebase Deslop 透镜**：显式调用 `gstack:deslop-shared-libs`，审查多模块间是否重复实现局部 helper，提炼公共库。
-5. **CSO 安全透镜**：若任务涉及安全/权限 Risk Tags，显式调度 `gstack:cso` 进行 STRIDE/OWASP 威胁建模。
+Task VERIFIED 不自动推进 Release。完整 Release 仍须全部适用 REQ/AC 和必需检查；没有覆盖的保持 PARTIAL/UNVERIFIED/FAILED。代码存在、CI 将来会跑、页面观感或授权均不能替代证据。
 
-Critical/Important 问题解决并重新通过复审后才能进入 Stage 5。发现根本性需求偏差时，必须回退至 Stage 1 走变更门禁。
+## 阶段 4：Review
 
----
+正式 Release 在高成本系统 Testing 前评审规格、diff 与风险；局部开发测试可以先运行。Tiny 自查 diff，Bounded 聚焦受影响范围，Architectural/Release 使用独立审查；用户明确要求时按其范围执行。
 
-## 阶段 5：Release Testing（真实环境系统测试）
+`gstack:review` 与 `superpowers:requesting-code-review` 选一个主审查；已有同一 diff 的有效审查可以复用。只在实际 UI 风险、并发/边界风险、安全风险或重复实现问题上追加对应透镜，`deslop-shared-libs` 与 `cso` 不是所有 Task 的必经步骤。没有值得抽取的公共逻辑时不制造重构。
 
-### 1. Test Matrix (按项目类型定制策略)
-- **Web / 前端项目**：使用 Playwright、真实 Chromium 探针（`gstack:qa` / `gstack:browse`）模拟真实交互。
-- **API / 后端项目**：运行真实服务实例、API 集成测试套件与边界压力测试。
-- **CLI 项目**：运行真实子进程命令，断言退出码、stdout、stderr 与文件系统副作用。
-- **桌面 / 移动端项目**：在对应模拟器或真实环境执行打包与生命周期测试。
+调用遵守 [编排契约](orchestration.md)，控制修改、提交和外部审查副作用。阻断问题修复后复审受影响部分；发现产品偏差回 Thinking。不能把旧 diff 的审查批准套在新增修复上。
 
-### 2. GUI/Web 真实运行证据标准 (.evidence/)
-针对涉及界面或用户交互的系统，**严禁仅凭纯 Mock 单元测试声称验收通过**：
-- 显式调用真实浏览器探针（`gstack:qa <url>`、`gstack:browse` 或 Playwright）；
-- 捕获控制台日志（Console Errors，必须为 0 报错）；
-- 捕获关键操作的页面截图与 Network HAR/请求日志；
-- 将原始截屏与日志统一归档于 `.evidence/<release-id>/` 目录，并在 `VERIFICATION.md` 中建立索引。
+## 阶段 5：Testing
 
-### 3. Completion Claim Gate
-任何 `DONE`、`FIXED`、`VERIFIED`、`READY_TO_SHIP` 声明前：
-1. 明确证明该声明的具体命令与用户路径；
-2. 运行完整检查并核对 exit code 与失败数；
-3. 核对证据是否覆盖全部适用 REQ/AC 与 Test Seams；
-4. 显式使用 `superpowers:verification-before-completion`（缺失时执行内置等价 gate）。
+| 项目 | 真实运行路径 |
+|---|---|
+| Web/GUI | qa-only、browse、Playwright 或宿主浏览器测试受影响交互；不能用纯 Mock 证明系统行为 |
+| API/后端 | 真实服务的相关接口与集成；压力测试只在性能风险或验收要求时运行 |
+| CLI | 真实子进程、退出码、输出与实际文件副作用 |
+| 桌面/移动端 | 对应模拟器或设备的受影响流程；打包/生命周期只在相关范围验收 |
 
----
+纯验收优先 `gstack:qa-only`；`gstack:qa` 会修复并提交，只在这些动作均获授权时调用，否则只读验收后由 owner 修复。任何修复都回 Building，并对变更做 Review 和 Testing；只重验失效部分。
 
-## 阶段 6：Shipping Gate 与两权分立
+### 真实证据按问题采集
 
-### Verification 与 Authorization 两权分立
+- 功能路径记录步骤、预期/实际和失败数；视觉验收按需保留关键状态截图，不为每个动作截图。
+- 控制台检查限定本次会话和路径。新增或相关错误必须解释/修复；已有无关第三方错误记录来源与影响，不能通过清空控制台制造“零报错”，也不因无关噪声阻断所有交付。
+- HAR、视频、trace、全量网络日志默认关闭；只在对应网络/时序/间歇故障调查或项目明确要求时开启，脱敏后保留必要片段。
+- 原始文件按 [证据预算](artifacts.md#证据预算与保留策略) 留存；Tiny 无行为文案检查不强制启动浏览器或建目录。
+
+### Completion Claim Gate
+
+任何 DONE、FIXED、VERIFIED、READY_TO_SHIP 声明前：确定声明范围 → 检查证据有效性 → 仅运行缺失/失效的必要检查 → 读真实退出码与失败数 → 核对覆盖与限制 → 报告实际结果。
+
+需要外部检查协议时可用 `superpowers:verification-before-completion`；与本次预算或证据复用要求冲突时执行上述内置 Gate。不要宣称调用了未运行的技能或把静态审查写成真实执行。
+
+## 阶段 6：Shipping Gate
 
 ```text
 Verification Status: VERIFIED | PARTIAL | UNVERIFIED | FAILED
 Shipping Authorization: NOT_REQUESTED | PENDING | APPROVED | DENIED
 ```
 
-- `APPROVED` 不改变 Verification Status；人类授权不能把未测试改写为通过。
-- 缺少适用 REQ/AC 证据时，绝对不能标 `READY_TO_SHIP`。
-- 风险接受记录可以说明人类决定，但不能把未知结果写成 `VERIFIED`。
+APPROVED 不改变验证事实，风险接受不能把缺失检查改成通过。
 
 ### READY_TO_SHIP Gate
-必须同时满足：
-- 当前 Release 的所有适用 REQ/AC 均达到 `VERIFIED`；
-- 必需 checks 有 fresh evidence，`.evidence/` 包含有效真机/浏览器证据；
-- 无未解决的阻断 review finding；
-- docs/traceability 一致。
+
+- 全部适用 Release REQ/AC 与必需检查已有有效证据；允许组合、复用可核对结果。
+- 无阻断 review finding，相关文档/追踪一致。
+- 需要真实环境验证的行为有对应证据；CLI 不要求浏览器，文案不要求 HAR。
+- 长期发布证明可取回；不依赖将被清理的唯一原始文件。
 
 ### Human Shipping Gate
-正式 publish、deploy、release 需要对精确 target 的明确 Shipping Authorization，且仍须满足上述 READY_TO_SHIP Gate。获得授权后，**显式调用 `gstack:ship`**（或 `superpowers:finishing-a-development-branch`）执行发布所需的版本 Bump、Changelog 审计、Release Commit、Tag 与 PR 创建。
 
-普通 `COMMIT | PUSH_BRANCH | COMMIT_AND_PUSH | OPEN_PR` 的明确操作授权独立于 Shipping Authorization；不要求 READY_TO_SHIP，可同步未验证的开发分支，不调用 `gstack:ship`。已知目标会自动触发正式部署/发布时仍适用完整 Shipping Gate，不能借普通 Git 请求绕过。
+正式 publish、deploy、release 须满足 READY_TO_SHIP Gate 与精确目标的 Shipping Authorization。已有明确授权直接使用；只在目标、风险或范围改变时重新确认。
+
+默认选择项目已有的直接发布路径，个人开发不强制 PR、功能分支、worktree 或 `gstack:ship`：
+
+1. 核对本次范围、仍适用的验证结果、目标分支/环境和已有发布授权，只补缺失证据。
+2. 按项目约定更新版本和必要变更说明，使用原生 Git 提交、推送；Tag、Release、软件包或部署只执行本次目标需要且已获授权的动作。
+3. 核对远程提交及实际发布回执。软件包验证包名/版本，服务部署验证目标/版本和适用 smoke/健康结果；不为无部署的发布强造健康检查。
+4. 在既有发布记录中保留结果与证据；小版本不为 Shipping 补建整套文档、多角色评审或完整复盘。
+
+只有用户显式要求 PR 时才创建，并按需要选择 `gstack:ship` 或 `superpowers:finishing-a-development-branch`；已有 PR 需合并和部署时可使用已获授权的 `gstack:land-and-deploy`。技能若强制 PR 而本次选择直发，就使用原生 Git 与项目命令，不调用该技能。分支保护要求 PR 时报告限制并等待用户选择，不绕过规则或擅自创建 PR。
+
+PR、分支推送或 ship 成功不能单独证明实际发布完成；达到本次目标的产物、版本和结果均核实后才标 RELEASED。
+
+普通 `COMMIT | PUSH_BRANCH | COMMIT_AND_PUSH | OPEN_PR` 继续走 [Lightweight Git Workflow](execution.md#lightweight-git-workflow)，无需 READY_TO_SHIP，不调用 ship，不改变原验证状态。已知会触发正式发布的 Git 目标仍需发布 Gate。
 
 ---
 
-## 阶段 7：Reflecting 与 Release 封存
+## 阶段 7：Reflecting
 
-进入 `RELEASED` 后：
-1. **显式调用 `gstack:retro`**：自动化分析提交历史、返工频率与耗时瓶颈；
-2. 生成 `RETRO.md` 并执行经验分类沉淀：
-   - 一次性缺陷 ➔ 归档 `BUG-xxx.md`；
-   - 重大架构决策 ➔ 沉淀 `DECISION.md`；
-   - 当前架构事实 ➔ 合并更新 living `TECH_DESIGN.md`；
-   - 重复性 Agent 错误 ➔ 提炼反模式写入 `AGENTS.md`；
-   - 新产品构想 ➔ 记录为下一 Release 候选 Backlog。
-3. 将本次 Release 所有 artifacts 封存为不可篡改历史快照。
+发布后只沉淀有用事实：简单 patch 可在既有记录写几句结果与教训；复杂 Release 或用户要求时用 `gstack:retro` 分析返工、提交和耗时。只有重复的项目行为问题才更新 AGENTS，架构确有变化才更新 TECH_DESIGN，不机械改所有文件。
+
+保留发布时的验证与授权事实，封存历史。发现的新产品想法进入候选 Backlog，不能污染下一版冻结范围。证据清理仍保护长期证明和活跃引用。

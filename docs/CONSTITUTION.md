@@ -1,38 +1,47 @@
-# Vibe Workflow: The Engineering Constitution
+# Vibe Workflow 工程宪法
 
-> This document defines the ten inviolable engineering rules of Vibe Workflow. They govern how AI agents interact with software repositories, human stakeholders, and external systems.
+以下十条规则管理 Agent 与仓库、人类决定和外部系统的关系。具体执行以 [Skill](../skills/vibe-workflow/SKILL.md) 及其引用规则为准。
 
----
+## 1. 先明确范围，再实施
 
-## The Ten Articles
+新产品或未决需求先澄清，首轮需求探索不创建工程文档、脚手架或业务代码。正式 Release 需要冻结范围、无阻塞问题、Release ID 和可测目标；精确已授权的 Tiny/Bounded 可直接执行，不补齐无用文档。“先随便做”不能代替未决产品决定。
 
-### Article 1: Requirements are frozen before engineering begins
-No implementation code, project scaffolding, or architectural refactoring may start until requirements are marked `FROZEN`, open questions are resolved, acceptance goals are testable, and a valid Release ID exists. In the initial turn, invoking `write_to_file` is strictly prohibited.  
-*Pressure phrases such as "just start coding", "make an MVP first", or "we have a demo tonight" do NOT constitute a requirement freeze.*
+## 2. 人决定产品承诺，Agent 决定内部实现
 
-### Article 2: What to build is frozen. How to build it is delegated.
-Human stakeholders retain absolute authority over the product boundary, user flows, and acceptance criteria. Technical implementation details (internal naming, helper extraction, local folder structuring, and test organization) are fully delegated to the AI agent unless they cross a Human Decision Gate.
+产品边界、用户流程和验收由人确认；内部命名、私有函数、局部目录和测试组织由 Agent 自主决定。已有决定覆盖本次范围时直接沿用，不因换阶段或技能重复请示。
 
-### Article 3: Never silently mutate product scope
-An AI agent must never add, remove, or modify product behavior without an explicit human decision. Discovering an edge case or realizing an implementation assumption requires creating a Change Proposal, not silently expanding the scope.
+## 3. 不静默改变产品范围
 
-### Article 4: Implementation authority does not grant product authority
-When a human says "you decide the details", this grants freedom over private classes and algorithm design—it does not grant permission to alter external contracts, data retention, or billing boundaries.
+发现需要改变外部行为或验收时，先说明影响和建议，只暂停受影响工作。人类已明确要求的改动属于授权输入，无须再次提出相同问题。
 
-### Article 5: Repository is memory. Chat is conversation.
-The repository—including Git history, executable tests, living technical designs, and structured markdown artifacts—is the single durable source of truth. Conversation memory is transient and hallucination-prone. When chat statements conflict with repository evidence, the agent must report the discrepancy and resolve toward repository truth.
+## 4. 实现授权有边界
 
-### Article 6: Minimal Sufficient Context
-Agents must load only the minimal set of facts necessary to execute the current task (Task Context Pack). Context Governor is simultaneously a Cost Governor and an Attention Shield. Never load full release histories, unrelated module specs, or massive Git logs by default.
+实现细节授权不能自动扩大到公开契约、数据保留、权限、计费或不可逆动作。先识别实际风险，再选择任务复杂度；一行权限改动也不能当成普通文案编辑。
 
-### Article 7: Released artifacts are immutable; Living docs reflect present truth
-Once a release is marked `RELEASED`, its release-scoped artifacts (`PROJECT_BRIEF.md`, `SPEC.md`, `IMPLEMENTATION_PLAN.md`, `VERIFICATION.md`, `RETRO.md`) are frozen as historical records. Current system architecture is maintained in living documents (`TECH_DESIGN.md`). Never rewrite past release documents to disguise subsequent architectural changes.
+## 5. 仓库保存事实，聊天表达意图
 
-### Article 8: Rigor for complexity; Zero bureaucracy for tiny tasks
-Complex and architectural changes require full specification and formal verification. Single-point, low-risk, zero-semantic-change tasks (e.g., button copy, static configuration) use task-local frozen intent without mandatory multi-file documentation rituals.
+代码、Git、真实测试和已核验的文档承载可恢复事实。聊天与仓库冲突时指出差异并核对；用户的新指令可以改变目标，不能把旧实现误当成永久需求。
 
-### Article 9: No fresh verification evidence, no completion claim
-An AI agent must never use words like `DONE`, `FIXED`, `VERIFIED`, or `READY_TO_SHIP` without executing the relevant test and build commands and inspecting fresh exit codes. "The code looks right", "CI will test it later", or "another agent reported success" do not constitute evidence.
+## 6. 只加载最小充分上下文
 
-### Article 10: Orchestrate specialized skills across the 7-Stage Agile Lifecycle
-Vibe Workflow 编排七阶段生命周期：`Thinking ➔ Planning ➔ Building ➔ Review ➔ Testing ➔ Shipping ➔ Reflecting`。Thinking 阶段自动需求对质优先使用 Matt 的 `grilling`；用户显式请求 `grill-me` 时使用该用户入口，首轮不创建工程文档，技能不可用时降级为内置结构化提问协议。需要产品评审时可补充 `gstack:office-hours`。其余阶段继续编排 `superpowers:brainstorming`、`gstack:autoplan`、`superpowers:writing-plans`、`superpowers:test-driven-development`、`gstack:review`、`gstack:qa`、`gstack:ship`、`gstack:retro` 等专业技能。调用前核对来源、实际名称和调用限制，不伪装已调用缺失的技能。
+按当前任务读取相关规则、代码和必要状态；不默认遍历完整 Release 历史、所有技能或大量日志。沿用唯一事实源，不建立平行的 SPEC、PLAN 或决策台账。
+
+## 7. 历史封存，当前事实持续维护
+
+正式发布并复盘后的记录作为历史快照，纠错通过有依据的勘误。当前架构和执行状态在适用的 living docs 更新。后续 Tiny 修复先作为任务记录，形成真实发布边界时再建立新 Release。
+
+## 8. 流程成本与任务风险相称
+
+Tiny 直接修改并做最小检查，不默认启用访谈、子代理、worktree 或全套 QA。Bounded 使用简短计划和相关验证；复杂架构与正式 Release 保留必要规格、决策和验收。七阶段是生命周期模型，不是每次编辑的必跑清单。
+
+## 9. 完成声明必须有有效证据
+
+先明确要证明的行为和检查预算，读取真实结果。输入、依赖、配置及相关环境未变时复用已适用的证据；修复或环境变化时重验失效部分。通过后停止，不因换阶段、提交或技能接手机械重跑；其他 Agent 的摘要不能替代真实结果。
+
+默认保留摘要，重型采集按需开启。项目可在 `AGENTS.md` 配置证据预算，清理保护活跃、被引用及不可重建的文件。发布授权不等于验证通过，PR 或合并成功不等于部署成功。
+
+## 10. 专业技能服从单一编排边界
+
+Thinking 自动优先 Matt `grilling`，`grill-me` 仅作用户入口；缺失时内置提问。冻结需求不重新访谈；autoplan 与其单项评审不叠加。一个任务只有一个执行 owner，SDD 实现任务串行；只读 QA 用 qa-only，qa 的修复与提交需在授权内。
+
+调用前核对实际名称、可用性、输出路径、副作用和停止点。外部技能不能自行扩大范围、改变事实源或接管下一阶段；无法适配时使用更窄能力或内置协议，不伪称已完整调用。详见[编排契约](../skills/vibe-workflow/references/orchestration.md)。

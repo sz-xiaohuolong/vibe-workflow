@@ -15,7 +15,7 @@ Project
 └── v0.3  BUILDING (当前进行中)
 ```
 
-对已发布产品的 Bug 修复创建新的 patch Release 或后续 Release；旧 Release 严格封存当时事实。这个封存边界优先于 Tiny 的轻文档预算：Tiny patch Release 仍保留新 Release 必需的事实职责，但每份只写该修复所需的最小内容，不生成冗余文件，严禁回写已发布版本的历史文档。
+已发布产品的后续修改先作为当前任务或下一版候选记录，不回写旧 Release。只有形成新的对外发布边界时才创建 patch/后续 Release；Tiny 修复不因旧版已发布而立即生成整套文档。正式发布仍保留本次范围、验收和授权事实，可集中在既有发布记录。
 
 Release 是对外有意义的范围/验收/发布边界；Slice 是同一 Release 中可运行、可验证的业务切片，Task 是更小的原子工作项。
 
@@ -25,7 +25,7 @@ Release 是对外有意义的范围/验收/发布边界；Slice 是同一 Releas
 
 ## 七阶段敏捷开发模型 (The 7-Stage Lifecycle)
 
-每个 Release 标准流转经历 7 个阶段，支持按证据动态回退，形成持续闭环：
+完整 Release 按七阶段推进；Tiny/Bounded 使用入口中的轻量路径，不为一次编辑反复遍历各阶段。阶段职责可以由同一份精简记录承担，支持按证据回退：
 
 ```text
 1. Thinking ──➔ 2. Planning ──➔ 3. Building ──➔ 4. Review ──➔ 5. Testing ──➔ 6. Shipping ──➔ 7. Reflecting
@@ -43,133 +43,68 @@ Release 是对外有意义的范围/验收/发布边界；Slice 是同一 Releas
 | **1. Thinking** | `REQUIREMENTS_FROZEN` | 需求对质、澄清边界、锁定基线 | `PROJECT_BRIEF.md` (FROZEN) |
 | **2. Planning** | `SPECIFIED` ➔ `DESIGNED` ➔ `PLANNED` | 外部测试接缝、技术架构审查、依赖图与切片 | `SPEC.md`, `PROPOSED_DESIGN.md`, `IMPLEMENTATION_PLAN.md` |
 | **3. Building** | `BUILDING` | Task 上下文包、TDD 循环、最小实现、单测绿化 | 源代码、单元测试、`PROGRESS.md` |
-| **4. Review** | `REVIEWING` | **置于系统测试前**：审查规格一致性与代码异味 | 代码评审记录、消肿重构提交 |
-| **5. Testing** | `VERIFYING` | 真实浏览器/真机环境验收、端到端用户流 | `VERIFICATION.md`, `.evidence/<id>/` |
-| **6. Shipping** | `READY_TO_SHIP` ➔ `RELEASED` | 独立发布授权、CI 审计、版本 Bump、发布部署 | Release Commit/Tag/PR、封存快照 |
+| **4. Review** | `REVIEWING` | **置于系统测试前**：审查规格一致性与代码异味 | 必要评审记录 |
+| **5. Testing** | `VERIFYING` | 真实浏览器/真机环境验收、端到端用户流 | 验收矩阵、按需原始证据或 CI 链接 |
+| **6. Shipping** | `READY_TO_SHIP` ➔ `RELEASED` | 按需版本更新、授权发布、核验实际结果 | 提交与适用发布回执；PR 仅显式要求时 |
 | **7. Reflecting** | `REFLECTING` ➔ 闭环进入下版 | 结构化复盘、经验分类沉淀、更新工程规则 | `RETRO.md`, `AGENTS.md`, living `TECH_DESIGN.md` |
 
 ---
 
-## 七阶段执行契约 (Stage Execution Contracts)
+## 七阶段执行契约
 
-### 阶段 1：Thinking（思考）
-- **Entry Gate**：收到新项目立项、新 Release、或需求变更请求。
-- **Required Inputs**：用户原始输入、仓库既有 `AGENTS.md`、`DOCUMENT_MAP.md`、当前产品事实。
-- **Actions**：
-  1. 识别任务属性（NEW_PROJECT / FEATURE / BUG / SPIKE / REQUIREMENT_CHANGE / TINY）；
-  2. **【显式调用与负向禁止令】首轮严禁执行 `write_to_file` 创建任何实现或规划文档！**
-     - 自动需求对质优先使用 Matt 的 `grilling`，澄清边界条件、数据模型与验收指标；
-     - 用户显式请求 `grill-me` 时使用该用户入口；调用前核对技能来源和调用限制，不自动调用声明 `disable-model-invocation: true` 的入口；
-     - 首轮需求澄清不创建工程文档；外部技能自身的文档写入动作也必须遵守当前阶段限制；
-     - 技能不可用时立即降级为内置结构化提问协议，使用可用交互工具（如 `ask_question`）澄清关键产品问题，等待人类答复；
-     - 需要产品减法评审时可补充 `gstack:office-hours`，但不设为自动对质的必经前置流程；
-  3. 若需验证技术可行性，允许受控 Discovery Spike（限定时限与丢弃边界，探针代码不入主分支）；
-  4. 人类对质答复完成后，锁定需求基线，确定可独立测试的 Acceptance Goals。
-- **External Skills**：Matt 的 `grilling`（自动需求对质）、`grill-me`（用户显式调用）、`gstack:office-hours`（可选产品评审）、`gstack:design-shotgun`（Spike 原型）。
-- **Outputs**：`PROJECT_BRIEF.md`（状态锁定为 `FROZEN`，`Open Questions == None`）。
-- **Exit Gate**：满足 `Requirement Status == FROZEN` 且 `Open Questions == None`，验收目标可独立判定。
-- **Failure Route**：若存在未解决歧义，保持 `WAITING_HUMAN`，禁止进入 Planning 阶段。
+外部调用遵守 [编排契约](orchestration.md)，阶段表中的技能都是能力选项，不构成每项必跑。
 
-### 阶段 2：Planning（规划）
-- **Entry Gate**：Stage 1 成功退出，需求基线已冻结。
-- **Required Inputs**：已冻结的 `PROJECT_BRIEF.md`、当前系统架构 `TECH_DESIGN.md`。
-- **Actions**：
-  1. **【显式调用】架构方案头脑风暴**：显式提示并调用 `superpowers:brainstorming`，探索 2~3 种技术选型方案与权衡；
-  2. **Effective SPEC 编制**：将冻结需求展开为可验证行为契约，显式定义 **Test Seams（外部可观察测试接缝）**；
-  3. **方案多维评审**：显式调用 `gstack:autoplan`（或依次调度 `plan-ceo-review`、`plan-eng-review`），对架构、减法与数据流进行全方位自动/半自动评审；重大决策记录 `DECISION.md` 并过 Human Gate；
-  4. **【显式调用】实施计划拆解**：显式调用 `superpowers:writing-plans`，按 Vertical Slice 拆分 Task，建立 **Task Dependency Graph**，明确标注 **Ready Frontier（无阻塞可就绪任务）**，建立 `REQ ➔ AC ➔ Design ➔ Task ➔ Test Seam` 映射矩阵。
-- **External Skills**：`superpowers:brainstorming`、`gstack:autoplan`（或 `plan-ceo-review`/`plan-eng-review`）、`superpowers:writing-plans`。
-- **Outputs**：`SPEC.md`、`PROPOSED_DESIGN.md`、`IMPLEMENTATION_PLAN.md`（含 Test Seams 与 Dependency Graph）。
-- **Exit Gate**：计划具备完整依赖拓扑，每项 AC 均有对应的 Test Seams 与执行 Task，高风险架构决策已获批。
-- **Failure Route**：架构假设被推翻或发现伪需求，回退至 Stage 1（Thinking）修改需求基线。
+### 阶段 1：Thinking
 
-### 阶段 3：Building（构建）
-- **Entry Gate**：Stage 2 规划获批，进入已就绪的 Vertical Slice。
-- **Required Inputs**：当前 Task Context Pack（含 Task Handoff Contract、相关 SPEC、测试接缝）。
-- **Actions**：
-  1. 按照 **Task Handoff Contract** 协议执行任务：
-     - `Task ID`、`Goal`、`Related REQ/AC`、`Dependencies`、`Allowed Modification Scope`、`Test Seams`、`Risk Tags`；
-  2. **【显式调用】隔离开发**：对于需要分支/独立目录的任务，显式提示并调度 `superpowers:using-git-worktrees`；
-  3. **【显式调用】多任务并行分发**：对处于 Ready Frontier 且互无共享状态的独立 Task，显式调用 `superpowers:subagent-driven-development` 并行分发；有共享写状态的强制串行；
-  4. **【显式调用】Task 执行协议**：每个 Task 执行前，必须在提示语中显式注入 **`**REQUIRED SUB-SKILL:** superpowers:test-driven-development`**，严格遵守 `红 (失败单测) ➔ 绿 (最小实现) ➔ 蓝 (重构优化)` 闭环；
-  5. 遇到连续 3 次同类失败或方向迷失，禁止继续盲改，显式触发 **`gstack:investigate`** 或 `superpowers:systematic-debugging` 进行根因分析，并触发 Circuit Breaker（置 `REPLAN_REQUIRED`）。
-- **External Skills**：`superpowers:test-driven-development`、`superpowers:subagent-driven-development`、`superpowers:using-git-worktrees`、`gstack:investigate`（或 `superpowers:systematic-debugging`）。
-- **Outputs**：功能代码、单元测试代码、更新后的 `PROGRESS.md`（标记任务为 `IMPLEMENTED_UNVERIFIED` 或 `VERIFIED`）。
-- **Exit Gate**：当前 Release 所有 Slice 的 Task 均实现完毕，局部测试全绿，diff 无越界。
-- **Failure Route**：触发 Circuit Breaker 时回退至 Stage 2（Planning）重新设计。
+新产品或未决需求进入澄清。自动优先 Matt `grilling`，`grill-me` 仅供用户显式调用，缺失时内置结构化提问；先查可得事实，只询问影响范围和验收的未决决定。首轮需求澄清不创建工程文档或实现。精确已批准的任务不重走访谈。
 
-### 阶段 4：Review（评审）⭐ 放在 Testing 之前
-- **Entry Gate**：Stage 3 全部 Task 构建完成，局部测试通过，代码 diff 稳定。
-- **Required Inputs**：已冻结 SPEC/AC、本次 Release 完整 Diff、Task 级实现与单测证据。
-- **Actions**：
-  1. **【显式调用】代码质量与规格评审**：显式调用 `gstack:review`（或 `superpowers:requesting-code-review`），由独立视角审查：
-     - **Spec Compliance**：是否 100% 覆盖已冻结的 REQ/AC？是否遗漏边界？是否产生未经批准的 Scope Creep？
-     - **Engineering Quality**：并发竞态、时区、资源泄露、错误处理健壮性；
-  2. **【显式调用】代码消肿与公共库抽取**：显式调用 `gstack:deslop-shared-libs`，扫描跨模块重复代码与过早抽象，合并冗余；
-  3. **【显式调用】安全威胁审查**：若任务标记有 Security/Auth Risk Tag，显式调度 `gstack:cso` 进行威胁建模与脆弱性检查。
-- **External Skills**：`gstack:review`、`superpowers:requesting-code-review`、`gstack:deslop-shared-libs`、`gstack:cso`。
-- **Outputs**：评审意见记录、消肿重构提交、更新后的代码基线。
-- **Exit Gate**：所有 Critical 与 Important 评审问题均已修复并通过复审，无未授权范围漂移。
-- **Failure Route**：
-  - 发现实现缺陷或代码异味 ➔ 回退至 Stage 3（Building）修复；
-  - 发现需求存在根本性理解偏差 ➔ 回退至 Stage 1（Thinking）走变更门禁。
+产品减法确有必要时可选 office-hours；原型需求可按 Discovery Spike 协议限时隔离。出口为范围与可测验收获得确认，无阻塞产品问题；未决时 WAITING_HUMAN。正式 Release 才建立对应基线与 ID。
 
-### 阶段 5：Testing（测试）⭐ 真实环境与端到端验收
-- **Entry Gate**：Stage 4 Review 全部通过，进入系统级真实环境验证。
-- **Required Inputs**：Test Matrix、运行环境配置、被测系统入口。
-- **Actions**：
-  1. 执行系统集成测试与回归测试用例；
-  2. **【显式调用】Web/UI/GUI 真机与真实浏览器验收**：严禁只用 Mock 测试充数，显式调用 `gstack:qa` 或 `gstack:browse`，驱动真实 Chromium 探针模拟用户真实交互流程；
-  3. 捕获真实运行证据：Console Logs（无报错）、Network 流量日志、界面关键操作截图，持久化存入 `.evidence/<release-id>/` 目录；
-  4. 逐项核验 REQ/AC 证据闭环，严格区分 `IMPLEMENTED_UNVERIFIED`、`POC_VALIDATED` 与 `VERIFIED`。
-- **External Skills**：`gstack:qa`、`gstack:browse`、`superpowers:verification-before-completion`、Playwright / 原生测试套件。
-- **Outputs**：`VERIFICATION.md`（REQ/AC 逐行证据矩阵）、`.evidence/<release-id>/` 原始运行截屏与日志。
-- **Exit Gate**：所有适用 REQ/AC 的 Verification Status 均为 `VERIFIED`，有新鲜且不可篡改的证据，状态达到 `READY_TO_SHIP`。
-- **Failure Route**：测试失败 ➔ 记录 Bug ➔ 回退至 Stage 3（Building）修复 ➔ 经过 Stage 4（Review）复审 ➔ 重新进入 Stage 5 验收。
+### 阶段 2：Planning
 
-### 阶段 6：Shipping（交付）
-- **Entry Gate**：用户要求正式 Publish / Deploy / Release，Stage 5 验收完毕，Workflow State 达到 `READY_TO_SHIP`；普通 Git 操作不适用此阶段。
-- **Required Inputs**：`VERIFICATION.md`、变更日志、版本号、部署环境信息。
-- **Actions**：
-  1. Preflight 检查：Git 状态干净、构建成功、无未解决阻塞项；
-  2. Documentation Audit：更新 README、CHANGELOG、VERSION；
-  3. **Human Shipping Gate**：出示发布提案（包含 target、影响、回滚方案），等待人类明确授权；
-  4. **【显式调用】交付流自动化**：在获得人类明确许可后，显式调用 `gstack:ship`（自动执行版本 Bump、Changelog 归档、Git commit、Tag、PR 创建与部署流）；
-  5. 部署 Smoke Test 与生产连通性检查；
-  6. 归档 Release Artifacts。
-- **External Skills**：`gstack:ship`、`superpowers:finishing-a-development-branch`。
-- **Outputs**：Git Commit/Tag/PR、发布结果记录、封存的 Release 目录。
-- **Exit Gate**：发布动作成功执行，确认部署无异常，状态推进为 `RELEASED`。
-- **Failure Route**：人类拒绝发布 ➔ 保持 `READY_TO_SHIP`，不执行外部动作；发布失败 ➔ 启动回滚或恢复方案，记录问题并调查。
+基于冻结范围确定规格、Test Seams、技术方案与任务依赖；普通内部实现自主决定。已有足够计划时不重复生成；Bounded 可用简短任务记录。
 
-### 阶段 7：Reflecting（复盘）⭐ 持续进化
-- **Entry Gate**：Stage 6 成功交付，状态已为 `RELEASED`。
-- **Required Inputs**：本次 Release 过程证据、Circuit Breaker 记录、Bug 记录、开发耗时数据。
-- **Actions**：
-  1. **【显式调用】结构化复盘**：显式调用 `gstack:retro`，自动化分析提交历史、返工频率、耗时瓶颈与测试盲区；
-  2. 经验分类沉淀：
-     - 一次性缺陷 ➔ 留存 `BUG-xxx.md` 归档；
-     - 重大架构抉择 ➔ 留存 `DECISION.md`；
-     - 当前系统事实 ➔ 合并更新 living `TECH_DESIGN.md`；
-     - 重复性 Agent 错误 ➔ 提炼 1~2 条反模式规则追加至 `AGENTS.md`（优先转化为自动化检测）；
-     - 发现的新产品想法 ➔ 沉淀为下一 Release 的候选 Backlog（禁止自动污染下一版本 Frozen Scope）。
-- **External Skills**：`gstack:retro`。
-- **Outputs**：`RETRO.md`（复盘记录）、更新后的 `AGENTS.md`、更新后的 living `TECH_DESIGN.md`。
-- **Exit Gate**：经验沉淀完成，活文档与历史快照严格对齐，闭环结束，准备进入下一 Release。
-- **Failure Route**：无阻塞性失败；若复盘发现遗留严重隐患，直接建 Bug 作为下一 Release 最高优先级。
+技术方案有长期取舍时过 Architecture Gate；复杂多维方案选 autoplan，单一维度选对应评审，不叠加已完成透镜。复杂拆解可用 writing-plans，写入既有计划路径。brainstorming 7 以需求访谈为主，不作本阶段固定前置，不让它绕过中间评审接管下一阶段。
 
----
+出口为任务、依赖、验收可执行且必要决定已批准。产品假设被推翻时回 Thinking；单纯技术调整只更新相关方案。
 
-## 优雅降级与能力探测机制 (Graceful Degradation)
+### 阶段 3：Building
 
-若运行环境未安装上述外部 Skill，Agent 必须遵循：
-1. **先探测**：检查环境是否具备对应的外部 Skill 或 Slash Command，并核对来源、实际名称与调用限制；仅限用户调用的入口不得作为自动编排的替代；
-2. **后降级**：若未安装，**在回复中显式告知用户**，并立即无缝降级为 `vibe-workflow` 内置的原生等价行为：
-   - Matt 的 `grilling` 不可用，或用户显式请求的 `grill-me` 不可用 ➔ 降级使用内置结构化提问协议；不自动调用仅限用户使用的入口；
-   - 缺少 `superpowers:test-driven-development` ➔ 严格执行内置原生失败单测先行循环；
-   - 缺少 `gstack:qa` / `gstack:browse` ➔ 降级使用 Playwright / Chromium CLI 或原生测试探针捕获证据；
-   - 缺少 `gstack:retro` ➔ 降级使用内置 `RETRO.md` 模板进行人工结构化复盘。
-3. **严禁报错中断**：外部技能缺失决不能成为流程崩溃的理由。
+按任务最小闭环实现。行为改动和 Bug 使用 TDD 或必要的真实回归验证，无行为变化编辑用适用检查。复杂委派才组装 Task Handoff Contract；简单任务直接执行。确需隔离时才用 worktree。
+
+SDD 按任务串行实现与评审，executing-plans 用于检查点执行，二选一；独立调查或隔离并行由唯一 owner 按 [routing.md](routing.md) 调度，不将 SDD 当并行实现器。
+
+同类失败连续三次、连锁回归或架构失效触发熔断；选择 investigate 或 systematic-debugging 之一。出口为当前范围实现且必要局部检查通过，未验证实现如实记录，不提升 Release 状态。
+
+### 阶段 4：Review
+
+正式 Release 在高成本系统测试前审查规格与 diff。Tiny 自查，Bounded 聚焦受影响范围，复杂 Release 独立审查。review 与 requesting-code-review 选一个；实际安全风险才加 cso，实际重复实现问题才加 deslop，不要求为评审制造重构。
+
+无 Critical/Important 阻断项才能进入系统验收；实现缺陷回 Building，产品偏差回 Thinking。修复后复审受影响部分，不无条件重新运行整套评审。
+
+### 阶段 5：Testing
+
+按 [验证预算](quality-and-release.md) 检查适用 AC 与真实路径；可以复用输入与环境未变的真实结果。Web/GUI 行为须真实运行，纯文案 Tiny 不要求浏览器。截图按视觉需要、HAR/视频/trace 按诊断需要采集，默认摘要级证据。
+
+只读验收用 qa-only/browse/原生工具；qa 的修复与提交均需在授权范围内。发现缺陷回 Building，修复后经过相关 Review 再验证失效部分。所有适用 Release AC 与必需检查通过、证据可取回时到 READY_TO_SHIP，不能因某个 Task 通过跳过其余范围。
+
+### 阶段 6：Shipping
+
+仅正式 Publish/Deploy/Release 进入，普通 Git 走 [Lightweight Git Workflow](execution.md#lightweight-git-workflow)。先核对 READY_TO_SHIP 与精确目标授权，已有授权不重复询问。
+
+默认使用原生 Git 与项目既有发布命令，按需更新版本、变更说明和发布产物；个人开发不强制 PR、功能分支或 ship。只有用户显式要求 PR 时才选相应分支交付流程；已有 PR 的授权合并/部署可用 land-and-deploy。分支保护不允许直推时报告限制，不能擅自创建 PR。核验实际目标、版本/commit 及适用的 smoke/健康或包发布回执后才置 RELEASED；PR、合并或 ship 成功不等于已部署。简单发布在既有记录保留必要事实，无须补建整套文档。
+
+失败记录真实结果，不重复触发不明状态的发布，也不在无授权时扩大回滚范围。
+
+### 阶段 7：Reflecting
+
+简单交付在既有记录简要总结；复杂 Release 或用户要求时用 retro。按事实更新相关 living docs；反复出现的问题才沉淀 AGENTS，真正架构变化才更新 TECH_DESIGN。下一版想法仅进入候选 Backlog。
+
+封存已发布事实，清理按 [证据保留策略](artifacts.md#证据预算与保留策略) 保护活跃引用与长期证明。无有价值经验时不为仪式新建空 RETRO。
+
+## 能力缺失
+
+先核对来源、实际注册名称和调用限制；当前所需技能缺失时简短说明并使用 [内置最小协议](orchestration.md)。缺少真实服务、浏览器或权限时记录未验证缺口，不能以降级为理由伪造成功。不要为尚未需要的所有技能逐个做安装检查。
 
 ---
 
@@ -214,13 +149,13 @@ Operational Status 不会自动改变 Workflow State。例如 BUILDING 中发生
 - 措辞歧义使用有日期、有理由、有链接的勘误记录。
 - 当前行为改变时写入新 Release 的 Effective SPEC。
 - 当前架构写入 Living TECH_DESIGN；历史原因写入 DEC。
-- 将验证有效的 1~2 条工程防坑守则提炼追加到仓库 `AGENTS.md`，实现跨会话持续记忆。
+- 有重复出现且已验证有效的经验时更新 `AGENTS.md`；无新经验时不新增规则。
 
 封存不是禁止纠错，而是禁止把今天的事实追溯覆盖为过去的事实。
 
 ## 恢复会话
 
-新会话从 PROGRESS 开始，但不盲信它：
+Tiny 与普通 Git 只读取适用规则、相关文件和必要状态；其余任务从现有 PROGRESS 或等价记录开始，但不盲信它：
 
 1. 读取 Current Release、Stage、State、Status、Slice、Task 和 Last Stable Commit。
 2. 用 Git、代码、测试和关联 artifacts 核验。

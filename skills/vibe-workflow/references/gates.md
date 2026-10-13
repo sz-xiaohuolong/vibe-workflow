@@ -52,7 +52,7 @@ Change Proposal 必须包含：
 
 ## Approval Contract
 
-有效批准必须指向一个明确方案及其已展示影响。以下不充分：
+有效批准必须指向明确范围及已知影响；沿用会话中已经覆盖本次目标的决定，不因换技能、文档或阶段重复请求。精确的低风险 Tiny/Bounded 请求可直接成为任务意图，不要求人为补齐 Release ID。以下不充分：
 
 - “直接做吧”但没有冻结范围。
 - “你自己决定细节”但选择改变产品行为。
@@ -93,7 +93,7 @@ investigate
 
 只有会锁定长期方向或跨外部边界的 Architecture 选择需要 Human Gate，例如：公共协议、核心数据模型、部署拓扑、跨平台兼容、重要供应商依赖。
 
-普通模块拆分和内部实现路径无需频繁询问。若确需 Gate，先调用 `superpowers:brainstorming` 或等价能力比较 2–3 个实质方案，再记录 DEC。方案评审时可借助多维审查透镜：CEO 减法（砍过度设计）、设计审美（防 AI Slop 塑料感）及工程复杂度（或调用 `gstack:autoplan` 统一走查）。
+普通模块拆分和内部实现路径无需频繁询问。若确需 Gate，基于已冻结范围比较实质技术方案，再记录必要 DEC；不默认调用面向需求访谈的 `superpowers:brainstorming`。方案评审时可借助多维审查透镜：CEO 减法（砍过度设计）、设计审美（防 AI Slop 塑料感）及工程复杂度（或调用 `gstack:autoplan` 统一走查）。
 
 ## Security / Permission Gate
 
@@ -111,15 +111,17 @@ UI 改动不能代表授权正确。改变匿名访问、AuthN/AuthZ、Secret、
 
 ## 七阶段核心门禁一览
 
+下表约束完整 Release 的阶段推进；Tiny/Bounded 仍按入口的任务路径执行，实际风险 Gate 不豁免。
+
 | 阶段 | 守门门禁 (Gate) | 判定依据 | 未通过时的阻断行为 |
 |---|---|---|---|
-| **1. Thinking** | **Requirement Freeze Gate** | 需求无歧义、首轮禁止写文件、AC 明确 | 保持 `WAITING_HUMAN`，严禁建立 SPEC/PLAN 或写代码 |
-| **2. Planning** | **Design & Plan Gate** | 方案通过多维评审、Test Seams 明确、任务依赖拓扑就绪 | 保持 `DRAFT`，严禁派发任务进入 Building |
-| **3. Building** | **Task TDD & Handoff Gate** | 遵循红绿循环、局部单测全绿、无越界改动 | 严禁标为 `IMPLEMENTED`，连续 3 次失败触发熔断 |
-| **4. Review** | **Release Review Gate** | Spec 100% 合规、无 Scope Creep、代码质量全过 | 严禁进入 Testing，直接打回 Building 修复 |
-| **5. Testing** | **Release Verification Gate** | 所有适用 REQ/AC 达到 `VERIFIED`，真机/浏览器证据新鲜有效 | 严禁进入 `READY_TO_SHIP`，记录 Bug 回退修复 |
+| **1. Thinking** | **Requirement Freeze Gate** | 范围明确、AC 可测；首轮需求探索不写工程文件 | 保持 `WAITING_HUMAN`，严禁建立 SPEC/PLAN 或写代码 |
+| **2. Planning** | **Design & Plan Gate** | 必要方案决定完成、Test Seams 明确、任务依赖就绪 | 保持 `DRAFT`，严禁派发任务进入 Building |
+| **3. Building** | **Task Verification Gate** | 行为改动遵循测试闭环，无行为编辑完成适用检查；diff 无越界 | 未验证实现记为 `IMPLEMENTED_UNVERIFIED`；连续 3 次同类失败熔断 |
+| **4. Review** | **Release Review Gate** | 适用规格与 diff 已审查，无阻断项和未批准的范围变化 | 严禁进入 Testing，直接打回 Building 修复 |
+| **5. Testing** | **Release Verification Gate** | 所有适用 REQ/AC 达到 `VERIFIED`，所需运行证据对应当前输入与环境 | 严禁进入 `READY_TO_SHIP`，记录 Bug 回退修复 |
 | **6. Shipping** | **Human Shipping Gate** | Release 就绪，人类针对明确发布 target 做出授权 | 严禁执行未经授权的 publish / deploy / release；普通 Git 另走轻量流程 |
-| **7. Reflecting** | **Continuous Learning Gate** | 结构化复盘完成、经验沉淀入 `AGENTS.md` | 严禁篡改已封存历史或污染下版 Frozen Scope |
+| **7. Reflecting** | **Continuous Learning Gate** | 必要过程结论已记录，有重复且有效的经验时更新 `AGENTS.md` | 严禁篡改已封存历史或污染下版 Frozen Scope |
 
 ## Verification 与 Shipping 分离
 

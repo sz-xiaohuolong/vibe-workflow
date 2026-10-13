@@ -8,6 +8,8 @@
 
 这是各阶段均可使用的保存/协作流程，不是新增生命周期阶段。仅要求 Git 操作时执行本节，不套用下方 Task 完成、TDD、Review 或 Release 契约。
 
+个人开发默认沿用当前明确分支和 upstream 直接提交/推送，不自动新建功能分支或 PR。“同步远程/推送代码”不隐含创建 Tag、GitHub Release、发布软件包或部署；“发布版本”不隐含 PR。只有用户显式要求 PR 时才选择 OPEN_PR。若远程保护要求 PR，说明拒绝原因及可选路径，等待用户选择，不绕过保护，也不自动创建 PR。
+
 | 操作 | 授权范围与结果 |
 |---|---|
 | `COMMIT` | 将本次授权 diff 提交到当前明确分支；不隐含 push |
@@ -44,7 +46,7 @@ Slice 3: 历史列表和删除完整闭环
 
 ## Task Handoff Contract (统一任务派发契约)
 
-每个 Task 向执行 Agent 派发时，必须封装为标准的 Task Handoff Contract：
+仅实际委派复杂任务时组装下列 Task Handoff Contract；Tiny 原地执行，Bounded 用目标、范围和验收三项短记录即可。已有事实用链接，不复制整套模板。外部技能还须遵守 [编排契约](orchestration.md)。
 
 ```text
 - Task ID: <TASK-ID>
@@ -69,7 +71,7 @@ Select Next Task (from Ready Frontier)
 → Assemble Task Handoff Contract
 → Confirm frozen scope and applicable Gates
 → Inspect existing code/tests
-→ [显式调用 superpowers:test-driven-development / 内置TDD] failing test
+→ 行为改动使用 superpowers:test-driven-development / 内置 TDD；无行为变化编辑选最小检查
 → minimal implementation
 → task verification (all green)
 → inspect diff (no out-of-scope changes)
@@ -81,14 +83,14 @@ Select Next Task (from Ready Frontier)
 
 Task Loop 中的 checkpoint/commit 使用上述 Lightweight Git Workflow。任务实现与完成声明所需验证仍按 Task contract 执行，但已经完成且仍适用的检查不因 Git 操作重复运行。
 
-**【显式 TDD 注入】**：派发任何 Feature、Bug、Refactor 任务时，必须在提示语中显式注入 **`**REQUIRED SUB-SKILL:** Use superpowers:test-driven-development`**。若环境未安装该外部技能，则严格执行内置原生 TDD 协议（编写失败用例 ➔ 最小实现 ➔ 验证全绿 ➔ 重构），严禁跳过红绿循环直接写业务代码。
+行为改动与 Bug 修复优先失败回归测试 → 最小实现 → 通过 → 必要重构；确有委派时显式传入 `superpowers:test-driven-development` 或等价协议。文档、文案、无行为变化的静态配置不用制造镜像测试。已有测试已覆盖时复用；缺少可执行测试环境时选择真实探针并明确限制，不能伪造红绿证据。
 
 Task 完成前至少确认：
 
 - 改动严格在 Allowed Modification Scope 内，无越界代码。
-- 对应 Test Seam 产生新鲜的成功输出（fresh output）。
+- 适用 Test Seam 有对应当前输入与环境的成功结果；按 [证据适用性](quality-and-release.md) 复用或重验，无行为变化的编辑使用适用静态检查。
 - diff 不包含无关重构或用户现有改动。
-- PROGRESS 记录 evidence、稳定点和 Next Task。
+- 有既有 PROGRESS 时更新受影响一行；无文档需要的 Tiny 在回复保留结果即可。
 - 已按 [文档同步检查点](artifacts.md#文档同步检查点) 同步受影响文档，避免只更新 PROGRESS 而遗漏已有计划、验证记录或当前架构。
 
 ## Bug Workflow 与根因排查
@@ -105,7 +107,7 @@ BUG REPORT
 → checkpoint/commit
 ```
 
-**【显式排障调用】**：使用 `gstack:investigate` 或 `superpowers:systematic-debugging`（遵循调试铁律：不定位根因绝不盲目改代码，深入追踪调用链与数据流）。复杂 Bug 可从 `assets/templates/BUG.md` 建立记录；简单 Bug 沿用现有 tracker，不强制新文件。
+复杂、复现不明或触发熔断时，选择 `gstack:investigate` 或 `superpowers:systematic-debugging` 之一；简单明确的 Bug 直接执行最小根因调查与回归验证（遵循调试铁律：不定位根因绝不盲目改代码，深入追踪调用链与数据流）。复杂 Bug 可从 `assets/templates/BUG.md` 建立记录；简单 Bug 沿用现有 tracker，不强制新文件。
 
 分支判断：
 
@@ -150,7 +152,7 @@ Retry 只适用于有新证据支持的 transient failure、明确 typo、环境
 
 ### Execution Parallel
 
-仅用于已过 Gate、无强依赖、无共享写状态、Context/Acceptance 独立的 Task。每个 Agent 有明确文件范围和 evidence contract；合并后必须运行集成验证和 review。
+仅用于已过 Gate、无强依赖、无共享写状态且可隔离的 Task。每个 Agent 有明确文件范围和 evidence contract；集成后只运行必要的受影响集成检查与审查。SDD 本身串行实现任务，不能同时另开并行实现器。
 
 禁止未经协调同时修改：同一核心文件、同一 Schema/migration、共享状态机、同一公共 contract 的互相依赖两端。
 
@@ -158,7 +160,7 @@ Retry 只适用于有新证据支持的 transient failure、明确 typo、环境
 
 ## Progress 更新
 
-Task 开始、完成、阻塞或触发 Gate/Circuit Breaker 时，同一轮更新 PROGRESS；摘要只提最重要的事实，明细在任务、证据或适用时的风险表中维护：
+有既有 PROGRESS 时，Task 开始、完成、阻塞或触发 Gate/Circuit Breaker 后同一轮更新相关内容；无治理文档的 Tiny 不因此新建 PROGRESS；摘要只提最重要的事实，明细在任务、证据或适用时的风险表中维护：
 
 - Current Release/State/Status。
 - Current Slice/Task。

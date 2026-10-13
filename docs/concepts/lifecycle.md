@@ -1,60 +1,18 @@
-# Vibe Workflow Lifecycle & State Machine
+# 生命周期与状态恢复
 
-> Detailed specification of the Release-centric state machine, operational statuses, and invalidation rewind contracts.
-
----
-
-## 1. Dual-State Architecture
-
-Vibe Workflow decouples high-level engineering evolution from real-time execution health:
-
-1. **Workflow State**: Represents progressive advancement across engineering phases.
-2. **Operational Status**: Represents immediate working status within any given Workflow State.
-
-### Workflow State Contracts
+完整 Release 的状态顺序为：
 
 ```text
-REQUIREMENTS_FROZEN
-  └──> SPECIFIED
-        └──> DESIGNED
-              └──> PLANNED
-                    └──> BUILDING
-                          └──> VERIFYING
-                                └──> REVIEWING
-                                      └──> READY_TO_SHIP
-                                            └──> RELEASED
+REQUIREMENTS_FROZEN → SPECIFIED → DESIGNED → PLANNED → BUILDING
+→ REVIEWING → VERIFYING → READY_TO_SHIP → RELEASED → REFLECTING
 ```
 
-| State | Entry Condition | Primary Evidence | Permitted Next States |
-|---|---|---|---|
-| `REQUIREMENTS_FROZEN` | Entry Gate fully satisfied (Frozen, Zero open Qs, Testable ACs) | `PROJECT_BRIEF.md` | `SPECIFIED` |
-| `SPECIFIED` | Requirements formalized into unambiguous REQ/AC and error states | `SPEC.md` (Effective SPEC) | `DESIGNED` |
-| `DESIGNED` | Technical architecture defined, critical decisions approved | `PROPOSED_DESIGN.md`, `DEC-xxx.md` | `PLANNED` |
-| `PLANNED` | Vertical slices, tasks, dependencies, and test mappings established | `IMPLEMENTATION_PLAN.md` | `BUILDING` |
-| `BUILDING` | Tasks implemented iteratively within approved boundaries | Code commits, tests, `PROGRESS.md` | `VERIFYING` |
-| `VERIFYING` | Release-level end-to-end verification executed | Test suite, lint/build logs, traceability table | `REVIEWING`, or rewind |
-| `REVIEWING` | Verification evidence submitted for peer or automated review | Code review findings, audit log | `READY_TO_SHIP`, or rewind |
-| `READY_TO_SHIP` | All applicable REQ/AC proven by fresh evidence; zero blockers | `VERIFICATION.md` | `RELEASED` (Requires Shipping Gate) |
-| `RELEASED` | Human explicitly authorizes external publish/deploy action | Tag, deployment URL, release notes | Next Release |
+先做受影响代码与规格审查，再运行高成本系统验收；行为改动的局部测试仍在实现过程中完成。证据适用性决定是否重跑。Tiny/Bounded 只完成本次任务的必要闭环，不反复迁移全部阶段或新建整套文档。
 
----
+`Operational Status` 独立于 Workflow State：`ACTIVE` 表示可推进，`WAITING_HUMAN` 表示有未决决定，`BLOCKED` 表示缺少外部条件，`REPLAN_REQUIRED` 表示当前方案已失效。普通 Git 操作不推进 Release 状态。
 
-## 2. Operational Statuses
+`READY_TO_SHIP` 需要所有适用验收与必需检查通过。`RELEASED` 还需要精确目标授权以及实际发布结果；创建 PR、合并或获得授权本身均不足以证明发布成功。
 
-- **`ACTIVE`**: Work is progressing normally within the current Workflow State.
-- **`WAITING_HUMAN`**: Execution paused at a Human Decision Gate (e.g. Scope change, Schema migration, API break).
-- **`BLOCKED`**: Progress prevented by external dependencies, environment issues, or missing credentials.
-- **`REPLAN_REQUIRED`**: Circuit Breaker triggered. Current assumptions or plan are discredited. Local patching is forbidden.
+范围变化后只回退到最早失效的状态；保留仍然有效的计划和证据。后续 Tiny 修复先作为任务，真实发布时再建立下一 Release。封存后的历史不追溯覆盖。
 
----
-
-## 3. Requirement Change Rewind Protocol
-
-When an approved requirement change alters established facts, the workflow rewinds to the earliest invalidated state:
-
-```text
-Requirement Change Approved
-  ├── Changes only task order or private code ──> Rewind to PLANNED
-  ├── Changes module boundaries or data model  ──> Rewind to DESIGNED
-  └── Changes product behaviors or user flows  ──> Rewind to SPECIFIED
-```
+阶段契约、回退矩阵和恢复步骤以[生命周期规则](../../skills/vibe-workflow/references/lifecycle.md)为准；授权与风险边界见[决策关卡](../../skills/vibe-workflow/references/gates.md)。

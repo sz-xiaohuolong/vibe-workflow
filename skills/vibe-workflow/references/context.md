@@ -12,7 +12,7 @@
 
 ## Bootstrap Pack
 
-首次接管仓库时读取：
+仅明确接管或复杂任务需要 Bootstrap Pack；普通 Tiny 与 Git 请求只读适用 AGENTS、相关文件、必要状态。首次接管仓库时读取：
 
 - 从当前目录向上适用的 AGENTS.md。
 - README、依赖和构建/测试入口。
@@ -26,7 +26,7 @@
 
 ## Resume Pack
 
-新会话依次读取：
+先按本次意图分流；Tiny 不遍历 Release 文档，也不因缺少 Release ID 阻塞。Bounded 优先从既有任务记录恢复目标、批准范围、验收和进度；没有正式 Release 时不补建 Release 文档。需要恢复完整 Release 状态时依次读取：
 
 1. AGENTS.md。
 2. 唯一权威的 PROJECT/Document Map，按其中真实路径定位资料。
