@@ -150,9 +150,14 @@ $vibe-workflow init 审计当前仓库，沿用已有文档与构建入口，建
 
 `init` 可重复执行；已有地图优先沿用，缺少时才创建 `DOCUMENT_MAP.md`。v0.2 还明确六类跨模块触发，并区分 `IMPLEMENTED_UNVERIFIED`、`POC_VALIDATED`、`VERIFIED`。行为回归记录见 [v0.2 验证](tests/results/v0.2.md)。
 
+正常 init 自动合并[通用 Agent 工作约定](skills/vibe-workflow/assets/templates/AGENT_RULES.md)，沿用项目已采用的 `AGENT.md` 或 `AGENTS.md`；无入口时使用用户指定名称，否则默认 `AGENTS.md`。只补语义缺口，保留人工内容和冲突规则，重复执行不制造 diff；只读请求不写文件。文件名兼容不保证宿主自动加载，恢复时定位真实入口。详见[使用教程](docs/USER_GUIDE.zh-CN.md#32-接管已有仓库)。
+
 v0.2.1 的文档约定：`PROGRESS`/`SPEC` 首屏先给最多三行摘要；短切片只在当前 Release 的计划与进度中推进；必要原始证据按需暂存于被忽略的 `.evidence/`，默认保留摘要与结果指针，正式 Release 验证需另有可长期取回的证明。参见[中文说明](README.zh-CN.md)与[行为复核](tests/results/v0.2.1.md)。
 
 #### Start a New Project
+
+空仓库直接调用 `$vibe-workflow`：首轮需求澄清不写工程文件；范围与验收确认且获准进入 Planning 后自动建立最小规则入口，无需额外 init 或重复确认。Tiny、普通 Git、临时目录单点任务与只读审计不触发该初始化。
+
 ```text
 $vibe-workflow Check the Entry Gate and initialize Release v0.1 from our frozen requirements.
 ```

@@ -19,7 +19,7 @@
 
 | 职责 | 实际路径或外部位置 | 状态 | 定位依据/备注 |
 |---|---|---|---|
-| Agent Rules | `AGENTS.md/待发现` | `待核验` | 行为与入口 |
+| Agent Rules | `<实际规则路径/待发现>` | `待核验` | 沿用 AGENT.md 或 AGENTS.md，行为与入口 |
 | Current Architecture | `待发现` | `待核验` | 由代码/配置核验 |
 | Current Progress | `待发现` | `待核验` | 由 Git/测试核验 |
 | Current Release Brief/SPEC | `待发现` | `待澄清` | 产品意图和验收来源 |

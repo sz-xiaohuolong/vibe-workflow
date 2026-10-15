@@ -11,11 +11,11 @@ The Context Governor enforces the principle that **more context does not equal b
 ### The Three Context Packs
 
 1. **Bootstrap Pack (Initial Repo Takeover)**:
-   - Reads: Root `AGENTS.md`, `README.md`, package manifests, build/test scripts, and `docs/vibe/PROJECT.md`.
+   - 读取：按[统一入口定位](../../skills/vibe-workflow/references/init.md#规则入口定位)找到的 `AGENT.md` 或 `AGENTS.md`、宿主适用规则、README、构建/测试入口与已有唯一文档地图。文件名兼容不保证宿主自动加载，必要时显式读取。
    - Purpose: Maps the engineering landscape without reading full source code into memory.
 
 2. **Resume Pack (Cross-Session Rehydration)**:
-   - Reads: `AGENTS.md`, `PROJECT.md`, `PROGRESS.md`, current release's `PROJECT_BRIEF.md`, and current `SPEC.md`.
+   - 读取：同一实际规则入口、唯一文档地图、真实进度路径与当前任务相关范围、设计、代码和证据；Tiny 与普通 Git 不遍历全部 Release 文档。
    - Action: Audits git log and test suite to verify whether repository facts match the last logged state in `PROGRESS.md`. Discrepancies are reported before work begins.
 
 3. **Task Context Pack (Single Task Execution)**:

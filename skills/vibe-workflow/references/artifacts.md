@@ -6,11 +6,11 @@
 
 ## 先接管，后补齐
 
-1. 检查仓库已有 AGENTS、README、docs、需求、设计、进度、测试、迁移和发布约定。
+1. 按 [规则入口定位](init.md#规则入口定位) 检查仓库已采用的 `AGENT.md` 或 `AGENTS.md`，以及 README、docs、需求、设计、进度、测试、迁移和发布约定。
 2. 找到职责等价物时沿用，不额外创建平行目录。
 3. 只有职责缺失时，才从 `assets/templates/` 复制相应模板。
 4. 在项目已有 Document Map、`DOCUMENT_MAP.md` 或等价索引中记录“职责 → 实际路径 → 状态 → 依据”。一个仓库只维护一个权威地图；索引只导航，不承载产品或技术结论。首次审计和重跑规则见 [init.md](init.md)。
-5. 更新 AGENTS 时保留已有规则，只加入必要的事实源路径和恢复顺序；不复制产品正文。
+5. 正常 init 或新项目获准进入 Planning 时，按 [接入与最小合并协议](init.md) 合并唯一[通用模板](../assets/templates/AGENT_RULES.md)；保留人工规则与冲突条款，只补缺失行为和已核验的事实源入口。只读不写入；规则文件不复制需求、架构、数据库或进度正文。
 
 ## Release-scoped artifacts
 
@@ -52,13 +52,13 @@ docs/vibe/decisions/
 docs/vibe/bugs/
 ```
 
-`DOCUMENT_MAP.md` 仅在仓库没有既有地图时创建；与 `PROJECT.md` 内的地图二选一。以上目录只是新建项目的建议路径，不要求存量仓库迁移。
+`AGENTS.md` 是无既有入口且用户未指定名称时的默认值；项目已采用 `AGENT.md` 则沿用，不同时生成两份工作约定。地图登记实际规则路径，后续恢复显式定位；自动加载遵循宿主机制。`DOCUMENT_MAP.md` 仅在仓库没有既有地图时创建，与 `PROJECT.md` 内的地图二选一。以上目录只是新建项目的建议路径，不要求存量仓库迁移。
 
 `decisions/` 是可选目录，不因创建 Release、功能点或 Slice 而自动建立。只有选择存在有分量的备选方案、会长期影响架构或外部契约，或需要追溯人类批准依据与恢复方式时，才按既有约定记录独立 DEC；普通实现选择写在该 Release 的 `PROPOSED_DESIGN.md` 或任务记录中即可。即使需要 DEC，也沿用仓库已有的等价位置，不创建第二套决策台账。
 
 | Artifact | 职责 |
 |---|---|
-| AGENTS.md | Agent 长期行为规则、事实源入口、项目命令；不复制业务正文 |
+| 实际规则入口（AGENT.md 或 AGENTS.md） | Agent 长期行为规则、事实源入口、已核验项目命令；不复制业务正文 |
 | PROJECT.md | 当前项目定位、当前 Release、Quality Profile；可承载既有 Document Map |
 | DOCUMENT_MAP.md 或既有地图 | 治理职责的真实路径、状态和定位依据；仅作导航 |
 | TECH_DESIGN.md | 当前真实架构、模块、接口、数据、权限、运行和验证入口 |
@@ -80,7 +80,7 @@ docs/vibe/bugs/
 
 ## 证据预算与保留策略
 
-项目在 `AGENTS.md` 或已登记的等价规则里覆盖以下默认值；不把技能仓库的设置自动写入所有项目，也不自动迁移/删除已有证据。
+项目在实际规则入口或已登记的等价规则里覆盖以下默认值；通用模板不携带项目专属预算，不把技能仓库的设置自动写入所有项目，也不自动迁移/删除已有证据。
 
 | 项目 | 默认策略 |
 |---|---|
@@ -151,7 +151,7 @@ REQ-003
 - IMPLEMENTATION_PLAN：REQ/AC/Seams → Slice/Task/Test (Task Handoff Contract)。
 - PROGRESS：Task → current evidence/status。
 - VERIFICATION：REQ/AC/Seams → evidence/result/commit，并链接适用的本地/CI 证据。
-- RETRO：本次 Release 过程证据 ➔ 经验分类沉淀 ➔ 反哺 `AGENTS.md`。
+- RETRO：本次 Release 过程证据 ➔ 经验分类沉淀 ➔ 反哺实际项目规则入口。
 
 Release Verification 必须能逐项回答“REQ 是否真的完成”，不能只回答“代码写好了”。
 
@@ -168,7 +168,7 @@ Release Verification 必须能逐项回答“REQ 是否真的完成”，不能�
 | Bug 修复 | 现有任务/Issue 与适用测试/evidence；复杂时 BUG | TECH_DESIGN、PROGRESS、VERIFICATION |
 | Task 完成、阻塞或验证结果变化 | PROGRESS、Task evidence；已有 PLAN 与 VERIFICATION 的对应任务状态或验收行 | BUG/DEC；首次记录验证时沿用现有证据位置 |
 | READY_TO_SHIP 判定、发布后收尾 | 核对 PROJECT、PROGRESS、权威地图、PLAN、VERIFICATION、TECH_DESIGN 中相关版本、状态、路径与证据，修正过期内容 | 沿用职责等价文档，只处理适用项 |
-| Release 完成与复盘 | 验证、进度与当前版本事实；既有记录中的必要复盘结论 | 复杂 Release 的 RETRO、release notes、有新经验时的 AGENTS.md |
+| Release 完成与复盘 | 验证、进度与当前版本事实；既有记录中的必要复盘结论 | 复杂 Release 的 RETRO、release notes、有新经验时的实际项目规则 |
 
 以上职责只在本次变化适用且存在相应事实源时同步，Tiny/Bounded 不为套矩阵新建整套文档。不相关文档无需机械修改。若容易造成误解，在当前记录中写明“不更新及理由”。
 

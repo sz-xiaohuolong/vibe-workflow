@@ -121,7 +121,7 @@ UI 改动不能代表授权正确。改变匿名访问、AuthN/AuthZ、Secret、
 | **4. Review** | **Release Review Gate** | 适用规格与 diff 已审查，无阻断项和未批准的范围变化 | 严禁进入 Testing，直接打回 Building 修复 |
 | **5. Testing** | **Release Verification Gate** | 所有适用 REQ/AC 达到 `VERIFIED`，所需运行证据对应当前输入与环境 | 严禁进入 `READY_TO_SHIP`，记录 Bug 回退修复 |
 | **6. Shipping** | **Human Shipping Gate** | Release 就绪，人类针对明确发布 target 做出授权 | 严禁执行未经授权的 publish / deploy / release；普通 Git 另走轻量流程 |
-| **7. Reflecting** | **Continuous Learning Gate** | 必要过程结论已记录，有重复且有效的经验时更新 `AGENTS.md` | 严禁篡改已封存历史或污染下版 Frozen Scope |
+| **7. Reflecting** | **Continuous Learning Gate** | 必要过程结论已记录，有重复且有效的经验时更新实际项目规则入口 | 严禁篡改已封存历史或污染下版 Frozen Scope |
 
 ## Verification 与 Shipping 分离
 

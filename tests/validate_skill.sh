@@ -60,6 +60,7 @@ required_files=(
   references/gates.md
   references/execution.md
   references/quality-and-release.md
+  assets/templates/AGENT_RULES.md
   assets/templates/PROJECT_BRIEF.md
   assets/templates/PROJECT.md
   assets/templates/DOCUMENT_MAP.md
@@ -165,6 +166,35 @@ for number in range(45, 54):
     assert "### Participant Prompt" in scenario and "### Evaluator Oracle" in scenario
 
 print("Git/Shipping 静态契约：通过；七阶段结构保持不变")
+PY
+
+# 仅验证公共模板、样例和场景结构；实际合并行为按场景执行并核对文件差异。
+uv run --no-project python - "$skill_dir" "$test_dir" <<'PY'
+import json
+import pathlib
+import re
+import sys
+
+root, tests = map(pathlib.Path, sys.argv[1:])
+template_path = root / "assets/templates/AGENT_RULES.md"
+template = template_path.read_text()
+assert template.startswith("# Agent 工作约定\n")
+assert re.findall(r"^## (\d)\. ", template, re.M) == list("12345")
+clauses = re.findall(r"^- (.+)$", template, re.M)
+assert len(clauses) == len(set(clauses)) == 24
+copies = [path for path in root.rglob("*.md") if template.strip() in path.read_text()]
+assert copies == [template_path], copies
+fixtures = json.loads((tests / "fixtures/agent-rules.json").read_text())
+assert set(fixtures) == {"existing-agents", "existing-agent", "both", "conflict", "template-update"}
+for files in fixtures.values():
+    for name, content in files.items():
+        assert not pathlib.Path(name).is_absolute() and ".." not in pathlib.Path(name).parts
+        assert isinstance(content, str) and content
+scenarios = (tests / "scenarios-agent-rules.md").read_text()
+assert re.findall(r"^## R(\d+) ", scenarios, re.M) == [f"{i:02}" for i in range(1, 13)]
+for section in re.split(r"\n## R\d+ ", scenarios)[1:]:
+    assert "### Participant Prompt" in section and "### Evaluator Oracle" in section
+print("规则接入资源结构：通过；行为结果须另查执行记录")
 PY
 
 if command -v skills-ref >/dev/null 2>&1; then

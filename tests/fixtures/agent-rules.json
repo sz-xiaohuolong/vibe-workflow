@@ -1,0 +1,20 @@
+{
+  "existing-agents": {
+    "AGENTS.md": "# 项目人工规则\n\n默认用简体中文答复；代码注释和提交说明按项目约定。\n先看已有文档、代码与测试，能查到的事不要再问我。\n只改本次任务的文件；不得覆盖我尚未提交的工作。\n需求、设计、进度沿用当前文档，不另建事实源；实现情况须用代码、配置、测试和运行结果核验。\n测试命令 `make test`；不要建立 src/domain、api、sql 三层目录。\n\n人工备注：录音文件仍由 samples/ 管理，禁止挪目录。\n"
+  },
+  "existing-agent": {
+    "AGENT.md": "# 项目人工规则\n\n本项目规则入口为 AGENT.md，恢复时先读 DOCUMENT_MAP.md。\n默认使用简体中文；保留 specs/、docs/ 的现有职责。\n人工备注：音频样例只放 samples/；测试入口见 README。\n",
+    "DOCUMENT_MAP.md": "# 文档地图\n\n| 职责 | 路径 | 说明 |\n|---|---|---|\n| Agent 规则 | AGENT.md | 本项目明确采用的入口 |\n| 产品范围 | specs/product.md | 产品意图待核验 |\n| 当前架构 | docs/architecture.md | 当前实现待核验 |\n| 当前进度 | docs/progress.md | 沿用人工记录 |\n| 测试 | Makefile | make test，仅样例冒烟 |\n"
+  },
+  "both": {
+    "AGENT.md": "# 项目规则\n\n本项目接入目标为本文件，文档地图见 DOCUMENT_MAP.md。人工约束：不得搬迁 specs/。\n",
+    "AGENTS.md": "# 宿主提示\n\n项目工作约定请显式读取 AGENT.md；本文件保留宿主入口提示。人工文字：不要覆盖本行。\n",
+    "DOCUMENT_MAP.md": "# 文档地图\n\n| 职责 | 路径 | 说明 |\n|---|---|---|\n| Agent 规则 | AGENT.md | 唯一工作约定接入目标；AGENTS.md 是宿主提示 |\n| 产品范围 | specs/product.md | 待核验 |\n| 架构 | docs/architecture.md | 待核验 |\n| 进度 | docs/progress.md | 待核验 |\n| 测试 | Makefile | make test |\n"
+  },
+  "conflict": {
+    "AGENTS.md": "# 项目规则\n\n本项目所有沟通使用英语；代码注释和提交说明沿用现有约定。\n人工备注：保留 specs/ 与 docs/，测试入口为 make test。\n\n<!-- vibe-workflow:agent-rules:start -->\n## 验证约定（人工调整）\n受影响的配置变化后，可以由维护者决定复用旧结果；Agent 不得擅自强制重跑。\n<!-- vibe-workflow:agent-rules:end -->\n"
+  },
+  "template-update": {
+    "AGENTS.md": "# 项目规则\n\n<!-- vibe-workflow:agent-rules:start -->\n## 基本行为（人工保留）\n默认使用简体中文沟通；代码与提交信息遵循项目约定和用户明确要求。\n先查项目资料与实现，已有信息足够时不要再问。\n人工备注：验证只使用 make test，不安装任何新工具。\n<!-- vibe-workflow:agent-rules:end -->\n"
+  }
+}

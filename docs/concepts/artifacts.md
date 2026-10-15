@@ -26,7 +26,7 @@ docs/vibe/releases/<release-id>/
 
 Located at: `docs/vibe/`
 
-- **`AGENTS.md`**: Core agent operating directives and repo script entrypoints.
+- **实际规则入口（`AGENT.md` 或 `AGENTS.md`）**：Agent 行为、边界及已核验文档和命令入口。沿用已采用文件，无入口时按用户指定或默认 `AGENTS.md` 建立；不生成重复约定。自动接入与保留人工内容见[初始化协议](../../skills/vibe-workflow/references/init.md)。
 - **`docs/vibe/PROJECT.md`**: Global project charter, current active release pointer, and quality profile.
 - **`docs/vibe/TECH_DESIGN.md`**: Living system architecture—must accurately describe currently working, passing code.
 - **`docs/vibe/PROGRESS.md`**: Single durable tracker of current state, stable commit, blockers, and next task.

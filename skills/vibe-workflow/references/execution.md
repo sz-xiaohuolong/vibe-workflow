@@ -181,7 +181,7 @@ PROGRESS 不复制 SPEC、TECH_DESIGN 或完整日志，只链接 owner。
 |---|---|
 | 一次性 Bug 事实 | BUG record |
 | 重大架构选择 | DEC |
-| Agent 反复犯同类仓库特定错误 | AGENTS.md |
+| Agent 反复犯同类仓库特定错误 | 项目实际规则入口（AGENT.md 或 AGENTS.md） |
 | 当前产品行为 | Effective SPEC |
 | 当前架构 | TECH_DESIGN |
 | 当前执行状态 | PROGRESS |

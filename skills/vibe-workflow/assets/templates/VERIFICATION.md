@@ -13,7 +13,7 @@
 
 - Project Type: `<Web / API / CLI / Desktop / Mobile>`
 - Primary Verification Harness: `<gstack:qa-only / gstack:browse / Playwright / 原生测试套件>`
-- Evidence Policy: `summary；必要时 targeted，按项目 AGENTS 覆盖`
+- Evidence Policy: `summary；必要时 targeted，按实际项目规则覆盖`
 - Evidence Location: `<CI 运行/既有记录；确需原始文件时 .evidence/<Release ID>/>`
 - Verification Budget: `<本次声明、最小检查集合、升级条件>`
 - Reused Evidence: `<运行 ID、输入/环境一致性依据；无则填无>`
@@ -24,7 +24,7 @@
 |---|---|---|---|---|---|---|---|---|---|
 | REQ-001 | AC-001 | `SEAM-001` | `NOT_STARTED/IMPLEMENTED_UNVERIFIED/POC_VALIDATED/VERIFIED` | `未关联` | `未运行` | `UNVERIFIED` | `无` | `无` | `待验证` |
 
-删除不适用的占位行；同一份证据可支持多项 AC，不按行重复执行。原始大文件不内嵌，保留策略见项目 AGENTS。
+删除不适用的占位行；同一份证据可支持多项 AC，不按行重复执行。原始大文件不内嵌，保留策略见实际项目规则入口。
 
 ## Automated Checks
 

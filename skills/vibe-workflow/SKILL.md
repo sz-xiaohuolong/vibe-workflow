@@ -18,7 +18,7 @@ description: Use when 软件项目任务跨越多个步骤、会话或 Release�
 
 ## 先选执行路径
 
-先读适用 `AGENTS.md`，确认请求、影响范围和已有授权；检查产品、Schema、安全、外部付费/数据边界、破坏性动作及发布风险，再分类。文件少不代表低风险。
+先按宿主机制读取适用项目规则，并按 [规则入口定位](references/init.md#规则入口定位) 找到项目实际采用的 `AGENT.md` 或 `AGENTS.md`；确认请求、影响范围和已有授权，检查产品、Schema、安全、外部付费/数据边界、破坏性动作及发布风险，再分类。文件少不代表低风险。
 
 | 路径 | 适用条件 | 最小闭环 |
 |---|---|---|
@@ -35,12 +35,14 @@ Tiny 使用用户精确请求作为 **task-local frozen intent**，不要求 Rel
 
 Tiny 与普通 Git 只读取适用规则、相关文件和必要的现有状态；不遍历所有 Release 文档。其余任务：
 
-1. 查找唯一 Document Map 与当前进度，缺失时再发现等价路径；不自动 init 或补齐模板。
+1. 查找唯一 Document Map 与当前进度，缺失时再发现等价路径；普通恢复不自动 init 或补齐模板。空仓库新项目获准进入 Planning 时执行下述最小规则接入。
 2. 用 Git、代码、测试核验当前 Release、Stage、State、Task 和稳定点；报告与聊天或文档的冲突。
 3. 未决产品/风险选择先过 Gate；已经确认的范围进入当前工作，不重新对质。
 4. 根据 [context.md](references/context.md) 加载最小任务上下文。
 
-`$vibe-workflow init` 用于接管仓库、建立职责地图，执行 [init.md](references/init.md)；它是对话子命令，不要求 CLI。只读现状审计可以先于需求冻结。
+`$vibe-workflow init` 用于接管仓库、建立职责地图，并将[通用工作约定](assets/templates/AGENT_RULES.md)合并到真实规则入口，执行 [init.md](references/init.md)；它是 Agent 执行的对话协议，不要求 CLI 或额外工具。正常 init 已授权必要的规则与文档入口更新；明确只读时只报告差异。现状审计可以先于需求冻结。
+
+空仓库直接调用本 Skill 启动新项目时，首轮需求澄清不写任何工程文件；范围与验收确认且获准进入 Planning 后，按 [新项目最小接入](references/init.md#新项目最小接入) 自动建立规则入口并合并同一模板，在正式实现前完成，无需另说 init。已有明确范围与授权直接复用；Tiny、普通 Git、临时目录单点任务和只读审计不触发该初始化。
 
 ## 七阶段生命周期
 
@@ -53,7 +55,7 @@ Tiny 与普通 Git 只读取适用规则、相关文件和必要的现有状态�
 | 阶段 | 核心职责 | 按需选择专业技能 | 出口证据 |
 |---|---|---|---|
 | **1. Thinking** | 澄清未决产品范围、冻结可测目标 | 自动优先 Matt `grilling`；`grill-me` 仅供用户显式调用；缺失时内置结构化提问 | 已确认范围与验收，无阻塞产品问题 |
-| **2. Planning** | 基于冻结需求比较技术方案、拆解任务与 Test Seams | 复杂方案选 `gstack:autoplan` 或所需单项评审；复杂计划用 `superpowers:writing-plans` | 必要方案批准、依赖与验收可执行 |
+| **2. Planning** | 新项目先最小规则接入；基于冻结需求比较技术方案、拆解任务与 Test Seams | 复杂方案选 `gstack:autoplan` 或所需单项评审；复杂计划用 `superpowers:writing-plans` | 必要方案批准、依赖与验收可执行 |
 | **3. Building** | 小切片实现、行为测试、失败熔断 | 行为改动用 `superpowers:test-driven-development`；复杂计划可选 SDD 或 executing-plans；排障只选一个技能 | 实现与局部适用检查通过 |
 | **4. Review** | 在高成本系统测试前核对规格与风险 | `gstack:review` 或 `superpowers:requesting-code-review` 二选一；确有风险时追加专项 | 无阻断问题；记录被审查范围 |
 | **5. Testing** | 验证受影响系统路径，复用有效证据 | 只读验收选 `gstack:qa-only`、`gstack:browse` 或原生测试；`qa` 仅在修复已获授权时使用 | 适用 AC 的证据矩阵，缺口如实记录 |
@@ -82,7 +84,7 @@ Tiny 与普通 Git 只读取适用规则、相关文件和必要的现有状态�
 - Release：覆盖所有适用 AC 与项目要求；组合有效的局部/CI 证据并补齐缺口。
 - Web/GUI 行为验收须有真实运行证据；截图按视觉验收需要采集，HAR/视频/trace 只用于相关诊断。纯文案 Tiny 不因此强制启动浏览器。
 
-详见 [quality-and-release.md](references/quality-and-release.md)。`.evidence/` 按需暂存原始证据；项目可在 `AGENTS.md` 覆盖预算与保留规则。保护被引用及不可重建证据，清理按 [artifacts.md](references/artifacts.md#证据预算与保留策略) 执行。
+详见 [quality-and-release.md](references/quality-and-release.md)。`.evidence/` 按需暂存原始证据；项目可在实际规则入口覆盖预算与保留规则。保护被引用及不可重建证据，清理按 [artifacts.md](references/artifacts.md#证据预算与保留策略) 执行。
 
 ## Gate、状态与完成声明
 

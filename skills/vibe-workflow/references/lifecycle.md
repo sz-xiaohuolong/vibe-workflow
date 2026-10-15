@@ -46,7 +46,7 @@ Release 是对外有意义的范围/验收/发布边界；Slice 是同一 Releas
 | **4. Review** | `REVIEWING` | **置于系统测试前**：审查规格一致性与代码异味 | 必要评审记录 |
 | **5. Testing** | `VERIFYING` | 真实浏览器/真机环境验收、端到端用户流 | 验收矩阵、按需原始证据或 CI 链接 |
 | **6. Shipping** | `READY_TO_SHIP` ➔ `RELEASED` | 按需版本更新、授权发布、核验实际结果 | 提交与适用发布回执；PR 仅显式要求时 |
-| **7. Reflecting** | `REFLECTING` ➔ 闭环进入下版 | 结构化复盘、经验分类沉淀、更新工程规则 | `RETRO.md`, `AGENTS.md`, living `TECH_DESIGN.md` |
+| **7. Reflecting** | `REFLECTING` ➔ 闭环进入下版 | 结构化复盘、经验分类沉淀、更新工程规则 | `RETRO.md`、实际项目规则、living `TECH_DESIGN.md` |
 
 ---
 
@@ -56,13 +56,15 @@ Release 是对外有意义的范围/验收/发布边界；Slice 是同一 Releas
 
 ### 阶段 1：Thinking
 
-新产品或未决需求进入澄清。自动优先 Matt `grilling`，`grill-me` 仅供用户显式调用，缺失时内置结构化提问；先查可得事实，只询问影响范围和验收的未决决定。首轮需求澄清不创建工程文档或实现。精确已批准的任务不重走访谈。
+新产品或未决需求进入澄清。自动优先 Matt `grilling`，`grill-me` 仅供用户显式调用，缺失时内置结构化提问；先查可得事实，只询问影响范围和验收的未决决定。首轮需求澄清不创建规则文件、工程文档、脚手架或业务代码。精确已批准的任务不重走访谈。
 
 产品减法确有必要时可选 office-hours；原型需求可按 Discovery Spike 协议限时隔离。出口为范围与可测验收获得确认，无阻塞产品问题；未决时 WAITING_HUMAN。正式 Release 才建立对应基线与 ID。
 
 ### 阶段 2：Planning
 
 基于冻结范围确定规格、Test Seams、技术方案与任务依赖；普通内部实现自主决定。已有足够计划时不重复生成；Bounded 可用简短任务记录。
+
+空仓库直接启动新项目且范围与验收已确认、获准进入本阶段时，先执行 [最小规则接入](init.md#新项目最小接入)：沿用实际规则入口或按约定新建，合并唯一公共模板，正式实现前完成。已有明确授权直接复用，无需额外 init 或确认；只读、Tiny、普通 Git 与临时目录单点任务不触发。规则入口只保留行为与已核验导航，不预写架构或验收事实。
 
 技术方案有长期取舍时过 Architecture Gate；复杂多维方案选 autoplan，单一维度选对应评审，不叠加已完成透镜。复杂拆解可用 writing-plans，写入既有计划路径。brainstorming 7 以需求访谈为主，不作本阶段固定前置，不让它绕过中间评审接管下一阶段。
 
@@ -98,7 +100,7 @@ SDD 按任务串行实现与评审，executing-plans 用于检查点执行，二
 
 ### 阶段 7：Reflecting
 
-简单交付在既有记录简要总结；复杂 Release 或用户要求时用 retro。按事实更新相关 living docs；反复出现的问题才沉淀 AGENTS，真正架构变化才更新 TECH_DESIGN。下一版想法仅进入候选 Backlog。
+简单交付在既有记录简要总结；复杂 Release 或用户要求时用 retro。按事实更新相关 living docs；反复出现的问题才沉淀到实际项目规则入口，真正架构变化才更新 TECH_DESIGN。下一版想法仅进入候选 Backlog。
 
 封存已发布事实，清理按 [证据保留策略](artifacts.md#证据预算与保留策略) 保护活跃引用与长期证明。无有价值经验时不为仪式新建空 RETRO。
 
@@ -149,13 +151,13 @@ Operational Status 不会自动改变 Workflow State。例如 BUILDING 中发生
 - 措辞歧义使用有日期、有理由、有链接的勘误记录。
 - 当前行为改变时写入新 Release 的 Effective SPEC。
 - 当前架构写入 Living TECH_DESIGN；历史原因写入 DEC。
-- 有重复出现且已验证有效的经验时更新 `AGENTS.md`；无新经验时不新增规则。
+- 有重复出现且已验证有效的经验时更新实际项目规则入口；无新经验时不新增规则。
 
 封存不是禁止纠错，而是禁止把今天的事实追溯覆盖为过去的事实。
 
 ## 恢复会话
 
-Tiny 与普通 Git 只读取适用规则、相关文件和必要状态；其余任务从现有 PROGRESS 或等价记录开始，但不盲信它：
+先按 [入口定位](init.md#规则入口定位) 读取项目实际采用的 `AGENT.md` 或 `AGENTS.md` 及宿主适用规则。Tiny 与普通 Git 只读取相关文件和必要状态；其余任务从现有 PROGRESS 或等价记录开始，但不盲信它：
 
 1. 读取 Current Release、Stage、State、Status、Slice、Task 和 Last Stable Commit。
 2. 用 Git、代码、测试和关联 artifacts 核验。

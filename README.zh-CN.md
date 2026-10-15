@@ -150,6 +150,8 @@ $vibe-workflow init 审计当前仓库，沿用已有文档和构建入口，建
 
 重复执行 `init` 会复核地图的真实路径和证据，只更新变化项。仓库已有 `PROJECT.md` 地图时继续沿用；缺少地图时才创建 `DOCUMENT_MAP.md`。需求尚未冻结时也可审计现状，但进入 SPEC、设计或开发仍需通过工程入口 Gate。
 
+正常 init 还会自动合并[通用 Agent 工作约定](skills/vibe-workflow/assets/templates/AGENT_RULES.md)：沿用项目已采用的 `AGENT.md` 或 `AGENTS.md`，无入口时按用户指定名称或默认 `AGENTS.md` 建立。只补语义缺口，保留人工内容与冲突规则，重复执行不制造 diff；明确只读时只报告建议。文件名兼容不保证宿主自动加载，恢复时按真实入口读取。详见[使用教程](docs/USER_GUIDE.zh-CN.md#32-接管已有仓库)。
+
 v0.2 还明确六类跨模块触发条件，并在进度中区分 `IMPLEMENTED_UNVERIFIED`（已实现待验证）、`POC_VALIDATED`（已通过 POC）和 `VERIFIED`（已验证）；前两者不能作为正式功能完成证据。
 
 从 v0.2.1 起，项目文档默认先展示最多三行的人类摘要：当前事实、阻塞和下一步。Release 才建立版本目录；同一 Release 的短切片只在计划与进度中推进，不生成整套文档。默认保留摘要；确有需要的运行日志、原始指标才放在项目根目录 `.evidence/`（默认忽略），`docs/` 保留可读结论与证据指针；正式 Release 的已验证声明还须有可长期取回的证明，必要时归档至 CI/artifact。已有项目沿用其等价路径，不自动迁移旧证据。详细约定见 [Artifact 规则](skills/vibe-workflow/references/artifacts.md)。
@@ -159,6 +161,9 @@ v0.2 还明确六类跨模块触发条件，并在进度中区分 `IMPLEMENTED_U
 存量接管与文档地图的设计参考了 [project-vibe-spec](https://github.com/dnwwdwd/project-vibe-spec)，并按本 Skill 的 Release 状态机与证据规则进行了独立整合。
 
 #### 启动新项目 / 新 Release
+
+空仓库可直接调用 `$vibe-workflow`：首轮需求澄清不写工程文件；范围与验收确认且获准进入 Planning 后，自动完成最小规则接入，无需额外 init。已有明确授权直接沿用；Tiny、普通 Git 与临时目录单点任务不触发初始化。
+
 ```text
 $vibe-workflow 检查工程入口 Gate，并基于当前冻结的需求初始化 v0.1 Release 流程。
 ```
