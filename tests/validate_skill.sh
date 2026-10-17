@@ -181,7 +181,7 @@ template = template_path.read_text()
 assert template.startswith("# Agent 工作约定\n")
 assert re.findall(r"^## (\d)\. ", template, re.M) == list("12345")
 clauses = re.findall(r"^- (.+)$", template, re.M)
-assert len(clauses) == len(set(clauses)) == 24
+assert len(clauses) == len(set(clauses)) == 27
 copies = [path for path in root.rglob("*.md") if template.strip() in path.read_text()]
 assert copies == [template_path], copies
 fixtures = json.loads((tests / "fixtures/agent-rules.json").read_text())
