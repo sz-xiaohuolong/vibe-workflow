@@ -1,0 +1,69 @@
+diff --git a/DOCUMENT_MAP.md b/DOCUMENT_MAP.md
+index 9f4ff52..57d34ea 100644
+--- a/DOCUMENT_MAP.md
++++ b/DOCUMENT_MAP.md
+@@ -3 +3 @@
+-- 当前 Release 入口：`docs/releases/R1/SPEC.md`
++- 当前 Release 入口：`docs/releases/R2/SPEC.md`
+@@ -14 +14 @@
+-| R2 验证记录 | docs/releases/R2/VERIFICATION.md | 待验证 |
++| R2 验证记录 | docs/releases/R2/VERIFICATION.md | 部分验证 |
+diff --git a/docs/PROGRESS.md b/docs/PROGRESS.md
+index 7f2b17c..50836b9 100644
+--- a/docs/PROGRESS.md
++++ b/docs/PROGRESS.md
+@@ -2,0 +3,2 @@
++TASK-020 已通过本地搜索验收，本地显示入口也已核验。R2 仍缺少外部文件导入，下一步为 TASK-021；本轮不进入发布阶段。
++
+@@ -9,2 +11,2 @@
+-- Current Task: `TASK-020`
+-- Last Stable Commit/Artifact: `待核验`
++- Current Task: `TASK-021`
++- Last Stable Commit/Artifact: `5c3ddab`（本轮已核验的代码与测试基线；文档更新尚未提交）
+@@ -14 +16 @@
+-| TASK-020 本地文本搜索 | IN_PROGRESS | 源码与测试已写，尚未运行 | 运行本地搜索验收 |
++| TASK-020 本地文本搜索 | VERIFIED | [R2 验证记录](releases/R2/VERIFICATION.md)：3 项测试通过，覆盖 AC-002 | 本任务已完成 |
+diff --git a/docs/PROJECT.md b/docs/PROJECT.md
+index 627beb1..b4ff3f0 100644
+--- a/docs/PROJECT.md
++++ b/docs/PROJECT.md
+@@ -3 +3 @@
+-- Current Release: `R1`（待冻结）
++- Current Release: `R2`（需求已冻结，验证尚未完成；见 [当前进度](PROGRESS.md)）
+diff --git a/docs/TECH_DESIGN.md b/docs/TECH_DESIGN.md
+index 55e1836..d00f7f5 100644
+--- a/docs/TECH_DESIGN.md
++++ b/docs/TECH_DESIGN.md
+@@ -2,0 +3,2 @@
++当前实现包含本地工具名称显示与无副作用的文本搜索函数。文件导入仍由 TASK-021 跟进，尚不属于已实现能力。
++
+@@ -3,0 +6,2 @@
++- `src/search.py`：提供 `search(documents, query)`，接收文本列表和字符串查询；查询先去除首尾空白并转为小写，再与转为小写的条目做包含匹配，按输入顺序返回匹配的原始条目。空白查询或无匹配返回空列表，不写入文件。
++- 搜索调用边界：当前由 `tests/test_search.py` 直接调用函数；`src/app.py` 仅显示名称，未接入搜索命令行交互。
+@@ -5,0 +10 @@
++- 实际运行、输入基线与覆盖限制见 [R2 验证记录](releases/R2/VERIFICATION.md)。
+diff --git a/docs/releases/R2/IMPLEMENTATION_PLAN.md b/docs/releases/R2/IMPLEMENTATION_PLAN.md
+index 5af48b9..a82d673 100644
+--- a/docs/releases/R2/IMPLEMENTATION_PLAN.md
++++ b/docs/releases/R2/IMPLEMENTATION_PLAN.md
+@@ -16 +16 @@
+-- Status: `IN_PROGRESS`
++- Status: `VERIFIED`（实际结果见 [验证记录](VERIFICATION.md)，任务状态见 [当前进度](../../PROGRESS.md)）
+diff --git a/docs/releases/R2/VERIFICATION.md b/docs/releases/R2/VERIFICATION.md
+index 55f3f08..46638de 100644
+--- a/docs/releases/R2/VERIFICATION.md
++++ b/docs/releases/R2/VERIFICATION.md
+@@ -9,2 +9,2 @@
+-| REQ-001 | AC-001 | 历史显示入口 | VERIFIED | .evidence/R2/app.log |
+-| REQ-002 | AC-002 | TASK-020 | UNVERIFIED | 未运行 |
++| REQ-001 | AC-001 | 历史显示入口 | VERIFIED | 本轮真实子进程检查，见下方运行摘要；原有 .evidence/R2/app.log 保留 |
++| REQ-002 | AC-002 | TASK-020 | VERIFIED | `python3 -m unittest discover -s tests -v`：3 项测试通过，见下方运行摘要 |
+@@ -11,0 +12,8 @@
++
++## 本轮运行摘要
++
++- 核验日期：2026-10-20；环境：本地 Python 3.14.7，无新增依赖。
++- 被测输入：提交 `5c3ddabb7c413d19a3613d957ab29ecf252930af` 中的 `src/app.py`、`src/search.py` 与 `tests/test_search.py`；运行前工作树干净，本轮未修改代码、测试或依赖。
++- 搜索检查：在项目根目录执行 `python3 -m unittest discover -s tests -v`，退出码为 0，运行 3 项测试，失败与错误均为 0。覆盖中文关键词、英文关键词、无匹配与空白查询，核对返回的原始条目或空列表，对应 REQ-002 / AC-002 / SEAM-002。
++- 显示检查：通过 Python 子进程执行 `src/app.py` 并断言结果；退出码为 0，标准输出为“本地文本工具”及换行，标准错误为空，对应 REQ-001 / AC-001 / SEAM-001。
++- 验证边界：以上证据仅覆盖当前显示与本地搜索。TASK-021 / AC-003 的文件导入尚未实现或验证，因此 R2 保持 `PARTIAL`，发布授权仍为 `NOT_REQUESTED`。

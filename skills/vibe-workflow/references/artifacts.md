@@ -12,6 +12,8 @@
 4. 在项目已有 Document Map、`DOCUMENT_MAP.md` 或等价索引中记录“职责 → 实际路径 → 状态 → 依据”。一个仓库只维护一个权威地图；索引只导航，不承载产品或技术结论。首次审计和重跑规则见 [init.md](init.md)。
 5. 正常 init 或新项目获准进入 Planning 时，按 [接入与最小合并协议](init.md) 合并唯一[通用模板](../assets/templates/AGENT_RULES.md)；保留人工规则与冲突条款，只补缺失行为和已核验的事实源入口。只读不写入；规则文件不复制需求、架构、数据库或进度正文。
 
+新建需求文档默认使用 `PRD.md`，名称为“产品需求文档（PRD）”。存量项目已采用 `SPEC.md` 或其他等价路径时，仍将其识别为 PRD 的事实 owner，并在唯一地图中登记实际路径；不强制迁移、不复制第二份、不改写历史。下文的 PRD 均包含这类等价入口；`SPECIFIED` 等机器状态保持不变。
+
 ## Release-scoped artifacts
 
 建议路径：
@@ -20,26 +22,26 @@
 docs/vibe/releases/<release-id>/
 ├── PROJECT_BRIEF.md
 ├── CHANGE.md
-├── SPEC.md
+├── PRD.md
 ├── PROPOSED_DESIGN.md
 ├── IMPLEMENTATION_PLAN.md
 ├── VERIFICATION.md
 └── RETRO.md
 ```
 
-只有真正的 Release 才拥有上述目录；同一 Release 的 S1/S2/S3 记录在 `IMPLEMENTATION_PLAN.md` 的 Slice Map 和 living `PROGRESS.md` 中。每个 Slice 在 PROGRESS 清单中用一条记录写状态、证据链接和下一步，不为 Slice 新建 `releases/<release-id>-Sx/`、单独子目录或整套 SPEC/PLAN/REVIEW/VERIFICATION。复杂切片确需调查、设计或决策文件时，按实际职责添加单份文件并链接，不能因此升级为 Release。已有历史目录不自动搬迁或改写；在 Document Map 中标明其历史性质，后续按真实 Release 边界写入。
+只有真正的 Release 才拥有上述目录；同一 Release 的 S1/S2/S3 记录在 `IMPLEMENTATION_PLAN.md` 的 Slice Map 和 living `PROGRESS.md` 中。每个 Slice 在 PROGRESS 清单中用一条记录写状态、证据链接和下一步，不为 Slice 新建 `releases/<release-id>-Sx/`、单独子目录或整套 PRD/PLAN/REVIEW/VERIFICATION。复杂切片确需调查、设计或决策文件时，按实际职责添加单份文件并链接，不能因此升级为 Release。已有历史目录不自动搬迁或改写；在 Document Map 中标明其历史性质，后续按真实 Release 边界写入。
 
 | Artifact | 拥有的事实 | 不拥有的事实 |
 |---|---|---|
 | PROJECT_BRIEF | Problem、Target User、Scope、Constraints、Acceptance Goals、Requirement Version/Status | 低层实现设计 |
 | CHANGE | 相对上一 Release 的 Added/Changed/Removed/Fixed | 当前完整产品行为 |
-| SPEC | 当前 Release 的完整 Effective Product Behavior、REQ/AC、Test Seams、状态、错误、边界、non-goals | 私有实现细节 |
+| PRD | 当前 Release 的完整有效产品行为、REQ/AC、测试接缝、产品状态转换、错误、边界与非目标 | 私有实现细节、开发进度或测试结果 |
 | PROPOSED_DESIGN | 当前 Release 尚未实现的目标技术方案、影响、恢复、验证设计和批准状态 | 当前真实架构 |
 | IMPLEMENTATION_PLAN | Slice/Task、Ready Frontier 依赖拓扑、Task Handoff Contract、验证、REQ/AC 映射 | 新产品能力 |
 | VERIFICATION | 每个 REQ/AC 的实际证据、结果、限制、commit/artifact、.evidence 索引 | 未执行检查的推测 |
 | RETRO | 结构化复盘、返工根因、各阶段瓶颈、反模式提炼、下一 Release 候选池 | 历史结论篡改、下版冻结范围 |
 
-CHANGE 是 delta；SPEC 是完整当前行为。Agent 默认读取当前 Release 的 Effective SPEC，不叠加所有历史 delta 推导需求。
+CHANGE 是 delta；PRD 是完整当前行为。Agent 默认读取当前 Release 的 Effective PRD，不叠加所有历史 delta 推导需求。
 
 ## Living project documents
 
@@ -68,9 +70,9 @@ docs/vibe/bugs/
 
 ## 面向人类的正文
 
-新建或实质修改四类试点文档时，按[文档写作规范](document-quality.md)读取通用规则与对应类型：`SPEC` 称“需求分析”，`PROPOSED_DESIGN` 称“方案设计”，另两类为“实施计划”“进度”。沿用既有文件名与编号；小更新检查改动部分，不重写无关内容。
+新建或实质修改文档时，先使用下方对应模板，再按[文档写作规范](document-quality.md)填写。`PROJECT_BRIEF` 是需求概要，`PRD` 是产品需求文档，`PROPOSED_DESIGN` 是方案设计，`TECH_DESIGN` 是当前技术设计，另有实施计划和进度。标准章节提供写作顺序与填写要求，适用的契约必须展开，不能只交摘要；小更新保持局部。
 
-`PROGRESS` 与 `SPEC` 标题后保留最多三条数据行的摘要表。进度说明当前事实、缺口和下一步；需求分析说明冻结范围、边界和验收入口，不复制运行进度。摘要仅导航到下方事实，状态只维护一处明细；失败、未验证、风险和阻塞在相关摘要或状态处可见。按实际条件选择流程、状态、接缝和交接视图，删除不适用章节与占位符；保留适用 Gate 和事实追踪，不机械创建目录或填满模板。限制在对应事实处解释一次。
+PRD 的背景、目标与用户章节各保留可独立理解的简述，再引用 BRIEF 的相关基线；BRIEF 不复制逐功能规格。摘要帮助快速判断，正文展开流程、规则、异常与可观察验收。进度开头简述当前事实、缺口和下一步，实际状态、日期、偏差与证据只在 PROGRESS/VERIFICATION 维护。简单任务可合并短章节，明确不适用的内容可省略；有界面时逐项核对四种页面状态，其他专业内容按实际影响填写。不要把完整模板变成所有任务的强制文档套件。
 
 ## 原始证据与可读文档分离
 
@@ -113,8 +115,8 @@ HAR/视频默认关闭；发布证明保留在 CI，VERIFICATION 记录运行 ID
 
 不存在一个文件对所有事实都“优先”。按问题找 owner：
 
-- 产品应该如何行为：当前 Effective SPEC。
-- 产品现在实际如何行为：代码、运行证据和测试；若偏离 SPEC，必须显式处理冲突。
+- 产品应该如何行为：当前 Effective PRD。
+- 产品现在实际如何行为：代码、运行证据和测试；若偏离 PRD，必须显式处理冲突。
 - 当前架构：TECH_DESIGN，并由代码/配置核验。
 - 某 Release 尚未实现的目标技术方案：该 Release 的 PROPOSED_DESIGN；实现与验证后才把成立部分合并进 TECH_DESIGN。
 - 当前执行位置：PROGRESS，并由 Git/代码/证据核验。
@@ -146,7 +148,7 @@ REQ-003
 
 分散维护但必须可连接：
 
-- SPEC：REQ → AC → Test Seams。
+- PRD：REQ → AC → Test Seams。
 - PROPOSED_DESIGN/DEC：REQ/AC → 目标 Design；实现并验证后由 TECH_DESIGN 描述成立的当前架构。
 - IMPLEMENTATION_PLAN：REQ/AC/Seams → Slice/Task/Test (Task Handoff Contract)。
 - PROGRESS：Task → current evidence/status。
@@ -159,14 +161,14 @@ Release Verification 必须能逐项回答“REQ 是否真的完成”，不能�
 
 | 变化 | 必须更新 | 按需更新 |
 |---|---|---|
-| 新 Release（实际形成新的发布边界时） | PROJECT_BRIEF、SPEC、PLAN、PROGRESS | PROPOSED_DESIGN、DEC、CHANGE；实现后按证据更新 TECH_DESIGN |
+| 新 Release（实际形成新的发布边界时） | PROJECT_BRIEF、PRD、PLAN、PROGRESS | PROPOSED_DESIGN、DEC、CHANGE；实现后按证据更新 TECH_DESIGN |
 | 切换当前 Release | PROJECT 的当前 Release、PROGRESS 的定位信息、权威地图的当前入口 | 当前定位或边界发生变化时更新 PROJECT 对应段落 |
 | 当前 Release 内新 Feature/Slice | PROGRESS 清单一条；PLAN 的 Slice Map 按需更新 | 影响既有 REQ/AC 时更新对应验证行；无独立文档套件；若改变冻结范围，先过 Requirement Change Gate |
-| 产品行为变化 | 当前 Release baseline/SPEC、CHANGE | PROJECT、PROPOSED_DESIGN、DEC |
-| 架构/数据/公开接口变化 | PROPOSED_DESIGN、PLAN、PROGRESS；适用 Gate 时含 DEC | SPEC（产品行为受影响时）；实现验证后更新 TECH_DESIGN |
+| 产品行为变化 | 当前 Release baseline/PRD、CHANGE | PROJECT、PROPOSED_DESIGN、DEC |
+| 架构/数据/公开接口变化 | PROPOSED_DESIGN、PLAN、PROGRESS；适用 Gate 时含 DEC | PRD（产品行为受影响时）；实现验证后更新 TECH_DESIGN |
 | 架构变化实现并验证后 | TECH_DESIGN 中受影响的模块、接口与运行命令 | 当前 Release 的 PROPOSED_DESIGN 实现状态 |
 | Bug 修复 | 现有任务/Issue 与适用测试/evidence；复杂时 BUG | TECH_DESIGN、PROGRESS、VERIFICATION |
-| Task 完成、阻塞或验证结果变化 | PROGRESS、Task evidence；已有 PLAN 与 VERIFICATION 的对应任务状态或验收行 | BUG/DEC；首次记录验证时沿用现有证据位置 |
+| Task 完成、阻塞或验证结果变化 | PROGRESS、Task evidence；已有 VERIFICATION 的对应验收行 | 预期步骤、依赖、范围或验证方法变化时更新 PLAN；适用 BUG/DEC；首次记录验证时沿用现有证据位置 |
 | READY_TO_SHIP 判定、发布后收尾 | 核对 PROJECT、PROGRESS、权威地图、PLAN、VERIFICATION、TECH_DESIGN 中相关版本、状态、路径与证据，修正过期内容 | 沿用职责等价文档，只处理适用项 |
 | Release 完成与复盘 | 验证、进度与当前版本事实；既有记录中的必要复盘结论 | 复杂 Release 的 RETRO、release notes、有新经验时的实际项目规则 |
 
@@ -180,13 +182,13 @@ Release Verification 必须能逐项回答“REQ 是否真的完成”，不能�
 
 ## 模板选择
 
-从以下文件复制，而不是把模板作为 reference 阅读：
+先读取与本次写作对应的模板，按其结构和填写要求完善已有事实 owner；只有职责缺失时才复制创建。模板提供正文骨架，reference 说明适用条件与维护职责。可选模板如下：
 
 - `assets/templates/PROJECT_BRIEF.md`
 - `assets/templates/PROJECT.md`
 - `assets/templates/DOCUMENT_MAP.md`（仅在现有仓库没有地图时）
 - `assets/templates/CHANGE.md`
-- `assets/templates/SPEC.md`
+- `assets/templates/PRD.md`
 - `assets/templates/TECH_DESIGN.md`
 - `assets/templates/PROPOSED_DESIGN.md`
 - `assets/templates/IMPLEMENTATION_PLAN.md`

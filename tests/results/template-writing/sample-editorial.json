@@ -1,0 +1,26 @@
+[
+  {
+    "file": "PROJECT_BRIEF.md",
+    "generated_sha256": "7bd02d9bbcd2c5610fc24835341751477e5014c59bc9010cb794c61335e8a65d",
+    "final_sha256": "5a502ae39668c01775bae7605f3134d1ce965198ef50cfb7edbcb5c252dc3f0d",
+    "editorial_diff": "--- 生成/PROJECT_BRIEF.md\n+++ 整理/PROJECT_BRIEF.md\n@@ -12 +12 @@\n-- 范围依据日期：2026-10-20；仓库版本事实见[快照元数据](../../../SNAPSHOT.json)。本次未指定正式 Release ID，因此不建立发布版本或迁移完整生命周期状态。\n+- 范围依据日期：2026-10-20；仓库版本事实见[快照元数据](SNAPSHOT.json)。本次未指定正式 Release ID，因此不建立发布版本或迁移完整生命周期状态。\n"
+  },
+  {
+    "file": "PRD.md",
+    "generated_sha256": "34bea13bc15bbe720e2d0e2f3034455e5608a59eae7866b7b4b5285668781ed1",
+    "final_sha256": "34bea13bc15bbe720e2d0e2f3034455e5608a59eae7866b7b4b5285668781ed1",
+    "editorial_diff": ""
+  },
+  {
+    "file": "PROPOSED_DESIGN.md",
+    "generated_sha256": "0e54e8631f74ad17bebe2ff90a9a3675c263b0f965cddc09f3f38b474a799efb",
+    "final_sha256": "c47c3e5a2fcded663465dc784a239d0492a34f6a92945c8151fb233d3bb282d1",
+    "editorial_diff": "--- 生成/PROPOSED_DESIGN.md\n+++ 整理/PROPOSED_DESIGN.md\n@@ -6 +6 @@\n-|---|---|---|---| \n+|---|---|---|---|\n@@ -9 +9 @@\n-| 决策依据 | `TW-01-input.md` 已批准范围 | 版本依据 | [SNAPSHOT.json](../../../SNAPSHOT.json) |\n+| 决策依据 | `TW-01-input.md` 已批准范围 | 版本依据 | [SNAPSHOT.json](SNAPSHOT.json) |\n@@ -140 +140 @@\n-## 5. 关键选择与备选方案\n+## 5. 关键选择与依据\n@@ -142,6 +142 @@\n-| 方案 | 核心思路 | 收益 | 代价与限制 | 结论与理由 |\n-|---|---|---|---|---|\n-| 完整模板与条件裁剪 | 五模板提供正文骨架，reference 解释适用条件 | Agent 能直接填写；人能审阅具体契约；简单任务仍可简化 | 需要维护模板、规范与使用入口的一致性 | 采用，直接满足已批准的“可直接填写”目标 |\n-| 仅保留摘要和外部写作提示 | 模板只留少量概要，详细要求交给其他文档 | 文件短 | 无法直接承载实施与验收细节，容易把引用当正文 | 不采用，与批准范围冲突 |\n-| 新建默认 PRD、旧入口沿用 | 修改活跃默认名称而不迁移历史 | 新用户用词一致，旧项目不产生第二份 owner | 必须保留兼容措辞并逐处判断引用 | 采用，属于已有产品决定 |\n-| 全量重命名 SPEC | 批量修改旧路径和历史引用 | 表面名称统一 | 破坏存量入口与历史，超出范围 | 不采用，已被批准的兼容约束排除 |\n+复用现有 Skill 的主入口、reference、模板和示例结构：模板承载正文骨架，reference 解释适用条件，现有脚本保护资源及引用契约。这样能直接支持可填写文档，同时避免新增生成器或运行依赖；代价是需要同步维护模板、规范和公开入口。\n@@ -149 +144 @@\n-目标方案和当前设计分为两份职责是已有明确决定，不重新比较合并选项。没有独立长期架构或公开 API 决策需要新增 DEC；本节保留普通内部选择理由。\n+默认使用 PRD、沿用旧 SPEC 入口，以及分开记录目标方案与当前事实，均已由用户确认，直接作为设计约束。本次没有需要比较的实质技术备选，不将已排除的范围列为候选。普通实现理由保留在本节，无需新增 DEC。\n"
+  },
+  {
+    "file": "TECH_DESIGN.md",
+    "generated_sha256": "445834a40cb01dcdd0ebb942b26601d2c92f0b1420036d2eee8d272151284300",
+    "final_sha256": "67668e71488bb148388534760d9be1fc8000639f7e10214fecd1f3e20221ab05",
+    "editorial_diff": "--- 生成/TECH_DESIGN.md\n+++ 整理/TECH_DESIGN.md\n@@ -7 +7 @@\n-| 适用范围 | 2026-10-20 提供的本仓库只读快照 | 版本来源 | [SNAPSHOT.json](../../../SNAPSHOT.json) |\n+| 适用范围 | 2026-10-20 提供的本仓库只读快照 | 版本来源 | [SNAPSHOT.json](SNAPSHOT.json) |\n"
+  }
+]

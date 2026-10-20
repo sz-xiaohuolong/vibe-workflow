@@ -16,7 +16,7 @@
 
 1. 待复现
 
-- Expected: `以 Effective SPEC/AC 为准，待关联`
+- Expected: `以 Effective PRD/AC 为准，待关联`
 - Actual: `待观察`
 
 ## Evidence

@@ -52,7 +52,7 @@ Slice 3: 历史列表和删除完整闭环
 - Task ID: <TASK-ID>
 - Slice: <SLICE-ID>
 - Goal: <明确单一的可验证目标>
-- Related REQ/AC: <关联 SPEC 中的 REQ 与 AC>
+- Related REQ/AC: <关联 PRD 中的 REQ 与 AC>
 - Test Seam: <SEAM-ID 外部可观察接缝>
 - Dependencies: <前置任务依赖，必须在 Ready Frontier 状态下派发>
 - Allowed Modification Scope: <精确限定允许修改的文件或目录列表>
@@ -111,9 +111,9 @@ BUG REPORT
 
 分支判断：
 
-- 实现偏离 Effective SPEC：Bug fix。
-- 实现符合 SPEC，但期望应改变：Requirement Change。
-- SPEC 与运行事实冲突且意图不明：停止并调查事实所有权，不能静默选一个。
+- 实现偏离 Effective PRD：Bug fix。
+- 实现符合 PRD，但期望应改变：Requirement Change。
+- PRD 与运行事实冲突且意图不明：停止并调查事实所有权，不能静默选一个。
 
 ## Retry 与 Replan
 
@@ -169,7 +169,7 @@ Retry 只适用于有新证据支持的 transient failure、明确 typo、环境
 - 新 evidence、known bugs、blockers、open decisions。
 - Next Task。
 
-PROGRESS 不复制 SPEC、TECH_DESIGN 或完整日志，只链接 owner。
+PROGRESS 不复制 PRD、TECH_DESIGN 或完整日志，只链接 owner。
 
 任务状态或证据变化时，同一轮按 [更新矩阵](artifacts.md#更新矩阵) 同步相关事实源；需要保存本轮改动时，将这些必要同步纳入本次范围。仅执行普通 Git 请求仍走 Lightweight Git Workflow，不额外补齐文档。
 
@@ -182,7 +182,7 @@ PROGRESS 不复制 SPEC、TECH_DESIGN 或完整日志，只链接 owner。
 | 一次性 Bug 事实 | BUG record |
 | 重大架构选择 | DEC |
 | Agent 反复犯同类仓库特定错误 | 项目实际规则入口（AGENT.md 或 AGENTS.md） |
-| 当前产品行为 | Effective SPEC |
+| 当前产品行为 | Effective PRD |
 | 当前架构 | TECH_DESIGN |
 | 当前执行状态 | PROGRESS |
 | 通用 Skill 的真实行为漏洞 | Skill 测试与最小规则修正 |

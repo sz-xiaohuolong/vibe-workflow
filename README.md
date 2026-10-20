@@ -75,7 +75,7 @@ It does not teach an LLM how to write a function; it provides the **state machin
 
 ```mermaid
 flowchart TD
-    S1["1. Thinking<br/>Requirement Clarification & Freeze<br/>[首轮需求探索不写工程文件]"] --> S2["2. Planning<br/>SPEC / Test Seams / Review / Plans"]
+    S1["1. Thinking<br/>Requirement Clarification & Freeze<br/>[首轮需求探索不写工程文件]"] --> S2["2. Planning<br/>PRD / Test Seams / Review / Plans"]
     S2 --> S3["3. Building<br/>Task Handoff Contract / TDD Loop"]
     S3 --> S4["4. Review<br/>Spec Compliance & Quality Review<br/>[Placed BEFORE testing]"]
     S4 --> S5["5. Testing<br/>系统集成 / 按需真实探针"]
@@ -152,7 +152,11 @@ $vibe-workflow init 审计当前仓库，沿用已有文档与构建入口，建
 
 正常 init 自动合并[通用 Agent 工作约定](skills/vibe-workflow/assets/templates/AGENT_RULES.md)，沿用项目已采用的 `AGENT.md` 或 `AGENTS.md`；无入口时使用用户指定名称，否则默认 `AGENTS.md`。只补语义缺口，保留人工内容和冲突规则，重复执行不制造 diff；只读请求不写文件。文件名兼容不保证宿主自动加载，恢复时定位真实入口。详见[使用教程](docs/USER_GUIDE.zh-CN.md#32-接管已有仓库)。
 
-v0.2.1 的文档约定：`PROGRESS`/`SPEC` 首屏先给最多三行摘要；短切片只在当前 Release 的计划与进度中推进；必要原始证据按需暂存于被忽略的 `.evidence/`，默认保留摘要与结果指针，正式 Release 验证需另有可长期取回的证明。参见[中文说明](README.zh-CN.md)与[行为复核](tests/results/v0.2.1.md)。
+当前文档约定：`PROGRESS` 首屏先给最多三行摘要；PRD 的摘要后按标准章节展开完整有效需求；短切片只在当前 Release 的计划与进度中推进；必要原始证据按需暂存于被忽略的 `.evidence/`，运行证据默认保留可读摘要与结果指针，正式 Release 验证需另有可长期取回的证明。参见[中文说明](README.zh-CN.md)与[行为复核](tests/results/v0.2.1.md)。
+
+文档写作以五份[标准模板](skills/vibe-workflow/assets/templates/)为基础：需求概要 `PROJECT_BRIEF`、产品需求 `PRD`、方案设计 `PROPOSED_DESIGN`、已实现架构 `TECH_DESIGN` 和实施计划 `IMPLEMENTATION_PLAN`。模板提供可填写的章节、表格和契约字段，按实际条件裁剪；适用的流程、权限、异常、数据、接口、页面状态和验收须写清，实际进度和证据由 `PROGRESS` / `VERIFICATION` 维护。详见[中文写作说明](docs/USER_GUIDE.zh-CN.md#43-每份文档的作用)。
+
+新建需求文档默认使用 `PRD.md`；旧项目已有 `SPEC.md` 时作为等价入口继续沿用，不强制改名、迁移、复制或改写历史，`SPECIFIED` 等机器状态不变。
 
 #### Start a New Project
 

@@ -41,7 +41,7 @@
 
 ## Impact and Follow-up
 
-- SPEC: `待确认`
+- PRD: `待确认`
 - TECH_DESIGN: `待确认`
 - PLAN/Tasks: `待确认`
 - Migration/Recovery: `待确认`

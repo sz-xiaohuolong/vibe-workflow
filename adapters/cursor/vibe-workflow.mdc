@@ -21,8 +21,10 @@ When working on multi-step, multi-session, or multi-release software engineering
 5. **Fresh Evidence Before "Done"**: Never declare a task or release complete without fresh, passing test/build execution evidence.
 
 ## Artifact Locations
-- Product Specs: `docs/vibe/releases/<release-id>/SPEC.md`
+- 产品需求文档：`docs/vibe/releases/<release-id>/PRD.md`
 - Proposed Architecture: `docs/vibe/releases/<release-id>/PROPOSED_DESIGN.md`
 - Implementation Plans: `docs/vibe/releases/<release-id>/IMPLEMENTATION_PLAN.md`
 - Living Architecture: `docs/vibe/TECH_DESIGN.md`
 - Progress & State: `docs/vibe/PROGRESS.md`
+
+以上为新建文档的建议位置；旧项目已有 `SPEC.md` 或等价需求入口时继续沿用，不迁移、不复制第二份，`SPECIFIED` 等机器状态不变。写文档时先读取 `skills/vibe-workflow/assets/templates/` 中的对应模板，并按 `references/document-quality.md` 展开适用契约。

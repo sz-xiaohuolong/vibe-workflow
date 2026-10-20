@@ -75,7 +75,7 @@
 
 ```mermaid
 flowchart TD
-    S1["1. Thinking (思考)<br/>需求对质与冻结 (FROZEN)<br/>【首轮需求探索不写工程文件】"] --> S2["2. Planning (规划)<br/>SPEC / Test Seams / 架构评审 / 依赖计划"]
+    S1["1. Thinking (思考)<br/>需求对质与冻结 (FROZEN)<br/>【首轮需求探索不写工程文件】"] --> S2["2. Planning (规划)<br/>PRD / Test Seams / 架构评审 / 依赖计划"]
     S2 --> S3["3. Building (构建)<br/>Task Handoff Contract / TDD 循环"]
     S3 --> S4["4. Review (评审)<br/>Spec 合规与工程代码质量 / 代码消肿<br/>【置于系统测试前】"]
     S4 --> S5["5. Testing (测试)<br/>系统集成 / 按需真实探针"]
@@ -148,17 +148,19 @@ cd vibe-workflow
 $vibe-workflow init 审计当前仓库，沿用已有文档和构建入口，建立或刷新唯一的职责地图，并报告待澄清事实。
 ```
 
-重复执行 `init` 会复核地图的真实路径和证据，只更新变化项。仓库已有 `PROJECT.md` 地图时继续沿用；缺少地图时才创建 `DOCUMENT_MAP.md`。需求尚未冻结时也可审计现状，但进入 SPEC、设计或开发仍需通过工程入口 Gate。
+重复执行 `init` 会复核地图的真实路径和证据，只更新变化项。仓库已有 `PROJECT.md` 地图时继续沿用；缺少地图时才创建 `DOCUMENT_MAP.md`。需求尚未冻结时也可审计现状，但进入 PRD、设计或开发仍需通过工程入口 Gate。
 
 正常 init 还会自动合并[通用 Agent 工作约定](skills/vibe-workflow/assets/templates/AGENT_RULES.md)：沿用项目已采用的 `AGENT.md` 或 `AGENTS.md`，无入口时按用户指定名称或默认 `AGENTS.md` 建立。只补语义缺口，保留人工内容与冲突规则，重复执行不制造 diff；明确只读时只报告建议。文件名兼容不保证宿主自动加载，恢复时按真实入口读取。详见[使用教程](docs/USER_GUIDE.zh-CN.md#32-接管已有仓库)。
 
 v0.2 还明确六类跨模块触发条件，并在进度中区分 `IMPLEMENTED_UNVERIFIED`（已实现待验证）、`POC_VALIDATED`（已通过 POC）和 `VERIFIED`（已验证）；前两者不能作为正式功能完成证据。
 
-从 v0.2.1 起，项目文档默认先展示最多三行的人类摘要：当前事实、阻塞和下一步。Release 才建立版本目录；同一 Release 的短切片只在计划与进度中推进，不生成整套文档。默认保留摘要；确有需要的运行日志、原始指标才放在项目根目录 `.evidence/`（默认忽略），`docs/` 保留可读结论与证据指针；正式 Release 的已验证声明还须有可长期取回的证明，必要时归档至 CI/artifact。已有项目沿用其等价路径，不自动迁移旧证据。详细约定见 [Artifact 规则](skills/vibe-workflow/references/artifacts.md)。
+进度文档先展示最多三行的人类摘要：当前事实、阻塞和下一步。PRD 可先给范围和验收摘要，正文仍需按标准模板展开当前有效需求。Release 才建立版本目录；同一 Release 的短切片只在计划与进度中推进，不生成整套文档。运行证据默认保留可读摘要；确有需要的运行日志、原始指标才放在项目根目录 `.evidence/`（默认忽略），`docs/` 保留可读结论与证据指针；正式 Release 的已验证声明还须有可长期取回的证明，必要时归档至 CI/artifact。已有项目沿用其等价路径，不自动迁移旧证据。详细约定见 [Artifact 规则](skills/vibe-workflow/references/artifacts.md)。
 
 内容按读者目的组织借鉴了 [Diátaxis 官方指南](https://diataxis.fr/how-to-use-diataxis/)；它并不要求预建四类目录。摘要卡和 `.evidence/` 是本 Skill 为上述问题制定的约定，并非 Diátaxis 的硬性规则。
 
-需求分析、方案设计、实施计划和进度已内置[文档写作规范](skills/vibe-workflow/references/document-quality.md)：结论前置，按具体条件裁剪章节，写作时自动自检；简单修改保持局部。各类写法见[正例与反例](skills/vibe-workflow/assets/examples/document-quality.md)。
+文档写作以五份[可填写模板](skills/vibe-workflow/assets/templates/)为基础：`PROJECT_BRIEF` 保留概要和确认基线；`PRD` 用标准九章展开用户、功能规则及验收；`PROPOSED_DESIGN` 写目标技术方案和详细契约；`TECH_DESIGN` 写已实现、经核验的当前架构；`IMPLEMENTATION_PLAN` 写环境、文件映射、阶段任务和验收追溯。按[文档写作规范](skills/vibe-workflow/references/document-quality.md)裁剪不适用内容，适用的数据、接口、页面状态和埋点必须展开，示例数值不作为默认承诺。实际进度和结果由 `PROGRESS` / `VERIFICATION` 维护。各类写法见[正例与反例](skills/vibe-workflow/assets/examples/document-quality.md)。
+
+新建需求文档默认使用 `PRD.md`，标题为“产品需求文档（PRD）”；旧项目已有 `SPEC.md` 时作为等价入口继续沿用，不强制改名、迁移、复制或改写历史，`SPECIFIED` 等机器状态保持不变。
 
 存量接管与文档地图的设计参考了 [project-vibe-spec](https://github.com/dnwwdwd/project-vibe-spec)，并按本 Skill 的 Release 状态机与证据规则进行了独立整合。
 
@@ -232,6 +234,8 @@ Vibe Workflow 严格遵循 open `SKILL.md` 规范 ([agentskills.io](https://agen
 ## 📚 深度技术文档
 
 - [文档质量优化计划](docs/plans/2026-10-20-document-quality/PROGRESS.md) — 需求分析、方案设计、实施步骤与当前进度。
+- [标准模板改造的真实任务样例](docs/plans/2026-10-20-template-writing/README.md) — 五类文档的填写结果与快照范围。
+- [标准模板验证记录](tests/results/template-writing.md) — 静态检查、旧 SPEC 兼容、首轮问题与复验结果。
 - [用户使用教程](docs/USER_GUIDE.zh-CN.md) — 从安装、接管到 Release 验证的完整使用路径，以及项目文档职责说明。
 - [工程宪法 (The Engineering Constitution)](docs/CONSTITUTION.md) — 十大不可违背的法典与判例。
 - [生命周期与状态机 (Lifecycle Specification)](docs/concepts/lifecycle.md) — 状态迁移、准入条件与回退协议。

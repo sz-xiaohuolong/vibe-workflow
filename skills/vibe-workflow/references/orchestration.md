@@ -28,7 +28,7 @@ vibe-workflow 维护范围、事实源、阶段和交付状态；专业技能执
 | grilling、brainstorming、office-hours 都想访谈 | 未决产品范围优先 grilling；grill-me 仅用户入口。复用已回答的事实和决定。 |
 | Superpowers 7 brainstorming 接到冻结需求 | 不作为技术选型固定前置；技术比较用内置分析及必要评审。显式请求时保留确认输入，只处理缺口；“跳过提问”不替代未决产品决定。 |
 | autoplan 与各单项评审重复 | 多维复杂问题选 autoplan，单一问题选对应评审；不再重跑其中已完成的审查，范围变化或新风险才增补。 |
-| writing-plans 默认写 docs/superpowers | 输出到既有计划 owner；不能接受既有路径时内置拆解，不建第二套 SPEC/PLAN。 |
+| writing-plans 默认写 docs/superpowers | 输出到既有计划 owner；不能接受既有路径时内置拆解，不建第二套 PRD/PLAN。 |
 | SDD、executing-plans 与并行工具竞争 | 复杂 written plan 二选一；SDD 的实现子代理串行。简单计划可直接执行，不因“有计划”强制委派。 |
 | using-git-worktrees 默认创建目录 | 仅需隔离并发修改、长期分支或用户要求时使用，优先复用；Tiny 默认原地修改。 |
 | TDD 要求文案文档先失败 | 行为改动和 Bug 优先 TDD；无行为变化编辑用 diff、静态或现有检查，不写仅镜像文案的测试。 |

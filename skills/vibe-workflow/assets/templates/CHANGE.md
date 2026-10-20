@@ -31,4 +31,4 @@
 - REQ: `未关联`
 - DEC: `未关联`
 
-本文件只描述相对上一 Release 的变化；当前完整产品行为以本 Release 的 `SPEC.md` 为准。
+本文件只描述相对上一 Release 的变化；当前完整产品行为以本 Release 的 `PRD.md` 为准。

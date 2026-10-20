@@ -1,34 +1,38 @@
-# Artifact Model & Fact Ownership
+# 产物模型与事实所有权
 
-> 最新的 Release/Slice 边界、摘要格式和 `.evidence/` 约定以 [Skill Artifact 规则](../../skills/vibe-workflow/references/artifacts.md) 为准；本页保留原有概念说明。
+本页说明不同文档的职责。模板选择、Release/Slice 边界和证据保留的执行规则见 [Skill 产物规则](../../skills/vibe-workflow/references/artifacts.md)，写法见[文档写作规范](../../skills/vibe-workflow/references/document-quality.md)。已有项目沿用其真实路径，下列目录只是新项目建议。
 
-> Mapping engineering truth across living documents and release-scoped archives.
+## 1. Release 文档
 
----
-
-## 1. Release-Scoped Artifacts (Archival & Immutable upon Release)
-
-Located at: `docs/vibe/releases/<release-id>/`
+Release 文档记录一次交付的范围、目标方案、计划和验收；发布并复盘封存后作为历史快照保留。
 
 ```text
 docs/vibe/releases/<release-id>/
-├── PROJECT_BRIEF.md         # Problem, Target Users, Scope, Non-Goals, Frozen Req Status
-├── CHANGE.md                # Delta relative to prior release (Added/Modified/Removed)
-├── SPEC.md                  # Complete Effective Product Behavior (REQ, AC, Error states)
-├── PROPOSED_DESIGN.md       # Target architectural changes & proposed schema migrations
-├── IMPLEMENTATION_PLAN.md   # Vertical slices, task graph, test mappings
-└── VERIFICATION.md          # Traceability evidence matrix for every REQ / AC
+├── PROJECT_BRIEF.md         # 产品意图概要、范围、约束和确认基线
+├── CHANGE.md                # 相对上一 Release 的差异，按需创建
+├── PRD.md                   # 当前完整有效行为、REQ/AC、规则、错误与边界
+├── PROPOSED_DESIGN.md       # 目标技术方案、详细契约、权衡、验证与恢复
+├── IMPLEMENTATION_PLAN.md   # 环境、文件映射、阶段任务、验收追溯与发布预案
+├── VERIFICATION.md          # 每个适用 REQ/AC 的实际验证结果和证据
+└── RETRO.md                 # 交付后的复盘，按需创建
 ```
 
----
+`PROJECT_BRIEF.md` 给出概要和确认基线；`PRD.md` 展开完整需求，背景、目标和用户先有可独立阅读的摘要，再引用概要。不能用一句摘要、链接或多版差异代替当前有效行为。流程、权限、异常、数据、接口、页面状态和埋点按适用条件展开，不把参考示例中的技术或数值强加给项目。
 
-## 2. Living Project Documents (Constantly Verifiable)
+新文档默认命名为 `PRD.md`，中文标题为“产品需求文档（PRD）”。旧项目的 `SPEC.md` 继续承担等价职责，按唯一地图读取，不强制改名、迁移、复制第二份或改写历史；`SPECIFIED` 等机器状态不变。
 
-Located at: `docs/vibe/`
+方案设计记录尚待实现的选择，实施计划记录预期任务与验证方法；实际执行状态、偏差和结果分别在进度与验证记录维护，不在 PRD 和计划中重复维护。
 
-- **实际规则入口（`AGENT.md` 或 `AGENTS.md`）**：Agent 行为、边界及已核验文档和命令入口。沿用已采用文件，无入口时按用户指定或默认 `AGENTS.md` 建立；不生成重复约定。自动接入与保留人工内容见[初始化协议](../../skills/vibe-workflow/references/init.md)。
-- **`docs/vibe/PROJECT.md`**: Global project charter, current active release pointer, and quality profile.
-- **`docs/vibe/TECH_DESIGN.md`**: Living system architecture—must accurately describe currently working, passing code.
-- **`docs/vibe/PROGRESS.md`**: Single durable tracker of current state, stable commit, blockers, and next task.
-- **`docs/vibe/decisions/DEC-xxx.md`**: Architecture Decision Records (ADRs).
-- **`docs/vibe/bugs/BUG-xxx.md`**: Deep systematic root-cause analyses.
+## 2. 当前项目文档
+
+当前文档随已核验的项目变化持续更新：
+
+- **实际规则入口（`AGENT.md` 或 `AGENTS.md`）**：Agent 的行为边界、真实文档和命令入口。沿用已采用文件，无入口时按用户指定或默认 `AGENTS.md` 建立；自动接入与保留人工内容见[初始化协议](../../skills/vibe-workflow/references/init.md)。
+- **唯一文档地图**：登记每类事实的实际路径、状态和依据。已有 `PROJECT.md` 地图时不再创建平行地图。
+- **`PROJECT.md`**：项目定位、边界、当前 Release 和质量要求，可包含文档地图。
+- **`TECH_DESIGN.md`**：当前已实现、经核验的系统架构、技术栈、模块与依赖、数据和接口契约、安全及运行入口；指向代码、配置和验证依据。目标方案实现并验证后才同步成立的部分。
+- **`PROGRESS.md`**：当前阶段与状态、Task、稳定点、实际执行变化、阻塞和下一步。
+- **`decisions/DEC-xxx.md`**：需要追溯的重大决策、实质备选和取舍。
+- **`bugs/BUG-xxx.md`**：需要独立记录的症状、复现、调查依据、根因与回归验证。
+
+五份核心模板是需求概要、PRD、方案设计、当前技术设计和实施计划。它们提供可填写的章节和字段；简单任务省略不适用内容，适用契约仍需写清。模板入口见[使用教程](../USER_GUIDE.zh-CN.md#43-每份文档的作用)。

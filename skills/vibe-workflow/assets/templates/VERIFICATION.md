@@ -3,7 +3,7 @@
 ## Control
 
 - Release: `<Release ID>`
-- Effective SPEC: `<SPEC 路径>`
+- Effective PRD: `<PRD 路径>`
 - Quality Profile: `Standard`
 - Verification Status: `UNVERIFIED`
 - Shipping Authorization: `NOT_REQUESTED`

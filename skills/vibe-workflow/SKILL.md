@@ -27,7 +27,7 @@ description: Use when 软件项目任务跨越多个步骤、会话或 Release�
 | Bounded | 有限业务闭环，范围与验收已知 | 一份已有任务记录或简短计划，相关测试和针对性审查；不强制多角色评审 |
 | Architectural / 正式 Release | 长期架构/公共契约选择、多领域风险，或明确发布边界 | 按下述七阶段推进，读取相关 reference |
 
-Tiny 使用用户精确请求作为 **task-local frozen intent**，不要求 Release ID、整套 SPEC/PLAN、正式阶段迁移或 `.evidence/` 目录。默认不启用 grilling、brainstorming、autoplan、子代理、worktree、全量 Review/QA、retro；实际风险或用户显式要求才扩展。文档、文案、静态配置和无行为变化的小修改不机械补 TDD 测试。实现后报告恰好验证了什么，不把局部通过升级为 Release VERIFIED。
+Tiny 使用用户精确请求作为 **task-local frozen intent**，不要求 Release ID、整套 PRD/PLAN、正式阶段迁移或 `.evidence/` 目录。默认不启用 grilling、brainstorming、autoplan、子代理、worktree、全量 Review/QA、retro；实际风险或用户显式要求才扩展。文档、文案、静态配置和无行为变化的小修改不机械补 TDD 测试。实现后报告恰好验证了什么，不把局部通过升级为 Release VERIFIED。
 
 仅多会话或多个文件不自动升级为 Architectural。详细阈值、文档预算与风险覆盖见 [routing.md](references/routing.md)。
 
@@ -105,4 +105,4 @@ Shipping Authorization: NOT_REQUESTED | PENDING | APPROVED | DENIED
 
 同类失败连续三次、连锁回归、架构假设失效或范围持续扩大时停止盲改，保存用户工作与可恢复稳定点，记录最小 Debug Snapshot，转根因调查或重新规划。实现、任务交接与熔断见 [execution.md](references/execution.md)。
 
-维护文档时只更新受影响的事实 owner；职责地图、模板选择和同步检查点见 [artifacts.md](references/artifacts.md)。新建或实质修改需求分析、方案设计、实施计划、进度时，按需读取[文档写作规范](references/document-quality.md)的对应部分；小更新保持局部，自行完成表达与事实检查，不增加审批。
+维护文档时只更新受影响的事实 owner；职责地图、模板选择和同步检查点见 [artifacts.md](references/artifacts.md)。新建需求文件使用 `PRD.md`，存量 `SPEC.md` 或等价需求文件继续沿用，不迁移、不复制第二份。新建或实质修改需求概要、产品需求文档（PRD）、方案设计、当前技术设计、实施计划或进度时，先读取[文档写作规范中的对应模板](references/document-quality.md#模板与职责)，再按需读取对应填写要求；适用契约写入正文，简单任务可裁剪。小更新保持局部，自行完成表达与事实检查，不增加审批。

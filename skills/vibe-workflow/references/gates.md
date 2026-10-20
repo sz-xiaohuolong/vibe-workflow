@@ -31,7 +31,7 @@ STOP affected implementation
 → write change proposal
 → Human Decision
 → new Requirement Version/baseline
-→ update Effective SPEC
+→ update Effective PRD
 → impact analysis
 → update Design/Plan/Progress
 → resume from earliest invalidated state
@@ -48,7 +48,7 @@ Change Proposal 必须包含：
 7. Recovery/rollback。
 8. Human Decision Required。
 
-未确认时可以调查并保存待确认方案；不得把它写成 Effective SPEC、migration 或既成产品行为。
+未确认时可以调查并保存待确认方案；不得把它写成 Effective PRD、migration 或既成产品行为。
 
 ## Approval Contract
 
@@ -115,7 +115,7 @@ UI 改动不能代表授权正确。改变匿名访问、AuthN/AuthZ、Secret、
 
 | 阶段 | 守门门禁 (Gate) | 判定依据 | 未通过时的阻断行为 |
 |---|---|---|---|
-| **1. Thinking** | **Requirement Freeze Gate** | 范围明确、AC 可测；首轮需求探索不写工程文件 | 保持 `WAITING_HUMAN`，严禁建立 SPEC/PLAN 或写代码 |
+| **1. Thinking** | **Requirement Freeze Gate** | 范围明确、AC 可测；首轮需求探索不写工程文件 | 保持 `WAITING_HUMAN`，严禁建立 PRD/PLAN 或写代码 |
 | **2. Planning** | **Design & Plan Gate** | 必要方案决定完成、Test Seams 明确、任务依赖就绪 | 保持 `DRAFT`，严禁派发任务进入 Building |
 | **3. Building** | **Task Verification Gate** | 行为改动遵循测试闭环，无行为编辑完成适用检查；diff 无越界 | 未验证实现记为 `IMPLEMENTED_UNVERIFIED`；连续 3 次同类失败熔断 |
 | **4. Review** | **Release Review Gate** | 适用规格与 diff 已审查，无阻断项和未批准的范围变化 | 严禁进入 Testing，直接打回 Building 修复 |

@@ -66,7 +66,7 @@ required_files=(
   assets/templates/PROJECT.md
   assets/templates/DOCUMENT_MAP.md
   assets/templates/CHANGE.md
-  assets/templates/SPEC.md
+  assets/templates/PRD.md
   assets/templates/TECH_DESIGN.md
   assets/templates/PROPOSED_DESIGN.md
   assets/templates/IMPLEMENTATION_PLAN.md
@@ -118,7 +118,7 @@ rg -q 'POC_VALIDATED' "$skill_dir/assets/templates/VERIFICATION.md"
 test -f "$repo_dir/tests/scenarios-v0.3.md"
 rg -q '## S31' "$repo_dir/tests/scenarios-v0.3.md"
 rg -q '## S44' "$repo_dir/tests/scenarios-v0.3.md"
-rg -q 'Test Seams' "$skill_dir/assets/templates/SPEC.md"
+rg -q 'Test Seams' "$skill_dir/assets/templates/PRD.md"
 rg -q 'Ready Frontier' "$skill_dir/assets/templates/IMPLEMENTATION_PLAN.md"
 rg -q 'Task Handoff Contract' "$skill_dir/assets/templates/IMPLEMENTATION_PLAN.md"
 rg -q 'Current Stage' "$skill_dir/assets/templates/PROGRESS.md"

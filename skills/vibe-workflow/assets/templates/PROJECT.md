@@ -10,8 +10,8 @@
 
 ## Current Product Boundaries
 
-- In Scope: `见当前 Release PROJECT_BRIEF/SPEC`
-- Out of Scope: `见当前 Release PROJECT_BRIEF/SPEC`
+- In Scope: `见当前 Release PROJECT_BRIEF/PRD`
+- Out of Scope: `见当前 Release PROJECT_BRIEF/PRD`
 
 ## Document Map
 
@@ -22,7 +22,7 @@
 | Agent Rules | `<实际规则路径/待发现>` | `待核验` | 沿用 AGENT.md 或 AGENTS.md，行为与入口 |
 | Current Architecture | `待发现` | `待核验` | 由代码/配置核验 |
 | Current Progress | `待发现` | `待核验` | 由 Git/测试核验 |
-| Current Release Brief/SPEC | `待发现` | `待澄清` | 产品意图和验收来源 |
+| Current Release Brief/PRD | `待发现` | `待澄清` | 产品意图和验收来源 |
 | Current Plan/Verification | `待发现` | `待核验` | 任务与证据路径 |
 | Decisions/Bugs | `待发现` | `待核验` | 历史记录路径 |
 

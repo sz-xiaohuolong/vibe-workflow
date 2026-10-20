@@ -41,7 +41,7 @@ Release 是对外有意义的范围/验收/发布边界；Slice 是同一 Releas
 | 阶段 (Stage) | 对应的细粒度 Workflow State | 阶段目标 | 交付物 (Artifacts) |
 |---|---|---|---|
 | **1. Thinking** | `REQUIREMENTS_FROZEN` | 需求对质、澄清边界、锁定基线 | `PROJECT_BRIEF.md` (FROZEN) |
-| **2. Planning** | `SPECIFIED` ➔ `DESIGNED` ➔ `PLANNED` | 外部测试接缝、技术架构审查、依赖图与切片 | `SPEC.md`, `PROPOSED_DESIGN.md`, `IMPLEMENTATION_PLAN.md` |
+| **2. Planning** | `SPECIFIED` ➔ `DESIGNED` ➔ `PLANNED` | 外部测试接缝、技术架构审查、依赖图与切片 | `PRD.md`, `PROPOSED_DESIGN.md`, `IMPLEMENTATION_PLAN.md` |
 | **3. Building** | `BUILDING` | Task 上下文包、TDD 循环、最小实现、单测绿化 | 源代码、单元测试、`PROGRESS.md` |
 | **4. Review** | `REVIEWING` | **置于系统测试前**：审查规格一致性与代码异味 | 必要评审记录 |
 | **5. Testing** | `VERIFYING` | 真实浏览器/真机环境验收、端到端用户流 | 验收矩阵、按需原始证据或 CI 链接 |
@@ -129,7 +129,7 @@ Operational Status 不会自动改变 Workflow State。例如 BUILDING 中发生
 |---|---|
 | 只改变任务顺序或内部实现 | `PLANNED` (Stage 2) |
 | 改变模块边界、公开接口或数据模型 | `DESIGNED` (Stage 2) |
-| 改变产品行为、范围、用户流程或验收 | `SPECIFIED` (Stage 2)，先更新 baseline/effective SPEC |
+| 改变产品行为、范围、用户流程或验收 | `SPECIFIED` (Stage 2)，先更新 baseline/effective PRD |
 | Requirement Gate 不再成立 | Requirement Clarification，回退至 `REQUIREMENTS_FROZEN` (Stage 1) |
 
 不要机械重走未受影响阶段，但必须做 impact analysis 并更新所有失效链接。
@@ -138,7 +138,7 @@ Operational Status 不会自动改变 Workflow State。例如 BUILDING 中发生
 
 1. 选择新的 Release ID。
 2. 以当前产品事实和本次新增/修改范围形成新的 PROJECT_BRIEF。
-3. Requirement Gate 通过后创建该 Release 的完整 Effective SPEC。
+3. Requirement Gate 通过后创建该 Release 的完整 Effective PRD。
 4. 有目标架构变化时创建该 Release 的 PROPOSED_DESIGN；必要 Decision 获批后才能进入 DESIGNED。
 5. `CHANGE.md` 只表达相对上一 Release 的差异；Agent 默认不靠叠加多个 delta 推导当前需求。
 6. 更新 PROGRESS 的 Current Release、Stage、State、Status 和 Next Task。
@@ -147,9 +147,9 @@ Operational Status 不会自动改变 Workflow State。例如 BUILDING 中发生
 
 `RELEASED` 并经过 `REFLECTING` 后：
 
-- 不静默修改 PROJECT_BRIEF、SPEC、PROPOSED_DESIGN、PLAN、VERIFICATION 或 RETRO。
+- 不静默修改 PROJECT_BRIEF、PRD、PROPOSED_DESIGN、PLAN、VERIFICATION 或 RETRO。
 - 措辞歧义使用有日期、有理由、有链接的勘误记录。
-- 当前行为改变时写入新 Release 的 Effective SPEC。
+- 当前行为改变时写入新 Release 的 Effective PRD。
 - 当前架构写入 Living TECH_DESIGN；历史原因写入 DEC。
 - 有重复出现且已验证有效的经验时更新实际项目规则入口；无新经验时不新增规则。
 

@@ -1,0 +1,111 @@
+diff --git a/DOCUMENT_MAP.md b/DOCUMENT_MAP.md
+index 9f4ff52..2264951 100644
+--- a/DOCUMENT_MAP.md
++++ b/DOCUMENT_MAP.md
+@@ -3 +3 @@
+-- 当前 Release 入口：`docs/releases/R1/SPEC.md`
++- 当前 Release 入口：`docs/releases/R2/SPEC.md`
+@@ -14 +14 @@
+-| R2 验证记录 | docs/releases/R2/VERIFICATION.md | 待验证 |
++| R2 验证记录 | docs/releases/R2/VERIFICATION.md | 部分验证，见记录 |
+diff --git a/docs/PROGRESS.md b/docs/PROGRESS.md
+index 7f2b17c..bb0e843 100644
+--- a/docs/PROGRESS.md
++++ b/docs/PROGRESS.md
+@@ -2,0 +3,2 @@
++TASK-020 的本地搜索验收已通过，证据见 [R2 验证记录](releases/R2/VERIFICATION.md)。R2 仍有外部文件导入未实现；下一步为 TASK-021，本轮保留该任务。
++
+@@ -9,2 +11,3 @@
+-- Current Task: `TASK-020`
+-- Last Stable Commit/Artifact: `待核验`
++- Current Task: `TASK-021`（本轮未启动）
++- Last Stable Commit/Artifact: `1472d69`（本地基线；本次受测源码与测试未修改）
++- 更新时间：2026-10-20
+@@ -14,2 +17,2 @@
+-| TASK-020 本地文本搜索 | IN_PROGRESS | 源码与测试已写，尚未运行 | 运行本地搜索验收 |
+-| TASK-021 外部文件导入 | NOT_STARTED | 无 | 实现与验收 |
++| TASK-020 本地文本搜索 | VERIFIED | [AC-002 验证记录](releases/R2/VERIFICATION.md#task-020-本地文本搜索) | 本任务验收完成 |
++| TASK-021 外部文件导入 | NOT_STARTED | 尚无实现与运行证据 | 实现 REQ-003 并验收 AC-003 |
+diff --git a/docs/PROJECT.md b/docs/PROJECT.md
+index 627beb1..0c4b9db 100644
+--- a/docs/PROJECT.md
++++ b/docs/PROJECT.md
+@@ -3 +3 @@
+-- Current Release: `R1`（待冻结）
++- Current Release: `R2`（需求已冻结，见 `releases/R2/PROJECT_BRIEF.md`）
+diff --git a/docs/TECH_DESIGN.md b/docs/TECH_DESIGN.md
+index 55e1836..ecc5068 100644
+--- a/docs/TECH_DESIGN.md
++++ b/docs/TECH_DESIGN.md
+@@ -3,3 +3,4 @@
+-- `src/app.py`：命令行文本显示入口。
+-- 运行命令：`python3 src/app.py`。
+-- 测试命令：`python3 -m unittest discover -s tests -v`。
++当前工具提供本地名称显示和文本列表搜索。外部文件导入仍属于待实现的 TASK-021；需求与目标方案沿用 R2 的既有文档。
++
++- `src/app.py`：命令行文本显示入口，标准输出为“本地文本工具”。
++- `src/search.py`：无副作用的 `search(documents, query)` 函数，对应 REQ-002 / AC-002。
+@@ -6,0 +8,15 @@
++
++## 搜索接口与处理流程
++
++调用方传入文本列表和字符串关键词。`search` 先对关键词去除首尾空白并转换为小写，再按列表顺序筛选包含该词的条目；比较时将条目转换为小写，返回值保留原始条目。空查询和无匹配查询返回空列表。函数只构造返回列表，不写入文件。
++
++实现依据：`src/search.py`；验收入口：`tests/test_search.py`。该函数目前作为独立 Python 接口提供，`src/app.py` 仍只负责名称显示。
++
++## 运行与验证入口
++
++| 用途 | 命令 | 结果入口 |
++|---|---|---|
++| 本地显示 | `python3 src/app.py` | [本地显示验证](releases/R2/VERIFICATION.md#本地显示入口) |
++| 搜索验收 | `python3 -m unittest discover -s tests -v` | [TASK-020 验证](releases/R2/VERIFICATION.md#task-020-本地文本搜索) |
++
++本次运行环境和被测基线见 [R2 验证记录](releases/R2/VERIFICATION.md)。外部文件导入的实现和验证缺口见 [当前进度](PROGRESS.md)。
+diff --git a/docs/releases/R2/IMPLEMENTATION_PLAN.md b/docs/releases/R2/IMPLEMENTATION_PLAN.md
+index 5af48b9..707549d 100644
+--- a/docs/releases/R2/IMPLEMENTATION_PLAN.md
++++ b/docs/releases/R2/IMPLEMENTATION_PLAN.md
+@@ -12 +12 @@
+-- Ready Status: READY
++- 就绪判断：结合前置依赖与 [当前进度](../../PROGRESS.md) 核验。
+@@ -16 +16 @@
+-- Status: `IN_PROGRESS`
++- 执行状态与证据：[当前进度](../../PROGRESS.md)、[TASK-020 验证记录](VERIFICATION.md#task-020-本地文本搜索)。
+@@ -22 +22 @@
+-- Status: `NOT_STARTED`
++- 执行状态与证据：[当前进度](../../PROGRESS.md)、[AC-003 验证记录](VERIFICATION.md)。
+diff --git a/docs/releases/R2/VERIFICATION.md b/docs/releases/R2/VERIFICATION.md
+index 55f3f08..3a57502 100644
+--- a/docs/releases/R2/VERIFICATION.md
++++ b/docs/releases/R2/VERIFICATION.md
+@@ -2,0 +3,2 @@
++本次核验通过了本地显示入口与 TASK-020 搜索验收。TASK-021 尚未实现、未验证，因此 R2 维持部分验证。
++
+@@ -5,0 +8,4 @@
++- 验证日期：2026-10-20
++- 被测基线：本地提交 `1472d69513bb1911c420b85aa12fb34126fc18f9`；本轮未修改源码或测试。
++- 运行环境：Python 3.14.7；项目根目录；未安装依赖。
++- 证据形式：本文件保存实际运行摘要；本次结果不依赖原 `.evidence/R2/app.log` 引用。
+@@ -9,3 +15,19 @@
+-| REQ-001 | AC-001 | 历史显示入口 | VERIFIED | .evidence/R2/app.log |
+-| REQ-002 | AC-002 | TASK-020 | UNVERIFIED | 未运行 |
+-| REQ-003 | AC-003 | TASK-021 | UNVERIFIED | 未实现、未运行 |
++| REQ-001 | AC-001 | 历史显示入口 | VERIFIED | [本地显示入口](#本地显示入口) |
++| REQ-002 | AC-002 | TASK-020 | VERIFIED | [TASK-020 本地文本搜索](#task-020-本地文本搜索) |
++| REQ-003 | AC-003 | TASK-021 | UNVERIFIED | 未实现、未运行；任务保留于 [当前进度](../../PROGRESS.md) |
++
++## TASK-020 本地文本搜索
++
++- 实际命令：`PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v`。
++- 结果：退出码 0，运行 3 项测试，均通过（`OK`）。
++- `test_chinese_keyword`：中文关键词返回匹配的原始条目。
++- `test_english_keyword`：英文关键词匹配保留原条目的大小写。
++- `test_empty_and_missing_keyword`：无匹配关键词及纯空白查询均返回空列表。
++- 覆盖入口：`tests/test_search.py` → `src/search.py` 的 `search(documents, query)`；对应 REQ-002 / AC-002 / SEAM-002。
++- 限制：本结果不覆盖 REQ-003 文件导入，也不代表 R2 全部验收完成。
++
++## 本地显示入口
++
++- 实际命令：`PYTHONDONTWRITEBYTECODE=1 python3 src/app.py`。
++- 结果：退出码 0，标准输出为“本地文本工具”。
++- 覆盖入口：`src/app.py`；对应 REQ-001 / AC-001 / SEAM-001。

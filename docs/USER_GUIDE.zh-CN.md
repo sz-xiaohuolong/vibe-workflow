@@ -52,7 +52,7 @@ flowchart TD
     S1 --> T2[Task：页面与流程验证]
 ```
 
-Slice 不自动生成新的 Release，也不需要各自复制一套 SPEC、计划和验证文档。已发布版本的后续修改先作为任务或下一版候选记录；形成实际发布边界时才创建 patch/后续 Release，不能改写旧版本历史快照。
+Slice 不自动生成新的 Release，也不需要各自复制一套 PRD、计划和验证文档。已发布版本的后续修改先作为任务或下一版候选记录；形成实际发布边界时才创建 patch/后续 Release，不能改写旧版本历史快照。
 
 ### 2.3 七阶段敏捷生命周期与状态流转
 
@@ -60,7 +60,7 @@ Slice 不自动生成新的 Release，也不需要各自复制一套 SPEC、计�
 
 ```mermaid
 flowchart TD
-    S1["1. Thinking (思考)<br/>需求对质与冻结 (FROZEN)"] --> S2["2. Planning (规划)<br/>SPEC / 架构评审 / 依赖计划"]
+    S1["1. Thinking (思考)<br/>需求对质与冻结 (FROZEN)"] --> S2["2. Planning (规划)<br/>PRD / 架构评审 / 依赖计划"]
     S2 --> S3["3. Building (构建)<br/>Task Handoff / TDD 循环"]
     S3 --> S4["4. Review (评审)<br/>Spec 合规与工程代码质量"]
     S4 --> S5["5. Testing (测试)<br/>系统集成 / 真实浏览器探针"]
@@ -100,14 +100,14 @@ Release 验证要逐项回答“每条需求和验收条件是否有证据支持
 | 阶段 | 文档 | 回答的问题 |
 |---|---|---|
 | 1. Thinking | `PROJECT_BRIEF.md` | 本次 Release 为谁解决什么问题，范围、约束和可观察目标是什么？ |
-| 2. Planning | 需求分析 `SPEC.md` | 做什么、边界是什么、怎样验收？复杂流程、状态及测试接缝按实际需要展开。 |
-| 2. Planning | 方案设计 `PROPOSED_DESIGN.md` | 选择什么方案、为什么，影响和风险是什么？方案是否获批？ |
-| 2. Planning | 实施计划 `IMPLEMENTATION_PLAN.md` | 先做什么、依赖什么、怎样验证和恢复？复杂委派时再组装完整交接契约。 |
+| 2. Planning | 产品需求文档 `PRD.md` | 当前有效的用户、场景、功能规则和验收是什么？流程、权限、异常、页面状态及测试接缝按适用条件展开。 |
+| 2. Planning | 方案设计 `PROPOSED_DESIGN.md` | 技术栈、架构、数据、接口和边界如何设计？为什么选择该方案，如何验证及恢复？ |
+| 2. Planning | 实施计划 `IMPLEMENTATION_PLAN.md` | 环境和依赖是什么，修改哪些文件，各阶段任务如何对应验收、验证及恢复？ |
 | 3. Building | `TECH_DESIGN.md` (Living) | 代码、配置和运行证据证明项目现在实际采用什么架构？（经实现核验后持续更新） |
 | 5. Testing | `VERIFICATION.md` | 每个 REQ/AC 与 Test Seams 的实际测试结果、真实环境日志与截屏证据索引是什么？ |
 | 7. Reflecting | `RETRO.md` | 本次 Release 的返工瓶颈、漏测原因、规则沉淀与下一版本候选池是什么？ |
 
-这几份文档不是从粗到细反复改写同一份设计。`PROJECT_BRIEF.md` 是产品意图基线；`SPEC.md` 只能展开已冻结的产品意图，不能自行增加范围；`PROPOSED_DESIGN.md` 是本次 Release 的**目标技术设计**，不能充当需求决定；`TECH_DESIGN.md` 是随已实现且经核验的架构变化持续更新的 living document。接管已有项目时，可以先根据现有代码与配置建立 `TECH_DESIGN.md` 的当前事实；新方案实现并验证后，再把成立的部分并入其中。
+这几份文档不是从粗到细反复改写同一份设计。`PROJECT_BRIEF.md` 是产品意图概要和确认基线；`PRD.md` 展开本次完整有效行为，不能自行增加范围。PRD 的背景、目标和用户先给出可独立阅读的简要说明，再引用概要，不要求读者跳转才能理解需求。`PROPOSED_DESIGN.md` 是本次 Release 的**目标技术设计**，不能充当需求决定；`TECH_DESIGN.md` 是随已实现且经核验的架构变化持续更新的 living document。接管已有项目时，可以先根据现有代码与配置建立 `TECH_DESIGN.md` 的当前事实；新方案实现并验证后，再把成立的部分并入其中。
 
 ## 3. 如何使用
 
@@ -153,7 +153,7 @@ $vibe-workflow init 审计当前仓库，沿用已有需求、设计、测试和
 可以这样提出任务：
 
 ```text
-$vibe-workflow 检查工程入口 Gate。基于已确认的需求启动 v0.2 Release，建立本次有效 SPEC、实施计划和进度记录，再按计划推进。
+$vibe-workflow 检查工程入口 Gate。基于已确认的需求启动 v0.2 Release，建立本次有效 PRD、实施计划和进度记录，再按计划推进。
 ```
 
 完整 Release 缺少入口条件时，Agent 应先列出缺口并协助澄清需求。精确、低风险的 Tiny Task 使用当前请求作为局部冻结意图，做最小实现和验证；Tiny、普通 Git、临时目录单点任务和只读审计不触发新项目规则初始化。
@@ -168,7 +168,7 @@ $vibe-workflow 检查工程入口 Gate。基于已确认的需求启动 v0.2 Rel
 $vibe-workflow 从仓库事实恢复当前 Release、状态和下一个 Task，并核验 PROGRESS 中的记录。
 ```
 
-恢复时按宿主机制和既有入口声明定位实际规则文件（`AGENT.md` 或 `AGENTS.md`），再沿唯一文档地图 → `PROGRESS` → 当前 Release 相关 SPEC → 当前 Task 所需设计、代码、测试和证据读取。写入与恢复采用同一[入口定位协议](../skills/vibe-workflow/references/init.md#规则入口定位)，不能只查默认文件名。聊天记录只提供线索，不能覆盖 Git、代码和测试事实。
+恢复时按宿主机制和既有入口声明定位实际规则文件（`AGENT.md` 或 `AGENTS.md`），再沿唯一文档地图 → `PROGRESS` → 当前 Release 相关 PRD → 当前 Task 所需设计、代码、测试和证据读取。写入与恢复采用同一[入口定位协议](../skills/vibe-workflow/references/init.md#规则入口定位)，不能只查默认文件名。聊天记录只提供线索，不能覆盖 Git、代码和测试事实。
 
 中途改变产品行为时，提出变更并等待影响分析与必要决定：
 
@@ -176,7 +176,7 @@ $vibe-workflow 从仓库事实恢复当前 Release、状态和下一个 Task，�
 $vibe-workflow 评估增加用户头像对当前 v0.2 范围、接口和验收的影响，先形成变更提案。
 ```
 
-变更获批后，按最早失效的阶段回退：产品行为变更回到 SPEC，模块或数据模型变更回到设计，任务顺序变化回到计划。同类失败连续三次、修复引发多处回归或关键架构假设失效时，应停止局部补丁，保存调试快照并重新规划。
+变更获批后，按最早失效的阶段回退：产品行为变更回到 PRD，模块或数据模型变更回到设计，任务顺序变化回到计划。同类失败连续三次、修复引发多处回归或关键架构假设失效时，应停止局部补丁，保存调试快照并重新规划。
 
 ### 3.5 评审、测试、发布与复盘
 
@@ -213,7 +213,7 @@ docs/vibe/
 └── releases/<release-id>/
     ├── PROJECT_BRIEF.md
     ├── CHANGE.md               # 有跨版本差异时使用
-    ├── SPEC.md
+    ├── PRD.md
     ├── PROPOSED_DESIGN.md      # 有目标架构方案时使用
     ├── IMPLEMENTATION_PLAN.md
     ├── VERIFICATION.md         # 验证阶段填写
@@ -224,16 +224,16 @@ docs/vibe/
 
 ### 4.2 写作与证据规则
 
-- `PROGRESS.md` 和 `SPEC.md` 标题下先放最多三条数据行的摘要：当前事实或范围、阻塞或边界、下一步或验收入口。正文再给明细，避免重复维护同一状态。
+- `PROGRESS.md` 标题下先放最多三条数据行的摘要：当前事实、阻塞和下一步。`PRD.md` 可以先给范围与验收摘要，但正文必须展开适用的标准章节和具体契约，摘要不能代替详细需求。
 - 未知事实写“待澄清”或“未验证”；未通过入口 Gate 时不能把模板中的需求状态写成 `FROZEN`。
-- `SPEC.md` 写当前 Release 的完整有效行为；`CHANGE.md` 只写相对上一 Release 的差异。不要让 Agent 叠加多版差异来推导当前需求。
+- `PRD.md` 写当前 Release 的完整有效行为；`CHANGE.md` 只写相对上一 Release 的差异。不要让 Agent 叠加多版差异来推导当前需求。旧项目已有 `SPEC.md` 时将其视为 PRD 的等价入口，继续使用真实路径，不强制迁移、复制或改写封存历史；`SPECIFIED` 等机器状态保持不变。
 - `PROPOSED_DESIGN.md` 写尚待实现的目标设计和批准状态；`TECH_DESIGN.md` 只写经过代码、配置或运行证据核验的当前架构。
 - 默认保留可读结论、命令、时间、输入/环境依据和结果指针；需要保留的原始日志才暂存 `.evidence/<release-id>/<slice-or-task-id>/`，并忽略本地目录。Tiny 不要求目录。相同输入和环境的有效结果可复用；支撑正式 Release 声明的证明须长期可取回。
 - Release 进入 `RELEASED` 且复盘封存后，原版需求、规格、方案、计划、验证和复盘记录作为历史快照保留。后续变化进入新 Release；必要纠错用有日期和依据的勘误记录。
 
 ### 4.3 每份文档的作用
 
-新建或实质修改需求分析、方案设计、实施计划和进度时，Agent 自动按需应用[文档写作规范](../skills/vibe-workflow/references/document-quality.md)：先给结论，明确必要信息和章节裁剪条件，写完自行检查。小更新保持局部，旧文档随任务渐进整理，不新增逐篇审批；写法参考[正例与反例](../skills/vibe-workflow/assets/examples/document-quality.md)。
+新建或实质修改文档时，Agent 先选择对应[标准模板](../skills/vibe-workflow/assets/templates/)，再按[文档写作规范](../skills/vibe-workflow/references/document-quality.md)填写。模板提供稳定的章节、字段和表格；Agent 根据项目实际裁剪，适用的行为和契约必须在正文写清。小更新保持局部，旧文档随任务渐进整理，不新增逐篇审批；写法参考[正例与反例](../skills/vibe-workflow/assets/examples/document-quality.md)。
 
 | 文档 | 何时使用 | 记录的核心事实 |
 |---|---|---|
@@ -244,15 +244,27 @@ docs/vibe/
 | `PROGRESS.md` | 每次执行、阻塞或状态变化后 | 当前 Stage/State/Status、Slice/Task、稳定点、证据、下一步 |
 | `PROJECT_BRIEF.md` | 每个新 Release 的需求概要与冻结阶段 | 问题、目标用户、范围、限制、验收目标和未决问题，作为需求基线 |
 | `CHANGE.md` | 需要说明相对上一 Release 的变化时 | 新增、修改、删除、修复及兼容或迁移提示 |
-| 需求分析 `SPEC.md` | 入口 Gate 通过后展开已冻结需求 | 完整有效行为、REQ/AC、错误与边界；流程、状态和接缝细节按条件补充 |
-| 方案设计 `PROPOSED_DESIGN.md` | 有目标技术方案时 | 推荐方案与理由、实际影响、风险、恢复、验证方式及方案状态 |
-| 实施计划 `IMPLEMENTATION_PLAN.md` | 实施前及计划调整时 | 任务、依赖、REQ/AC、修改边界、验证与恢复；切片和完整交接按条件增加 |
+| 产品需求文档 `PRD.md` | 入口 Gate 通过后展开已冻结需求 | 背景与目标摘要、用户场景、功能优先级、详细规则、REQ/AC；适用的交互、非功能约束、边界与埋点 |
+| 方案设计 `PROPOSED_DESIGN.md` | 有目标技术方案时 | 技术目标、技术栈与工程约定、架构与数据流、详细数据和接口设计、备选权衡、安全、风险、验证及恢复 |
+| 实施计划 `IMPLEMENTATION_PLAN.md` | 实施前及计划调整时 | 前置依赖、文件变更映射、分阶段任务、AC 追溯矩阵、发布恢复预案；实际进度和证据指向对应记录 |
 | `VERIFICATION.md` | Release 验证与评审阶段 | 每个 REQ/AC 与 Test Seams 的实际结果、真机证据索引、版本指针和未验证项 |
 | `RETRO.md` | Release 交付后的复盘阶段 | 返工根因、各阶段耗时瓶颈、规则提炼与下一版本候选 Backlog |
 | `DEC-xxx.md` | 重大、长期影响的选择需追溯时 | 备选方案、取舍、人类决定、影响和恢复方式 |
 | `BUG-xxx.md` | 排查与修复 Bug 时 | 症状、复现、证据、根因、修复和回归检查 |
 
-模板位于 [`skills/vibe-workflow/assets/templates/`](../skills/vibe-workflow/assets/templates/)。复制适用模板后删除空章节和占位符；现有仓库已有等价文档时继续使用原文档。
+五份核心模板分别提供以下写作骨架：
+
+| 模板 | 填写重点 |
+|---|---|
+| [需求概要](../skills/vibe-workflow/assets/templates/PROJECT_BRIEF.md) | 背景、产品定位、目标用户、目标与非目标、约束、成功指标、待决问题；保持概要和确认基线的职责 |
+| [产品需求文档](../skills/vibe-workflow/assets/templates/PRD.md) | 九章覆盖背景、目标、用户、功能优先级、详细需求与验收、交互、限制与边界、埋点、待决问题与风险；沿用 `REQ-xxx` 和 `AC-xxx`，验收写成给定条件—执行操作—可观察结果 |
+| [方案设计](../skills/vibe-workflow/assets/templates/PROPOSED_DESIGN.md) | 写出待实施的技术选择及理由；数据字段、接口输入输出、权限和错误、并发与恢复等适用契约有具体字段，不只留一句“见需求” |
+| [当前技术设计](../skills/vibe-workflow/assets/templates/TECH_DESIGN.md) | 使用相应技术维度说明已实现、经核验的架构，并指向代码、配置和运行入口；目标方案实现后再同步成立的部分 |
+| [实施计划](../skills/vibe-workflow/assets/templates/IMPLEMENTATION_PLAN.md) | 环境、文件映射、阶段任务、验收追溯、发布与恢复、里程碑与偏差入口；每项任务写编号、交付结果、文件、步骤、验证与预期、恢复依据 |
+
+有界面时逐项核对空、加载、错误和极限状态；涉及存储、接口、埋点时展开相应章节，不适用时按模板说明原因或删除可选部分。性能、容量、工期、覆盖率、告警和灰度参数依据实际需求填写；不能把参考模板中的示例数字变成项目承诺。阶段按真实依赖拆分，不默认引入数据库、缓存、重试或特性开关，也不要求每阶段独立提交。
+
+`PRD.md` 不重复维护开发状态，实施计划记录预期步骤、验证和发布方案；实际日期、偏差、结果和证据在 `PROGRESS.md` / `VERIFICATION.md` 维护，通过链接衔接。复制模板后清理占位符和不适用章节，保留真实依据和待决问题；现有仓库已有等价文档时继续使用原文档。
 
 ### 与其他编排技能共同使用
 
@@ -290,9 +302,9 @@ Superpowers、gstack 和 Matt skills 按本次能力需求使用，不叠加第�
 
 假设你要给已有应用增加“用户导出个人数据”功能：
 
-1. 运行 `$vibe-workflow init`，定位当前 SPEC、架构、测试和进度来源。
+1. 运行 `$vibe-workflow init`，定位当前 PRD（或既有 SPEC）、架构、测试和进度来源。
 2. 明确导出范围、格式、权限、失败行为和验收方式；冻结本次 Release 需求。
-3. 在 `SPEC.md` 中记录 REQ/AC；若涉及权限或外部存储，先完成相应决策关卡。
+3. 在 `PRD.md`（或既有等价需求文档）中记录 REQ/AC；若涉及权限或外部存储，先完成相应决策关卡。
 4. 在目标设计和计划中把导出接口、后台任务、页面入口及测试映射到 Slice/Task。
 5. 按 Task 实现并收集证据，更新 `PROGRESS.md`；出现未批准的范围变化时暂停受影响工作。
 6. 在 `VERIFICATION.md` 逐项核对 REQ/AC、权限检查、失败路径和可取回的证据。评审通过后进入 `READY_TO_SHIP`，取得明确发布授权再发布。

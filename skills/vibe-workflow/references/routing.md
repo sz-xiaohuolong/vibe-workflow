@@ -32,7 +32,7 @@ Gate 必须先于复杂度和调度。不要先说“只是 Tiny”再检查权�
 | `SPIKE` | 验证技术可行性或交互原型 | **Discovery Spike 协议**：限定时限与丢弃边界；探针产物仅供可行性决策，严禁直接作为正式实现并入主代码，严禁标记为正式功能完成 |
 | `REQUIREMENT_CHANGE` | 改变冻结的产品意图 | 停止受影响工作，进入 Human Gate |
 
-如果 Bug 调查证明实现符合 SPEC、真正错误是产品预期，则改为 `REQUIREMENT_CHANGE`。
+如果 Bug 调查证明实现符合 PRD、真正错误是产品预期，则改为 `REQUIREMENT_CHANGE`。
 Pre-Freeze 需求探索阶段：自动需求对质优先使用 Matt 的 `grilling`，澄清边界并形成可测 AC；用户显式请求 `grill-me` 时使用该用户入口，不自动调用。调用前核对技能来源和调用限制；技能不可用时立即降级为内置结构化提问协议，不以仅限用户调用的入口替代。需要产品减法评审时可补充 `gstack:office-hours`，但不设为必经前置流程。严禁首轮创建工程文档、脚手架或业务代码。
 
 ## Complexity
@@ -41,7 +41,7 @@ Pre-Freeze 需求探索阶段：自动需求对质优先使用 Matt 的 `grillin
 
 同时满足：影响单点、行为明确、低风险、无跨模块共享状态、无 Gate、可在一个小验证闭环内完成。
 
-使用用户精确请求作为 task-local frozen intent。直接执行“相关文件 → 修改 → 最小检查 → 报告”，不要求 Release ID，不新建 PROJECT_BRIEF、SPEC、TECH_DESIGN、PLAN 或证据目录。已有 PROGRESS/CHANGE 约定只做最小同步。
+使用用户精确请求作为 task-local frozen intent。直接执行“相关文件 → 修改 → 最小检查 → 报告”，不要求 Release ID，不新建 PROJECT_BRIEF、PRD、TECH_DESIGN、PLAN 或证据目录。已有 PROGRESS/CHANGE 约定只做最小同步。
 
 Tiny 默认由当前 Agent 原地执行，不启动需求访谈、autoplan、子代理、worktree、完整 Review/QA 或 retro。Production 项目也按本次实际风险选择检查。无行为变化的文档、文案、静态值编辑不强制 TDD；实际行为变化仍需相关验证，风险 Gate 优先。
 

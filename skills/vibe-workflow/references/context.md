@@ -20,7 +20,7 @@
 - 当前工作树、分支和最近相关状态。
 - PROJECT/Document Map 或等价索引。
 
-用户明确运行 `$vibe-workflow init` 时按 [init.md](init.md) 审计、合并规则和更新映射；只读请求不写文件。需求未冻结不妨碍现状审计与事实记录，但不能因此进入 SPEC/Build。空仓库新项目在范围确认且获准进入 Planning 后执行同一协议的最小规则接入，无需额外 init；首轮澄清、Tiny 与普通 Git 不触发。
+用户明确运行 `$vibe-workflow init` 时按 [init.md](init.md) 审计、合并规则和更新映射；只读请求不写文件。需求未冻结不妨碍现状审计与事实记录，但不能因此进入 PRD/Build。空仓库新项目在范围确认且获准进入 Planning 后执行同一协议的最小规则接入，无需额外 init；首轮澄清、Tiny 与普通 Git 不触发。
 
 目的只是建立事实源地图和当前 Release，不是把整个仓库永久留在上下文。
 
@@ -31,7 +31,7 @@
 1. 按同一入口定位顺序读取真实项目规则文件，不只查默认 `AGENTS.md`；宿主未自动发现的已采用入口须显式读取。
 2. 唯一权威的 PROJECT/Document Map，按其中真实路径定位资料。
 3. PROGRESS。
-4. 当前 Release 的 PROJECT_BRIEF 和 Effective SPEC 中相关部分。
+4. 当前 Release 的 PROJECT_BRIEF 和 Effective PRD 中相关部分。
 5. 当前 Task 对应的 PROPOSED_DESIGN、当前 TECH_DESIGN、PLAN、代码、测试和 evidence；没有目标架构变化时省略 PROPOSED_DESIGN。
 
 然后核验：
@@ -61,7 +61,7 @@
 实际规则入口中的相关约束
 PROJECT path map
 PROGRESS current task block
-SPEC relevant REQ/AC and Test Seams
+PRD relevant REQ/AC and Test Seams
 PROPOSED_DESIGN relevant approved section, when applicable
 TECH_DESIGN current-state relevant section
 IMPLEMENTATION_PLAN current task (Task Handoff Contract)
@@ -75,17 +75,17 @@ relevant DEC/BUG only
 
 | 阶段 | 允许加载的核心上下文 | 严禁加载的冗余内容 |
 |---|---|---|
-| **1. Thinking** | 用户原始输入、实际项目规则、既有项目事实与地图 | 历史代码细节、SPEC 模板、长篇实现计划 |
+| **1. Thinking** | 用户原始输入、实际项目规则、既有项目事实与地图 | 历史代码细节、PRD 模板、长篇实现计划 |
 | **2. Planning** | 冻结的 PROJECT_BRIEF、living TECH_DESIGN、架构备选方案 | 具体的非关键业务代码、未获批的临时设想 |
-| **3. Building** | 当前 Task Handoff Contract、相关 SPEC/AC/Seams、最小受影响代码与单测 | 整个 Release 的非关联模块代码、全部 Git 日志 |
-| **4. Review** | 冻结 SPEC/AC、本次 Release 纯净 Diff、Task 级单测证据 | 漫长的调试过程、全部聊天上下文 |
+| **3. Building** | 当前 Task Handoff Contract、相关 PRD/AC/Seams、最小受影响代码与单测 | 整个 Release 的非关联模块代码、全部 Git 日志 |
+| **4. Review** | 冻结 PRD/AC、本次 Release 纯净 Diff、Task 级单测证据 | 漫长的调试过程、全部聊天上下文 |
 | **5. Testing** | Test Matrix、系统运行环境、端到端测试入口与探针配置 | 内部辅助函数的细枝末节、早先废弃的原型代码 |
 | **6. Shipping** | `VERIFICATION.md`、CHANGELOG、VERSION、部署配置 | 已经通过的单元测试过程细节 |
 | **7. Reflecting** | 本次 Release 返工记录、Circuit Breaker 快照、Bug 归档、实际项目规则 | 业务功能正文、外部网络参考资料 |
 
 ## 默认排除
 
-- 历史 Release 的全部 PROJECT_BRIEF/SPEC/VERIFICATION。
+- 历史 Release 的全部 PROJECT_BRIEF/PRD/VERIFICATION。
 - 无关 Bug、Decision、模块和测试。
 - 整个 Git history、全部 PR 讨论。
 - node_modules、vendor、build artifacts、generated files。
