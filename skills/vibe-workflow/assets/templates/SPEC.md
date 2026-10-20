@@ -1,68 +1,31 @@
-# Effective SPEC — <Release ID>
+# 需求分析 — <项目或版本>
 
-| 范围 | 冻结的产品事实 | 待澄清/边界 | 验收入口 |
-|---|---|---|---|
-| Release `<ID>` | `<目标用户与核心行为>` | `<范围外事项或待澄清>` | `<REQ/AC 链接>` |
-| 核心能力 | `<用户可观察的结果>` | `<关键条件或无>` | `<对应 AC>` |
-| 异常与边界 | `<失败时的可见行为>` | `<尚未确认的条件或无>` | `<对应 ERR/BND>` |
+| 范围 | 核心行为与边界 | 验收入口 |
+|---|---|---|
+| `<目标用户与本次范围>` | `<预期结果、重要边界或未决问题>` | `<对应 REQ/AC>` |
 
-## Control
+## 需求基线
 
-- Release: `<Release ID>`
-- Requirement Version: `<版本>`
-- Requirement Baseline: `<PROJECT_BRIEF 路径>`
-- Status: `DRAFT`
+- 来源：`<已确认需求或 PROJECT_BRIEF 路径>`
+- 需求版本与状态：`<版本>` / `DRAFT`
+- Release：`<仅正式 Release 填写；其他任务删除本行>`
 
-## Product Behaviors
+## 产品行为
 
 ### REQ-001 — <行为名称>
 
-- Source: `<PROJECT_BRIEF 章节>`
-- Actors: `待澄清`
-- Preconditions: `待澄清`
-- Trigger: `待澄清`
-- Expected Behavior: `待澄清`
-- Resulting State: `待澄清`
-- Explicit Non-goals: `待澄清`
+- 来源与使用者：`<来源章节、目标使用者>`
+- 触发与前提：`<在什么条件下做什么>`
+- 行为与结果：`<用户可观察的变化>`
+- 错误与边界：`<已知异常、输入限制及恢复方式；无适用事项则删除本行>`
+- 非目标：`<本次明确不做的内容；共同边界写一次>`
 
-#### Acceptance Criteria
+**验收条件**
 
-- AC-001: 待澄清为可观察、可判定的结果。
+- AC-001：`<给定条件、操作及可判定结果>`
 
-#### Error Scenarios
+## 验收入口（Test Seams）
 
-- ERR-001: 待澄清触发条件、用户可见结果和恢复方式。
+`<关联 REQ/AC → 从哪里输入、观察什么结果、用什么检查；简单行为可直接写在 AC 旁并删除本节>`
 
-#### Boundary Conditions
-
-- BND-001: 待澄清输入、容量、权限、平台或状态边界。
-
-## User Flows
-
-```text
-待澄清入口 → 状态 → 操作 → 结果/错误恢复
-```
-
-## State Transitions
-
-| Current State | Event | Guard | Next State | User-visible Result |
-|---|---|---|---|---|
-| `待澄清` | `待澄清` | `待澄清` | `待澄清` | `待澄清` |
-
-## Test Seams (可观察测试接缝)
-
-| Seam ID | 关联 REQ/AC | 接缝类型 (CLI/API/DOM/DB/Log) | 可观察边界与判定依据 |
-|---|---|---|---|
-| SEAM-001 | `REQ-001 / AC-001` | `<外部可观察接缝类型>` | `<外部输入、可捕获输出、状态变化或事件日志>` |
-
-## 验收索引
-
-| REQ | AC | Test Seam | Source |
-|---|---|---|---|
-| REQ-001 | AC-001 | `SEAM-001` | `<Brief section>` |
-
-<!-- SPEC 只展开 PROJECT_BRIEF 已冻结的产品意图；测试结果与切片进度归 PROGRESS/VERIFICATION。删除不适用的空章节与占位符。 -->
-
-## Limitations & Disclaimers
-
-- `<仅解释一次适用范围和已知限制；没有则写“无”或删除本节>`
+<!-- 按 document-quality.md 的条件展开：单一同步交互只保留 REQ/AC 与适用边界；顺序影响结果时补用户流程；存在独立生命周期、异步事件或转换限制时补状态转换；跨模块/系统验收时补接缝细节。需要额外视图时引用 AC，不重复解释同一行为。SPEC 不记录运行进度或测试通过状态。沿用既有编号，删不适用章节与占位符。 -->

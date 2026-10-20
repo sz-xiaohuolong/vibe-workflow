@@ -56,6 +56,7 @@ required_files=(
   references/routing.md
   references/orchestration.md
   references/artifacts.md
+  references/document-quality.md
   references/context.md
   references/gates.md
   references/execution.md
@@ -74,6 +75,7 @@ required_files=(
   assets/templates/BUG.md
   assets/templates/VERIFICATION.md
   assets/templates/RETRO.md
+  assets/examples/document-quality.md
 )
 
 for required_file in "${required_files[@]}"; do
@@ -94,13 +96,14 @@ rg -q 'READY_TO_SHIP' "$skill_dir/SKILL.md"
 rg -q 'subagent-driven-development' "$skill_dir/SKILL.md"
 rg -q 'executing-plans' "$skill_dir/SKILL.md"
 rg -q 'orchestration.md' "$skill_dir/SKILL.md"
-rg -q '^\| Release `<ID>` \|' "$skill_dir/assets/templates/PROGRESS.md"
-rg -q '^\- \[ \] `SLICE-01`' "$skill_dir/assets/templates/PROGRESS.md"
-rg -q 'Triggered: `待核验`' "$skill_dir/assets/templates/PROGRESS.md"
+# 这里只检查条件指引仍在，实际展开与省略由文档质量场景的输出验证。
+rg -q 'Workflow State' "$skill_dir/assets/templates/PROGRESS.md"
+rg -q 'Operational Status' "$skill_dir/assets/templates/PROGRESS.md"
+rg -q 'Debug Snapshot' "$skill_dir/assets/templates/PROGRESS.md"
 rg -q 'Status: `PROPOSED`' "$skill_dir/assets/templates/PROPOSED_DESIGN.md"
 rg -q 'PROPOSED_DESIGN.md' "$skill_dir/references/artifacts.md"
 rg -q 'PROPOSED_DESIGN' "$skill_dir/references/context.md"
-rg -q 'Proposed Design:' "$skill_dir/assets/templates/IMPLEMENTATION_PLAN.md"
+rg -q 'PROPOSED_DESIGN' "$skill_dir/assets/templates/IMPLEMENTATION_PLAN.md"
 rg -q 'Verification Status' "$skill_dir/assets/templates/VERIFICATION.md"
 rg -q 'Shipping Authorization' "$skill_dir/assets/templates/VERIFICATION.md"
 rg -q '\$vibe-workflow init' "$skill_dir/SKILL.md"

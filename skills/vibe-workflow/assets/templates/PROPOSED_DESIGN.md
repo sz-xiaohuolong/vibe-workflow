@@ -1,56 +1,26 @@
-# Proposed Technical Design
+# 方案设计 — <项目或版本>
 
-## Control
+`<先说明推荐方案、选择理由、主要影响与待决事项>`
 
-- Proposal ID: `DESIGN-<编号>`
-- Target Release: `<Release ID>`
+## 方案状态与依据
+
 - Status: `PROPOSED`
-- Related REQ/AC: `<REQ/AC ID>`
-- Related Decisions: `未关联/待确认`
-- Owner: `待确认`
-- Last Updated: `<日期>`
+- 关联需求：`<SPEC 的 REQ/AC 与约束>`
+- 当前架构依据：`<已核验的 TECH_DESIGN 章节、代码或事实材料>`
+- Release / 决策引用：`<仅适用时填写；其他任务删除本行>`
 
-## Goal and Constraints
+## 设计与理由
 
-- Goal: `待确认`
-- In Scope: `待确认`
-- Out of Scope: `待确认`
-- Constraints: `待确认`
+`<本次改变的组件、交互或数据流；解释为什么适合当前约束。当前事实使用引用，未实施结构明确按方案描述>`
 
-## Proposed Architecture
+## 影响、风险与恢复
 
-描述目标组件、接口、数据流和部署边界。此处是尚未实现的 proposal，不代表当前系统事实。
+`<实际影响的边界、重要失败方式、恢复依据与未知事实；没有变化的领域用一句话交代>`
 
-## Interfaces and Compatibility
+## 验证方式
 
-- Public APIs: `待确认`
-- Internal Contracts: `待确认`
-- Compatibility Impact: `待确认`
-- Migration/Coexistence: `待确认`
-
-## Data, Security, and External Boundaries
-
-- Data/Schema Impact: `待确认`
-- Auth/Permission Impact: `待确认`
-- Privacy/Compliance: `待确认`
-- External Services/Secrets: `待确认`
-
-## Failure and Recovery
-
-- Failure Modes: `待确认`
-- Retry/Idempotency: `待确认`
-- Rollback/Recovery: `待确认`
-
-## Verification Design
-
-| REQ/AC | Planned Test/Check/Flow | Expected Evidence |
+| 关联 REQ/AC | 计划检查与判定 | 预期证据 |
 |---|---|---|
-| `<REQ/AC ID>` | `待确认` | `待确认` |
+| `<REQ/AC>` | `<实际可执行的检查入口>` | `<应保留的结果与定位>` |
 
-## Approval
-
-- Required Human Gates: `待确认`
-- Decision: `PENDING`
-- Approved By/At: `未批准`
-
-实现与验证完成前，不得把本文件内容合并为 living `TECH_DESIGN.md` 的当前事实。
+<!-- 存在实质备选时补取舍比较；涉及接口、兼容、数据、权限或迁移时展开相应契约和适用 Gate；跨模块状态必须覆盖写入、读取、传播/刷新/恢复、失败与取消、受影响及已检查未受影响模块。已有批准引用实际依据，无待决 Gate 时不新建审批。方案实现并验证后，才将成立部分合并为 TECH_DESIGN 的当前事实。删除不适用章节与占位符。 -->

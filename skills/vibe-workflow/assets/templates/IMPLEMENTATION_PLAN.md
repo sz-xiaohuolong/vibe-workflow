@@ -1,61 +1,22 @@
-# Implementation Plan — <Release ID>
+# 实施计划 — <项目或版本>
 
-## Control
+`<交付目标、整体顺序，以及当前影响执行的决定或约束>`
 
-- Requirement Baseline: `<PROJECT_BRIEF 路径>`
-- Effective SPEC: `<SPEC 路径>`
-- Current Architecture: `<TECH_DESIGN 路径>`
-- Proposed Design: `<当前 Release PROPOSED_DESIGN 路径或不适用>`
-- Status: `DRAFT`
+## 依据与共同约束
 
-## Global Constraints
+- 需求分析：`<SPEC 与适用 REQ/AC>`
+- 方案设计：`<PROPOSED_DESIGN 路径或不适用>`
+- 当前事实与限制：`<相关架构/代码入口、修改边界及必要 Gate>`
+- 验证与恢复：`<共同检查入口与可恢复依据；未知则明确写未核验>`
 
-- 只实现当前 Requirement Version 的冻结范围。
-- 不跨越未完成的 Human Gate。
-- 每个 Task 必须有验证和可恢复稳定点。
+## 任务与依赖（Ready Frontier）
 
-## Slice Map
+| 任务 | 交付与 REQ/AC | 前置依赖 | 修改范围 | 验证与恢复差异 |
+|---|---|---|---|---|
+| TASK-001 | `<可验证交付、REQ/AC>` | `<无或前置任务>` | `<文件/模块边界>` | `<检查入口、结果判定与特殊恢复要求>` |
 
-| Slice | Business Loop | REQ/AC | Dependencies | Exit Evidence | Status |
-|---|---|---|---|---|---|
-| SLICE-01 | `待定义` | `未关联` | `无/待确认` | `待定义` | `NOT_STARTED` |
+当前就绪任务：`<依赖与适用 Gate 已满足的任务；依据现有进度核验>`。状态和实际证据见既有 `PROGRESS`，不在本计划另维护一套。
 
-## Task Dependency Graph & Ready Frontier
+<!-- 单一闭环使用任务表即可；多个业务闭环时补 Slice Map，复杂依赖难以从表格判断时补拓扑。前置任务验证通过后才推进。共同事实写一次，任务仅写差异，不省略适用的风险、证据、恢复和跨模块影响。 -->
 
-```text
-[TASK-001] (Ready Frontier: 无依赖可立即就绪)
-    ↓ (完成交付)
-[TASK-002] (Blocked: 依赖 TASK-001)
-```
-
-- **Ready Frontier (当前可并行调度任务)**: `TASK-001`
-- **Blocked Tasks (等待前置依赖任务)**: `待定义`
-
-## Tasks (Task Handoff Contracts)
-
-### TASK-001 — <任务名称>
-
-- Slice: `SLICE-01`
-- Goal: `待定义一个可验证交付`
-- REQ/AC: `未关联`
-- Test Seam: `未关联 / 待定义 SEAM ID`
-- Dependencies: `无/待确认`
-- Ready Status: `READY`
-- Allowed Modification Scope: `待定义文件/模块`
-- Explicit Out of Scope: `待定义`
-- Relevant Context: `待补充核心上下文与设计契约`
-- Risk Tags: `None/待确认`
-- Planned Test/Evidence: `待定义失败用例与验证命令`
-- Cross-module Impact: `不适用/写入入口、读取方、传播、刷新/恢复与失败路径待确认`
-- Checked Unaffected Modules: `不适用/待确认`
-- Expected Outputs: `代码实现、测试用例、测试证据`
-- Recovery Point: `待定义`
-- Status: `NOT_STARTED`
-
-## Integration and Review Gates
-
-- Integration Order: `待定义`
-- Independent Review: `待定义`
-- Release Verification Handoff: `待定义`
-
-详细执行计划可由 `superpowers:writing-plans` 生成，但必须保留上述 REQ/AC、Gate、evidence 和 recovery 映射。
+<!-- Task Handoff Contract：仅真正委派复杂任务时，按 references/execution.md 组装完整契约并引用本计划。普通有界任务不逐项复制交接字段。无委派不增加交接章节；已有批准与有效证据直接复用。删除不适用内容与占位符。 -->

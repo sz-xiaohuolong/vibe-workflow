@@ -105,4 +105,4 @@ Shipping Authorization: NOT_REQUESTED | PENDING | APPROVED | DENIED
 
 同类失败连续三次、连锁回归、架构假设失效或范围持续扩大时停止盲改，保存用户工作与可恢复稳定点，记录最小 Debug Snapshot，转根因调查或重新规划。实现、任务交接与熔断见 [execution.md](references/execution.md)。
 
-维护文档时只更新受影响的事实 owner；职责地图、模板选择和同步检查点见 [artifacts.md](references/artifacts.md)。
+维护文档时只更新受影响的事实 owner；职责地图、模板选择和同步检查点见 [artifacts.md](references/artifacts.md)。新建或实质修改需求分析、方案设计、实施计划、进度时，按需读取[文档写作规范](references/document-quality.md)的对应部分；小更新保持局部，自行完成表达与事实检查，不增加审批。

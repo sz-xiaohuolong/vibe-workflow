@@ -158,6 +158,8 @@ v0.2 还明确六类跨模块触发条件，并在进度中区分 `IMPLEMENTED_U
 
 内容按读者目的组织借鉴了 [Diátaxis 官方指南](https://diataxis.fr/how-to-use-diataxis/)；它并不要求预建四类目录。摘要卡和 `.evidence/` 是本 Skill 为上述问题制定的约定，并非 Diátaxis 的硬性规则。
 
+需求分析、方案设计、实施计划和进度已内置[文档写作规范](skills/vibe-workflow/references/document-quality.md)：结论前置，按具体条件裁剪章节，写作时自动自检；简单修改保持局部。各类写法见[正例与反例](skills/vibe-workflow/assets/examples/document-quality.md)。
+
 存量接管与文档地图的设计参考了 [project-vibe-spec](https://github.com/dnwwdwd/project-vibe-spec)，并按本 Skill 的 Release 状态机与证据规则进行了独立整合。
 
 #### 启动新项目 / 新 Release
@@ -229,6 +231,7 @@ Vibe Workflow 严格遵循 open `SKILL.md` 规范 ([agentskills.io](https://agen
 
 ## 📚 深度技术文档
 
+- [文档质量优化计划](docs/plans/2026-10-20-document-quality/PROGRESS.md) — 需求分析、方案设计、实施步骤与当前进度。
 - [用户使用教程](docs/USER_GUIDE.zh-CN.md) — 从安装、接管到 Release 验证的完整使用路径，以及项目文档职责说明。
 - [工程宪法 (The Engineering Constitution)](docs/CONSTITUTION.md) — 十大不可违背的法典与判例。
 - [生命周期与状态机 (Lifecycle Specification)](docs/concepts/lifecycle.md) — 状态迁移、准入条件与回退协议。

@@ -100,9 +100,9 @@ Release 验证要逐项回答“每条需求和验收条件是否有证据支持
 | 阶段 | 文档 | 回答的问题 |
 |---|---|---|
 | 1. Thinking | `PROJECT_BRIEF.md` | 本次 Release 为谁解决什么问题，范围、约束和可观察目标是什么？ |
-| 2. Planning | `SPEC.md` | 已冻结的意图具体表现为哪些用户行为、流程、错误、边界和可观察 Test Seams？ |
-| 2. Planning | `PROPOSED_DESIGN.md` | 为实现这些 REQ/AC，准备如何改变架构、接口、数据与验证方式？方案是否获批？ |
-| 2. Planning | `IMPLEMENTATION_PLAN.md` | 按 Vertical Slice 拆分的 Task 依赖拓扑、Ready Frontier 与 Task Handoff Contract 是什么？ |
+| 2. Planning | 需求分析 `SPEC.md` | 做什么、边界是什么、怎样验收？复杂流程、状态及测试接缝按实际需要展开。 |
+| 2. Planning | 方案设计 `PROPOSED_DESIGN.md` | 选择什么方案、为什么，影响和风险是什么？方案是否获批？ |
+| 2. Planning | 实施计划 `IMPLEMENTATION_PLAN.md` | 先做什么、依赖什么、怎样验证和恢复？复杂委派时再组装完整交接契约。 |
 | 3. Building | `TECH_DESIGN.md` (Living) | 代码、配置和运行证据证明项目现在实际采用什么架构？（经实现核验后持续更新） |
 | 5. Testing | `VERIFICATION.md` | 每个 REQ/AC 与 Test Seams 的实际测试结果、真实环境日志与截屏证据索引是什么？ |
 | 7. Reflecting | `RETRO.md` | 本次 Release 的返工瓶颈、漏测原因、规则沉淀与下一版本候选池是什么？ |
@@ -233,6 +233,8 @@ docs/vibe/
 
 ### 4.3 每份文档的作用
 
+新建或实质修改需求分析、方案设计、实施计划和进度时，Agent 自动按需应用[文档写作规范](../skills/vibe-workflow/references/document-quality.md)：先给结论，明确必要信息和章节裁剪条件，写完自行检查。小更新保持局部，旧文档随任务渐进整理，不新增逐篇审批；写法参考[正例与反例](../skills/vibe-workflow/assets/examples/document-quality.md)。
+
 | 文档 | 何时使用 | 记录的核心事实 |
 |---|---|---|
 | 实际规则入口（`AGENT.md` 或 `AGENTS.md`） | Agent 开始或恢复任务时 | 长期行为规则、事实源入口、已核验项目命令、跨会话反模式沉淀；不复制产品正文 |
@@ -242,9 +244,9 @@ docs/vibe/
 | `PROGRESS.md` | 每次执行、阻塞或状态变化后 | 当前 Stage/State/Status、Slice/Task、稳定点、证据、下一步 |
 | `PROJECT_BRIEF.md` | 每个新 Release 的需求概要与冻结阶段 | 问题、目标用户、范围、限制、验收目标和未决问题，作为需求基线 |
 | `CHANGE.md` | 需要说明相对上一 Release 的变化时 | 新增、修改、删除、修复及兼容或迁移提示 |
-| `SPEC.md` | 入口 Gate 通过后详细展开已冻结需求 | 当前 Release 的完整有效产品行为、REQ/AC、Test Seams、错误与边界 |
-| `PROPOSED_DESIGN.md` | 本次 Release 有目标技术方案时 | 待实现的目标架构、接口或数据影响、恢复与验证设计、批准状态 |
-| `IMPLEMENTATION_PLAN.md` | 实施前及计划调整时 | Slice、Task 依赖拓扑、Ready Frontier、Task Handoff Contract 与 REQ/AC 对应关系 |
+| 需求分析 `SPEC.md` | 入口 Gate 通过后展开已冻结需求 | 完整有效行为、REQ/AC、错误与边界；流程、状态和接缝细节按条件补充 |
+| 方案设计 `PROPOSED_DESIGN.md` | 有目标技术方案时 | 推荐方案与理由、实际影响、风险、恢复、验证方式及方案状态 |
+| 实施计划 `IMPLEMENTATION_PLAN.md` | 实施前及计划调整时 | 任务、依赖、REQ/AC、修改边界、验证与恢复；切片和完整交接按条件增加 |
 | `VERIFICATION.md` | Release 验证与评审阶段 | 每个 REQ/AC 与 Test Seams 的实际结果、真机证据索引、版本指针和未验证项 |
 | `RETRO.md` | Release 交付后的复盘阶段 | 返工根因、各阶段耗时瓶颈、规则提炼与下一版本候选 Backlog |
 | `DEC-xxx.md` | 重大、长期影响的选择需追溯时 | 备选方案、取舍、人类决定、影响和恢复方式 |

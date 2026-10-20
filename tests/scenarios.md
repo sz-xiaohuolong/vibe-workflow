@@ -4,6 +4,8 @@
 
 每次测试只把对应场景的“Participant Prompt”交给 fresh-context Agent。不得把“Evaluator Oracle”或其他场景一起提供给参与者。参与者应作出实际决策，说明下一步行动；不要求真的修改文件。
 
+文档写作与裁剪新增边界见 [文档质量场景](scenarios-document-quality.md)：覆盖简单局部更新、中等需求分析与方案设计、复杂状态和证据保留。生成者仅读取相应夹具，不读取评估依据。
+
 ## S01 未冻结需求要求直接开发
 
 ### Participant Prompt

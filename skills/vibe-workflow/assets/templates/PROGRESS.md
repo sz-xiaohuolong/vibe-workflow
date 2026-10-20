@@ -1,47 +1,20 @@
-# Progress
+# 进度 — <项目或任务>
 
-| 范围 | 当前事实 | 阻塞/未验证 | 下一步 |
-|---|---|---|---|
-| Release `<ID>` | `Workflow State: <值>；Operational Status: <值>` | `<最重要阻塞或无>` | `<下一 Gate>` |
-| Slice `<ID>` / Task `<ID>` | `<已验证/已实现待验证/已通过 POC/进行中>` | `<当前缺口或无>` | `<一个动作>` |
-| 验证 | `<本轮检查与结果；未运行则写未运行>` | `<未覆盖的 AC 或无>` | `<检查或复核入口>` |
+| 当前事实 | 阻塞或未验证 | 下一步 |
+|---|---|---|
+| `<本次变化及对应任务/证据入口>` | `<最重要缺口或无>` | `<一个可执行动作>` |
 
 ## 定位信息
 
-- Current Stage: `<1. Thinking / 2. Planning / 3. Building / 4. Review / 5. Testing / 6. Shipping / 7. Reflecting>`
-- Current Requirement Baseline: `<路径或未建立>`
-- Last Stable Commit/Artifact: `未建立/待核验`
-- Last Updated: `<日期>`
+- 当前阶段（Current Stage）：`<实际阶段>`；需求基线：`<实际路径或任务已确认意图>`
+- 最近稳定依据：`<已核验 commit/artifact；没有则写未建立，不编造>`
+- 更新时间：`<日期>`
 
-## 任务状态
+## 当前记录
 
-| Task/REQ | Delivery Status | 实现或 POC 范围 | 当前证据 | 待验证动作 |
-|---|---|---|---|---|
-| `待核验` | `NOT_STARTED/IN_PROGRESS/IMPLEMENTED_UNVERIFIED/POC_VALIDATED/VERIFIED/BLOCKED` | `待核验` | `未记录` | `待核验` |
+- 任务与状态：`<TASK/REQ>` / `<NOT_STARTED / IN_PROGRESS / IMPLEMENTED_UNVERIFIED / POC_VALIDATED / VERIFIED / BLOCKED>`
+- 实现与证据：`<变化范围、实际检查及结果、来源定位；未运行明确写未运行>`
 
-## Slice 进度
+<!-- 摘要最多三条数据行，仅导航到必要明细。一个任务使用当前记录；多个任务改用一张任务状态表，不同时复制两套。证据需统一解释覆盖时再加明细；不粘贴日志。 -->
 
-- [ ] `SLICE-01`：`待核验`；证据/阻塞：`未记录`；下一步：`待核验`。
-
-## Verification Evidence
-
-| Scope | Command/Flow | Result | Evidence | Time |
-|---|---|---|---|---|
-| `待核验` | `未运行/待核验` | `UNVERIFIED` | `未记录` | `未记录` |
-
-## 风险、阻塞与待决定
-
-| 类型 | 事实或链接 | 负责人/下一动作 |
-|---|---|---|
-| `Bug / 阻塞 / Decision` | `<仅填适用项，并链接 BUG/DEC 或证据>` | `<待确认>` |
-
-## Debug Snapshot
-
-- Triggered: `待核验`
-- Symptom/Evidence/Attempts: `待核验`
-
-<!-- 摘要是导航，不在后文重复写相同状态；详细 Task/证据以对应表格为唯一明细。风险/阻塞/待决定可有多条，摘要只摘最重要一条。POC_VALIDATED 与 IMPLEMENTED_UNVERIFIED 不能标完成；Task 状态不替代 Release Verification 或 Shipping Authorization。删除不适用的空章节。 -->
-
-## Limitations & Disclaimers
-
-- `<只写一次需要解释的适用范围/限制；没有则写“无”或删除本节>`
+<!-- 有 Release 时补 Current Release、Workflow State、Operational Status；有 Slice 时补一条对应清单；实际熔断才增加 Debug Snapshot。已实现待验证与 POC 不能标功能完成，任务通过不能替代 Release 验证或发布授权。风险与缺口在摘要/对应状态处可见，删不适用内容与占位符。 -->
