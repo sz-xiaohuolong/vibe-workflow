@@ -58,12 +58,15 @@ docs/vibe/bugs/
 
 `decisions/` 是可选目录，不因创建 Release、功能点或 Slice 而自动建立。只有选择存在有分量的备选方案、会长期影响架构或外部契约，或需要追溯人类批准依据与恢复方式时，才按既有约定记录独立 DEC；普通实现选择写在该 Release 的 `PROPOSED_DESIGN.md` 或任务记录中即可。即使需要 DEC，也沿用仓库已有的等价位置，不创建第二套决策台账。
 
+API 调用文档按接口使用方需要维护，优先沿用既有 API 文档、OpenAPI 及生成文档或 SDK 文档，并在唯一地图登记契约源与调用说明入口。缺少调用说明职责时，才使用 `API.md` 模板建立项目级文档，不随 Release 复制；已有契约源时引用其字段和 Schema，不手写第二份。方案设计保留目标与取舍，当前技术设计保留实现事实及契约入口，调用文档说明如何使用，详见[写作规范](document-quality.md#api-调用文档)。
+
 | Artifact | 职责 |
 |---|---|
 | 实际规则入口（AGENT.md 或 AGENTS.md） | Agent 长期行为规则、事实源入口、已核验项目命令；不复制业务正文 |
 | PROJECT.md | 当前项目定位、当前 Release、Quality Profile；可承载既有 Document Map |
 | DOCUMENT_MAP.md 或既有地图 | 治理职责的真实路径、状态和定位依据；仅作导航 |
 | TECH_DESIGN.md | 当前真实架构、模块、接口、数据、权限、运行和验证入口 |
+| API.md 或既有调用文档（按需） | 面向调用方的接入、认证、输入输出、错误、示例与兼容限制；引用已有权威契约 |
 | PROGRESS.md | 当前 State/Status/Slice/Task、Last Stable Commit、证据、阻塞和 Next Task |
 | DEC-xxx.md | 重大选择、方案、取舍、批准、影响和恢复 |
 | BUG-xxx.md | 症状、复现、证据、根因、修复、回归测试和状态 |
@@ -167,6 +170,7 @@ Release Verification 必须能逐项回答“REQ 是否真的完成”，不能�
 | 产品行为变化 | 当前 Release baseline/PRD、CHANGE | PROJECT、PROPOSED_DESIGN、DEC |
 | 架构/数据/公开接口变化 | PROPOSED_DESIGN、PLAN、PROGRESS；适用 Gate 时含 DEC | PRD（产品行为受影响时）；实现验证后更新 TECH_DESIGN |
 | 架构变化实现并验证后 | TECH_DESIGN 中受影响的模块、接口与运行命令 | 当前 Release 的 PROPOSED_DESIGN 实现状态 |
+| 供调用方使用的接口新增或变化（含 Bug 修复；认证、参数、返回、错误或兼容行为） | 与实现同轮同步契约权威源及调用说明的受影响部分 | 受影响的示例、生成文档与地图入口；沿用项目既有生成方式 |
 | Bug 修复 | 现有任务/Issue 与适用测试/evidence；复杂时 BUG | TECH_DESIGN、PROGRESS、VERIFICATION |
 | Task 完成、阻塞或验证结果变化 | PROGRESS、Task evidence；已有 VERIFICATION 的对应验收行 | 预期步骤、依赖、范围或验证方法变化时更新 PLAN；适用 BUG/DEC；首次记录验证时沿用现有证据位置 |
 | READY_TO_SHIP 判定、发布后收尾 | 核对 PROJECT、PROGRESS、权威地图、PLAN、VERIFICATION、TECH_DESIGN 中相关版本、状态、路径与证据，修正过期内容 | 沿用职责等价文档，只处理适用项 |
@@ -190,6 +194,7 @@ Release Verification 必须能逐项回答“REQ 是否真的完成”，不能�
 - `assets/templates/CHANGE.md`
 - `assets/templates/PRD.md`
 - `assets/templates/TECH_DESIGN.md`
+- `assets/templates/API.md`（缺少 API 调用说明入口时按需使用）
 - `assets/templates/PROPOSED_DESIGN.md`
 - `assets/templates/IMPLEMENTATION_PLAN.md`
 - `assets/templates/PROGRESS.md`

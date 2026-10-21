@@ -68,6 +68,7 @@ required_files=(
   assets/templates/CHANGE.md
   assets/templates/PRD.md
   assets/templates/TECH_DESIGN.md
+  assets/templates/API.md
   assets/templates/PROPOSED_DESIGN.md
   assets/templates/IMPLEMENTATION_PLAN.md
   assets/templates/PROGRESS.md

@@ -105,4 +105,6 @@ Shipping Authorization: NOT_REQUESTED | PENDING | APPROVED | DENIED
 
 同类失败连续三次、连锁回归、架构假设失效或范围持续扩大时停止盲改，保存用户工作与可恢复稳定点，记录最小 Debug Snapshot，转根因调查或重新规划。实现、任务交接与熔断见 [execution.md](references/execution.md)。
 
-维护文档时只更新受影响的事实 owner；职责地图、模板选择和同步检查点见 [artifacts.md](references/artifacts.md)。新建需求文件使用 `PRD.md`，存量 `SPEC.md` 或等价需求文件继续沿用，不迁移、不复制第二份。新建或实质修改需求概要、产品需求文档（PRD）、方案设计、当前技术设计、实施计划或进度时，先读取[文档写作规范中的对应模板](references/document-quality.md#模板与职责)，再按需读取对应填写要求；适用契约写入正文，简单任务可裁剪。小更新保持局部，自行完成表达与事实检查，不增加审批。
+维护文档时只更新受影响的事实 owner；职责地图、模板选择和同步检查点见 [artifacts.md](references/artifacts.md)。新建需求文件使用 `PRD.md`，存量 `SPEC.md` 或等价需求文件继续沿用，不迁移、不复制第二份。新建或实质修改需求概要、产品需求文档（PRD）、方案设计、当前技术设计、实施计划、进度或 API 调用文档时，先读取[文档写作规范中的对应模板](references/document-quality.md#模板与职责)，再按需读取对应填写要求；适用契约写入正文，简单任务可裁剪。小更新保持局部，自行完成表达与事实检查，不增加审批。
+
+项目提供面向前端、其他服务或第三方的 API、SDK 等调用接口时，按 [API 调用文档规范](references/document-quality.md#api-调用文档)维护调用说明，沿用现有契约和文档入口；普通内部函数不触发此要求。
