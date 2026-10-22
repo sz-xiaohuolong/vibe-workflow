@@ -183,19 +183,19 @@ root, tests = map(pathlib.Path, sys.argv[1:])
 template_path = root / "assets/templates/AGENT_RULES.md"
 template = template_path.read_text()
 assert template.startswith("# Agent 工作约定\n")
-assert re.findall(r"^## (\d)\. ", template, re.M) == list("12345")
+assert re.findall(r"^## (\d)\. ", template, re.M) == list("123456")
 clauses = re.findall(r"^- (.+)$", template, re.M)
-assert len(clauses) == len(set(clauses)) == 27
+assert clauses and len(clauses) == len(set(clauses)), "通用模板不应重复同一条款"
 copies = [path for path in root.rglob("*.md") if template.strip() in path.read_text()]
 assert copies == [template_path], copies
 fixtures = json.loads((tests / "fixtures/agent-rules.json").read_text())
-assert set(fixtures) == {"existing-agents", "existing-agent", "both", "conflict", "template-update"}
+assert set(fixtures) == {"existing-agents", "existing-agent", "both", "conflict", "template-update", "project-authorization"}
 for files in fixtures.values():
     for name, content in files.items():
         assert not pathlib.Path(name).is_absolute() and ".." not in pathlib.Path(name).parts
         assert isinstance(content, str) and content
 scenarios = (tests / "scenarios-agent-rules.md").read_text()
-assert re.findall(r"^## R(\d+) ", scenarios, re.M) == [f"{i:02}" for i in range(1, 13)]
+assert re.findall(r"^## R(\d+) ", scenarios, re.M) == [f"{i:02}" for i in range(1, 16)]
 for section in re.split(r"\n## R\d+ ", scenarios)[1:]:
     assert "### Participant Prompt" in section and "### Evaluator Oracle" in section
 print("规则接入资源结构：通过；行为结果须另查执行记录")

@@ -14,6 +14,9 @@
   "conflict": {
     "AGENTS.md": "# 项目规则\n\n本项目所有沟通使用英语；代码注释和提交说明沿用现有约定。\n人工备注：保留 specs/ 与 docs/，测试入口为 make test。\n\n<!-- vibe-workflow:agent-rules:start -->\n## 验证约定（人工调整）\n受影响的配置变化后，可以由维护者决定复用旧结果；Agent 不得擅自强制重跑。\n<!-- vibe-workflow:agent-rules:end -->\n"
   },
+  "project-authorization": {
+    "AGENTS.md": "# 项目人工规则\n\n默认使用简体中文沟通；代码和提交说明遵循项目约定。\n持续授权：允许 Agent 将本项目已完成且属于当前任务的修改 Commit 并 Push 到 origin/dev；其他分支需另行明确授权。\n部署、Publish、Tag 和正式 Release 必须由用户单独授权，普通同步不包含这些操作。\n人工目录约定：specs/、docs/、samples/ 保持原位，禁止新增 src/domain、api、sql 分层。\n专属验证要求：修改任何 Markdown 后必须运行 make docs-check，包括 init 的规则更新；不得以通用默认预算省略。\n\n<!-- vibe-workflow:agent-rules:start -->\n人工约束：每次 Commit 前必须运行 make test，即使本次只修改文档；不得用旧证据代替本次检查。\n<!-- vibe-workflow:agent-rules:end -->\n"
+  },
   "template-update": {
     "AGENTS.md": "# 项目规则\n\n<!-- vibe-workflow:agent-rules:start -->\n## 基本行为（人工保留）\n默认使用简体中文沟通；代码与提交信息遵循项目约定和用户明确要求。\n先查项目资料与实现，已有信息足够时不要再问。\n人工备注：验证只使用 make test，不安装任何新工具。\n<!-- vibe-workflow:agent-rules:end -->\n"
   }
